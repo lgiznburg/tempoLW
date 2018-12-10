@@ -1,0 +1,11 @@
+<html t:type="layout" t:pageTitle="Администрирование:Редактирование предмета"
+      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
+      xmlns:p="tapestry:parameter">
+<h2>Edit Subject</h2>
+<div>
+    <t:beaneditform t:id="subjectForm" object="subject" submitLabel="Save" include="title">
+    </t:beaneditform>
+
+    <t:pagelink page="admin/subjects" class="btn btn-outline-info">Go Back</t:pagelink>
+</div>
+</html>

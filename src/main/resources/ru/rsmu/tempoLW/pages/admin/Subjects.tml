@@ -1,0 +1,22 @@
+<html t:type="layout" t:pageTitle="Администрирование:Список предметов"
+      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
+      xmlns:p="tapestry:parameter">
+<h2>Subjects</h2>
+<div>
+    <t:grid t:id="subjectTable" id="subjectTable" t:source="subjectSource" t:inPlace="true"
+            t:include="title" t:add="edit,upload"
+            t:row="currentSubject">
+        <p:nameCell>${currentSubject.title}</p:nameCell>
+        <p:editCell>
+            <t:pagelink page="admin/editsubject" context="currentSubject"><span class="glyphicon glyphicon-pencil">&nbsp; </span>
+            </t:pagelink>
+        </p:editCell>
+        <p:uploadCell><t:pagelink t:page="admin/uploadquestions" t:context="currentSubject"><span class="glyphicon glyphicon-import"></span></t:pagelink> </p:uploadCell>
+        <p:empty>
+                <p class="empty-result">No results</p>
+        </p:empty>
+    </t:grid>
+
+    <t:pagelink page="admin/editsubject" class="btn btn-primary" >Create new subject</t:pagelink>
+</div>
+</html>

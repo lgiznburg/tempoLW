@@ -1,0 +1,77 @@
+package ru.rsmu.tempoLW.entities;
+
+import org.apache.tapestry5.beaneditor.Validate;
+import org.hibernate.annotations.Type;
+import ru.rsmu.tempoLW.data.QuestionType;
+
+import javax.persistence.*;
+import java.io.Serializable;
+
+/**
+ * @author leonid.
+ */
+@Entity
+@Table(name = "question")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn( name = "type", discriminatorType = DiscriminatorType.STRING )
+public abstract class Question implements Serializable {
+    private static final long serialVersionUID = -107174030301141499L;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY )
+    private long id;
+
+    @Column(insertable = false, updatable = false)
+    @Enumerated(EnumType.STRING)
+    private QuestionType type;
+
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "question_info_id")
+    private QuestionInfo questionInfo;
+
+    @Column
+    private int version;
+
+    @Column
+    @Type( type = "org.hibernate.type.TextType" )
+    private String text;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId( long id ) {
+        this.id = id;
+    }
+
+    public QuestionType getType() {
+        return type;
+    }
+
+    public void setType( QuestionType type ) {
+        this.type = type;
+    }
+    public QuestionInfo getQuestionInfo() {
+        return questionInfo;
+    }
+
+    public void setQuestionInfo( QuestionInfo questionInfo ) {
+        this.questionInfo = questionInfo;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public void setVersion( int version ) {
+        this.version = version;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText( String text ) {
+        this.text = text;
+    }
+}
