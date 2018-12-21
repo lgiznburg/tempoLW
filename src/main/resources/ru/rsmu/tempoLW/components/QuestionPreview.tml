@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<t:container xmlns="http://www.w3.org/1999/xhtml" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd" xmlns:p="tapestry:parameter">
+
+    <div id="questionPreview" class="row">
+        <h2>${question.questionInfo.name}</h2>
+        <p><span style="font-size: 22pt;">${question.text}</span>
+        </p>
+        <t:if test="questionSimple">
+            <ul>
+                <t:loop source="simpleAnswers" value="answer">
+                    <li>
+                        <t:if test="answer.correct">
+                            <span class="alert-success">${answer.text}</span>
+                            <p:else>${answer.text}</p:else>
+                        </t:if>
+                    </li>
+                </t:loop>
+            </ul>
+        </t:if>
+        <t:if test="questionOpen">
+            <ul>
+                <t:loop source="simpleAnswers" value="answer">
+                    <li><span class="alert-success">${answer.text}</span></li>
+                </t:loop>
+            </ul>
+        </t:if>
+        <t:if test="questionCorrespondence">
+            <dl>
+                <t:loop source="correspondenceVariants" value="correspondence">
+                    <dt>${correspondence.text}</dt>
+                    <dd>
+                        <ul>
+                            <t:loop source="correspondence.correctAnswers" value="answer">
+                                <li>${answer.text}</li>
+                            </t:loop>
+                        </ul>
+                    </dd>
+                </t:loop>
+            </dl>
+            <ul>
+                <t:loop source="simpleAnswers" value="answer">
+                    <li>${answer.text}</li>
+                </t:loop>
+            </ul>
+
+        </t:if>
+    </div>
+</t:container>

@@ -16,4 +16,8 @@ public interface QuestionDao extends BaseDao {
 
     Question findNextQuestion( long id, TestSubject subject );
 
+    Question findRandomQuestion( TestingPlanRule rule );
+    List<Question> findRandomQuestions( TestingPlanRule rule );
+
+    List<TestingPlan> findTestingPlans();
 }

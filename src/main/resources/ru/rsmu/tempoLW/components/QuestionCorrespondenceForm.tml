@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<t:container xmlns="http://www.w3.org/1999/xhtml" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd" xmlns:p="tapestry:parameter">
+
+    <t:form t:id="questionSimpleForm" validate="questionResult" class="form-horizontal">
+
+        <t:loop source="rows" t:id="correspondence" encoder="rowEncoder" value="row">
+            <div class="form-group">
+                <div class="col-sm-4 text-lg">${row.correspondenceVariant.text}</div>
+                <div class="col-sm-8 text-lg">
+                    <t:checklist t:id="simpleAnswers" model="answerModel" selected="row.selectedAnswers" encoder="answerEncoder" />
+                </div>
+            </div>
+
+        </t:loop>
+        <div class="form-group">
+            <div class="col-sm-4 col-sm-offset-4">
+                <t:submit value="message:save" class="btn btn-primary"/>
+            </div>
+        </div>
+
+    </t:form>
+</t:container>

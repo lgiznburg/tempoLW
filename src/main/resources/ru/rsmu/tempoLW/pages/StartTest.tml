@@ -1,0 +1,12 @@
+<html t:type="layout" t:pageTitle="Тестирование"
+      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
+      xmlns:p="tapestry:parameter">
+
+<h2>Тестирование: ${testingPlan.subject.title} (${testingPlan.name})</h2>
+<div class="row">
+    <div class="col-sm-8 col-sm-offset-2">Ваш вариант теста готов. Всего ${questionNumber} вопросов.</div>
+</div>
+<div class="row">
+    <div class="col-sm-8 col-sm-offset-2"><t:pagelink page="testwizard" context="0" class="btn btn-primary">${message:start-test}</t:pagelink> </div>
+</div>
+</html>

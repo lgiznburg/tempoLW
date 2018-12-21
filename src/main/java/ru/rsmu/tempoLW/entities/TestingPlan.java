@@ -19,11 +19,14 @@ public class TestingPlan implements Serializable {
     @ManyToOne
     private TestSubject subject;
 
-    @OneToMany(mappedBy = "testingPlan")
+    @OneToMany(mappedBy = "testingPlan", cascade = CascadeType.ALL )
     private List<TestingPlanRule> rules;
 
     @Column
     private String name;
+
+    @Column
+    private boolean enabled;
 
     public long getId() {
         return id;
@@ -55,5 +58,13 @@ public class TestingPlan implements Serializable {
 
     public void setName( String name ) {
         this.name = name;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled( boolean enabled ) {
+        this.enabled = enabled;
     }
 }

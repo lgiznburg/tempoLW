@@ -6,6 +6,7 @@ import ru.rsmu.tempoLW.data.QuestionType;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author leonid.
@@ -74,4 +75,6 @@ public abstract class Question implements Serializable {
     public void setText( String text ) {
         this.text = text;
     }
+
+    abstract public int countErrors( List<ResultElement> elements );
 }

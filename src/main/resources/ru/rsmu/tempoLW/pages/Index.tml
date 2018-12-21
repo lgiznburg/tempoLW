@@ -1,4 +1,14 @@
 <html t:type="layout" t:pageTitle="Тестирование"
       xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
       xmlns:p="tapestry:parameter">
+
+<h2>${message:available-tests}</h2>
+<t:loop source="testingPlans" value="plan">
+    <div class="row">
+        <div class="col-sm-10 col-sm-offset-2">
+            <t:pagelink page="starttest" context="plan"><strong>${plan.subject.title}</strong> ( ${plan.name} )</t:pagelink>
+
+        </div>
+    </div>
+</t:loop>
 </html>

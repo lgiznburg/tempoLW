@@ -28,8 +28,12 @@ public class TestingPlanRule implements Serializable, Comparable<TestingPlanRule
     @Column(name = "question_count")
     private int questionCount;
 
+    // Cost of one score of question
+    @Column(name = "score_cost")
+    private int scoreCost;
+
     @Transient
-    private int totalQuestions;
+    private long totalQuestions;
 
     public long getId() {
         return id;
@@ -71,12 +75,20 @@ public class TestingPlanRule implements Serializable, Comparable<TestingPlanRule
         this.questionCount = questionCount;
     }
 
-    public int getTotalQuestions() {
+    public long getTotalQuestions() {
         return totalQuestions;
     }
 
-    public void setTotalQuestions( int totalQuestions ) {
+    public void setTotalQuestions( long totalQuestions ) {
         this.totalQuestions = totalQuestions;
+    }
+
+    public int getScoreCost() {
+        return scoreCost;
+    }
+
+    public void setScoreCost( int scoreCost ) {
+        this.scoreCost = scoreCost;
     }
 
     @Override

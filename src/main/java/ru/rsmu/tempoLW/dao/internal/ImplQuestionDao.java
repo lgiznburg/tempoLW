@@ -1,14 +1,15 @@
 package ru.rsmu.tempoLW.dao.internal;
 
 import org.hibernate.Criteria;
-import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
-import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.*;
 import org.hibernate.transform.AliasToBeanResultTransformer;
 import ru.rsmu.tempoLW.dao.QuestionDao;
 import ru.rsmu.tempoLW.entities.*;
 
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * @author leonid.
@@ -37,11 +38,11 @@ public class ImplQuestionDao extends ImplBaseDao implements QuestionDao {
     @Override
     public List<TestingPlanRule> prepareTestingPlan( TestSubject subject ) {
         Criteria criteria = session.createCriteria( QuestionInfo.class )
-                .add( Restrictions.eq("subject", subject) )
+                .add( Restrictions.eq( "subject", subject ) )
                 .setProjection( Projections.projectionList()
-                                .add( Projections.property( "topic" ) )
-                                .add( Projections.property( "complexity" ) )
-                        .add( Projections.rowCount(), "totalQuestions" )
+                                .add( Projections.groupProperty( "topic" ), "topic" )
+                                .add( Projections.groupProperty( "complexity" ), "complexity" )
+                                .add( Projections.rowCount(), "totalQuestions" )
                 )
                 .setResultTransformer( new AliasToBeanResultTransformer( TestingPlanRule.class ) );
         return (List<TestingPlanRule>) criteria.list();
@@ -52,11 +53,54 @@ public class ImplQuestionDao extends ImplBaseDao implements QuestionDao {
         Criteria criteria = session.createCriteria( Question.class )
                 .createAlias( "questionInfo", "questionInfo" )
                 .add( Restrictions.eq( "questionInfo.subject", subject ) )
-                .addOrder( Order.asc("id") );
+                .addOrder( Order.asc( "id" ) );
         if ( id > 0 ) {
             criteria.add( Restrictions.gt( "id", id ) );
         }
         criteria.setMaxResults( 1 );
         return (Question) criteria.uniqueResult();
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public List<TestingPlan> findTestingPlans() {
+        Criteria criteria = session.createCriteria( TestingPlan.class )
+                .add( Restrictions.eq( "enabled", true ) );
+        return criteria.list();
+    }
+
+    @Override
+    public Question findRandomQuestion( TestingPlanRule rule ) {
+        Question question = null;
+        Criterion restrictions = Restrictions.conjunction()
+                .add( Restrictions.eq( "questionInfo.complexity", rule.getComplexity() ) )
+                .add( Restrictions.eq( "questionInfo.topic", rule.getTopic() ) );
+
+        Criteria criteria = session.createCriteria( Question.class )
+                .createAlias( "questionInfo", "questionInfo" )
+                .add( restrictions )
+                .setProjection( Projections.rowCount() );
+        int count = ((Number) criteria.uniqueResult()).intValue();
+        if (0 != count) {
+            int index = new Random().nextInt(count);
+            criteria = session.createCriteria( Question.class )
+                    .createAlias( "questionInfo", "questionInfo" )
+                    .add( restrictions )
+                    .setFirstResult( index ).setMaxResults( 1 );
+            question = (Question) criteria.uniqueResult();
+        }
+        return question;
+    }
+
+    @Override
+    public List<Question> findRandomQuestions( TestingPlanRule rule ) {
+
+        Criteria criteria = session.createCriteria( Question.class )
+                .createAlias( "questionInfo", "questionInfo" )
+                .add( Restrictions.eq( "questionInfo.complexity", rule.getComplexity() ) )
+                .add( Restrictions.eq( "questionInfo.topic", rule.getTopic() ) );
+        List<Question> questions = criteria.list();
+        Collections.shuffle( questions );
+        return questions.subList( 0, rule.getQuestionCount() );
     }
 }

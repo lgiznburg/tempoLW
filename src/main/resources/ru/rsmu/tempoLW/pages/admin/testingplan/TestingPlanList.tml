@@ -1,0 +1,20 @@
+<html t:type="layout" t:pageTitle="Администрирование:Список предметов"
+      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
+      xmlns:p="tapestry:parameter">
+<h2>${message:testing-plan-list}</h2>
+<div>
+    <t:grid t:id="plansTable" id="plansTable" t:source="planSource" t:inPlace="true"
+            t:include="name,enabled" t:add="edit"
+            t:row="plan">
+        <p:editCell>
+            <t:pagelink page="admin/testingplan/testingplanedit" context="plan"><span class="glyphicon glyphicon-pencil">&nbsp;</span>
+            </t:pagelink>
+        </p:editCell>
+        <p:empty>
+            <p class="empty-result">No results</p>
+        </p:empty>
+    </t:grid>
+
+    <t:pagelink page="admin/subjects" class="btn btn-primary" >${message:back-to-subjects}</t:pagelink>
+</div>
+</html>

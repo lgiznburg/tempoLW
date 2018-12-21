@@ -1,0 +1,66 @@
+<html t:type="layout" t:pageTitle="Администрирование:План тестирования"
+      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
+      xmlns:p="tapestry:parameter">
+<h3>${message:edit-testing-plan}</h3>
+<div>
+    <t:form t:id="testingPlanForm" validate="testingPlan">
+        <div class="form-group">
+            <t:label for="name" class="col-sm-4"/>
+            <div class="col-sm-8">
+                <t:textfield value="testingPlan.name" t:id="name"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <t:label for="enabled" class="col-sm-4"/>
+            <div class="col-sm-8">
+                <t:checkbox value="testingPlan.enabled" t:id="enabled"/>
+            </div>
+        </div>
+        <div class="form-group">
+        <table class="table table-hover table-bordered">
+            <thead>
+            <tr>
+                <th>${message:topic-title}</th>
+                <th>${message:complexity}</th>
+                <th>${message:question-count}</th>
+                <th>${message:score-cost}</th>
+            </tr>
+            </thead>
+            <tbody>
+            <t:loop source="testingPlan.rules" value="rule" encoder="ruleEncoder">
+                <tr>
+                    <td>${rule.topic.title}</td>
+                    <td>${rule.complexity}</td>
+                    <td><t:textfield t:id="questionCountField" value="rule.questionCount"/></td>
+                    <td><t:textfield t:id="scoreCostField" value="rule.scoreCost"/></td>
+                </tr>
+            </t:loop>
+            <t:if test="additionalRules">
+                <tr>
+                    <td colspan="3">
+                        ${message:add-new-rules}
+                    </td>
+                </tr>
+            </t:if>
+
+            <t:loop source="additionalRules" value="rule" formstate="ITERATION">
+                <tr>
+                    <td>${rule.topic.title}</td>
+                    <td>${rule.complexity}</td>
+                    <td><t:textfield t:id="questionCountField1" value="rule.questionCount"/></td>
+                    <td><t:textfield t:id="scoreCostField" value="rule.scoreCost"/></td>
+                </tr>
+            </t:loop>
+            </tbody>
+        </table>
+        </div>
+
+        <div class="form-group">
+            <div class="btn-group">
+                <t:submit class="btn btn-primary" value="message:save"/>
+                <t:pagelink page="admin/subjects" class="btn btn-default">${message:cancel}</t:pagelink>
+            </div>
+        </div>
+    </t:form>
+</div>
+</html>

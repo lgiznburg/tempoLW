@@ -4,7 +4,9 @@ import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author leonid.
@@ -34,5 +36,30 @@ public class QuestionCorrespondence extends Question {
 
     public void setCorrespondenceVariants( List<CorrespondenceVariant> correspondenceVariants ) {
         this.correspondenceVariants = correspondenceVariants;
+    }
+
+    @Override
+    public int countErrors( List<ResultElement> elements ) {
+        int errors = 0;
+        Map<Long,Integer> counts = new HashMap<>();
+        for ( ResultElement result : elements ) {
+            errors += result.isCorrect() ? 0:1;
+            Long id = ((ResultCorrespondence)result).getCorrespondenceVariant().getId();
+            if ( counts.containsKey( id ) ) {
+                counts.put( id, counts.get( id ) + 1 );
+            }
+            else {
+                counts.put( id, 1 );
+            }
+        }
+
+        for ( CorrespondenceVariant correspondenceVariant : correspondenceVariants ) {
+            Integer size = counts.get( correspondenceVariant.getId() );
+            if ( size == null ) size = 0;
+
+            // add errors only if there are less answers
+            errors += Math.max( 0, correspondenceVariant.getCorrectAnswers().size() - size );
+        }
+        return errors;
     }
 }

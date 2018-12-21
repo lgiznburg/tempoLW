@@ -94,7 +94,11 @@ public class QuestionsLoader extends ExcelLayout {
         String name = getCellValue( row, COLUMN_NAME );
         Long complexity = getCellNumber( row, COLUMN_COMPLEXITY );
         Long maxScore = getCellNumber( row, COLUMN_MAX_SCORE );
-        if ( name == null || name.isEmpty() || complexity == null || maxScore == null ) {
+        if ( name == null || name.isEmpty() ) {
+            warning.add( String.format( "Error: Line %d. Question has no name.", row.getRowNum() ) );
+            name = topicTitle;
+        }
+        if ( complexity == null || maxScore == null ) {
             warning.add( String.format( "Error: Line %d. Question has no name or score or complexity.", row.getRowNum() ) );
             return null;
         }

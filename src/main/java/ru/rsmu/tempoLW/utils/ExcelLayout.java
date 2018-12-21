@@ -35,8 +35,25 @@ public abstract class ExcelLayout {
                     value = cell.getRichStringCellValue().getString().trim();
                     break;
                 case NUMERIC:
-                    value = Long.toString( Math.round( cell.getNumericCellValue() ) );
+                    double cellDouble = Math.abs( cell.getNumericCellValue() );
+                    double floorDouble = Math.floor( cellDouble );
+                    if ( cellDouble == floorDouble ) {
+                        value = Long.toString( Math.round( cell.getNumericCellValue() ) );
+                    }
+                    else {
+                        value = Double.toString( cell.getNumericCellValue() );
+                    }
                     break;
+                case FORMULA:
+                    try {
+                        value = cell.getRichStringCellValue().toString().trim();
+                    } catch (Exception e) { // if formula does not return string we get exception
+                        try {               // lets try number
+                            value = Double.toString( cell.getNumericCellValue() );
+                        } catch (Exception e1) {
+                            value = "";
+                        }
+                    }
                 default:
                     return null;
             }

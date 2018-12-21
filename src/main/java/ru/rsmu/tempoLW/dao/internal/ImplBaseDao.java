@@ -30,4 +30,14 @@ public class ImplBaseDao implements BaseDao {
         return session.createCriteria( type ).list();
     }
 
+    @Override
+    public <T> void delete( T entity ) {
+        session.delete( entity );
+    }
+
+    @Override
+    public <T> void refresh( T entity ) {
+        session.refresh( entity );
+    }
+
 }
