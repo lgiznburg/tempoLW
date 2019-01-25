@@ -130,4 +130,5 @@ public class QuestionResult implements Serializable {
     public int getViewNumber() {
         return orderNumber + 1;
     }
+
 }

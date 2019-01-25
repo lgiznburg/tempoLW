@@ -79,3 +79,87 @@ button.bg-dark:focus {
 .mx-auto {
     margin-left: auto !important;
 }
+
+
+.btn-primary {
+    color: #fff;
+    background-color: #007984;
+    border-color: #007984;
+}
+
+.btn-primary:hover {
+    color: #fff;
+    background-color: #00565e;
+    border-color: #004a51;
+}
+
+/*
+.text-lg {
+    font-size: x-large;
+}*/
+
+.row h2 {
+    font-size: 150%;
+    color: #7fa4a7;
+
+}
+
+#questionView {
+    font-size: 18px;
+}
+
+.form-horizontal .control-label {
+    padding-top: 0;
+}
+
+.subquestion-nav {
+    padding-top: 4rem;
+}
+
+body {
+    font-family: ubuntu;
+    font-weight: 300;
+}
+
+strong {
+    font-weight: 400;
+}
+
+h1, h2, h3, h4 {
+    font-weight: 400;
+}
+
+/* Question simple order presentation styles */
+.qso-element-select {
+    display: inline-block;
+    margin-left: 2rem;
+    width: auto;
+}
+
+.qso-elements-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.qso-element-div {
+    justify-content: space-between;
+    align-content: center;
+    margin: 0.2rem 0;
+    padding: 1rem;
+    border: 1px solid #eee;
+    border-radius: 0.5rem;
+    display: flex;
+}
+
+.qso-element-text {
+    font-weight: 400;
+}
+
+.qc-variant-text {
+    font-weight: 400;
+    text-align: right;
+    padding-top: 2rem;
+    padding-right: 0.5rem;
+}
+/*  ---- */
+

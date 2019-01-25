@@ -81,7 +81,7 @@ public class TestingPlanEdit {
             }
         }
         questionDao.save( testingPlan );
-        return TestingPlanList.class; //todo redirect to subject view (or plans list)
+        return TestingPlanList.class;
     }
 
 

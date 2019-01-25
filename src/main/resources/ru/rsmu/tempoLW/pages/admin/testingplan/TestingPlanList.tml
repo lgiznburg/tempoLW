@@ -6,6 +6,7 @@
     <t:grid t:id="plansTable" id="plansTable" t:source="planSource" t:inPlace="true"
             t:include="name,enabled" t:add="edit"
             t:row="plan">
+        <p:nameCell>${plan.subject.title} (${plan.name})</p:nameCell>
         <p:editCell>
             <t:pagelink page="admin/testingplan/testingplanedit" context="plan"><span class="glyphicon glyphicon-pencil">&nbsp;</span>
             </t:pagelink>

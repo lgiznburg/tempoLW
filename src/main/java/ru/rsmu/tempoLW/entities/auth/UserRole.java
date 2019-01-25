@@ -15,7 +15,7 @@ public class UserRole implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "role")
+    @Column(name = "role", unique = true)
     @Enumerated(EnumType.STRING)
     private UserRoleName roleName;
 

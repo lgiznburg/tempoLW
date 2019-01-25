@@ -17,6 +17,18 @@
                 </t:loop>
             </ul>
         </t:if>
+        <t:if test="questionSimpleOrder">
+            <ul>
+                <t:loop source="simpleAnswers" value="answer">
+                    <li>
+                        <t:if test="answer.correct">
+                            <span class="alert-success">${answer.text} (${answer.sequenceOrder})</span>
+                            <p:else>${answer.text}</p:else>
+                        </t:if>
+                    </li>
+                </t:loop>
+            </ul>
+        </t:if>
         <t:if test="questionOpen">
             <ul>
                 <t:loop source="simpleAnswers" value="answer">

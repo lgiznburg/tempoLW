@@ -3,11 +3,12 @@
         "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 <hibernate-configuration>
     <session-factory>
-        <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="hibernate.connection.url">jdbc:mysql://127.0.0.1/tempo_db?autoReconnect=true</property>
-        <property name="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</property>
-        <property name="hibernate.connection.username">tempo</property>
-        <property name="hibernate.connection.password">neonka</property>
+        <property name="hibernate.connection.driver_class">${hibernate.connection.driver_class}</property>
+        <property name="hibernate.connection.url">${hibernate.connection.url}</property>
+        <property name="hibernate.dialect">${hibernate.dialect}</property>
+        <property name="hibernate.default_schema">${hibernate.default_schema}</property>
+        <property name="hibernate.connection.username">${hibernate.connection.username}</property>
+        <property name="hibernate.connection.password">${hibernate.connection.password}</property>
         <property name="hbm2ddl.auto">update</property>
         <property name="hibernate.show_sql">false</property>
         <property name="hibernate.format_sql">false</property>

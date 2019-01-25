@@ -59,6 +59,9 @@ public class QuestionPreview {
             }
             return answerVariants;
         }
+        else if ( question instanceof QuestionSimpleOrder ) {
+            return ((QuestionSimpleOrder)question).getAnswerVariants();
+        }
 
         return Collections.emptyList();
     }
@@ -82,4 +85,7 @@ public class QuestionPreview {
         return question instanceof QuestionCorrespondence;
     }
 
+    public boolean isQuestionSimpleOrder() {
+        return question instanceof QuestionSimpleOrder;
+    }
 }

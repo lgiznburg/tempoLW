@@ -2,15 +2,20 @@
       xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
       xmlns:p="tapestry:parameter">
 
-<h2 class="align-center">Тестирование: ${testResult.testingPlan.subject.title} (${testResult.testingPlan.name})</h2>
+<div class="row">
+<h2>${message:testing-header} ${testResult.testingPlan.subject.title} (${testResult.testingPlan.name})</h2>
+</div>
 
 <t:questionform current="current"/>
 
-<div class="row">
+<div class="row subquestion-nav">
 
-    <div class="col-sm-4 col-sm-offset-2">
+    <div class="col-sm-4 align-left">
         <t:if test="prevExist">
             <t:eventlink event="prevQuestion" class="btn btn-default">${message:prev-question}</t:eventlink>
+            <p:else>
+                <button class="btn btn-default" disabled="disabled">${message:prev-question}</button>
+            </p:else>
         </t:if>
     </div>
     <div class="col-sm-4 align-center">
@@ -19,6 +24,9 @@
     <div class="col-sm-4 align-right">
         <t:if test="nextExist">
             <t:eventlink event="nextQuestion" class="btn btn-default">${message:next-question}</t:eventlink>
+            <p:else>
+                <button class="btn btn-default" disabled="disabled">${message:next-question}</button>
+            </p:else>
         </t:if>
     </div>
 

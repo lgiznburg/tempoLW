@@ -2,10 +2,7 @@ package ru.rsmu.tempoLW.components;
 
 import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.annotations.Property;
-import ru.rsmu.tempoLW.entities.QuestionCorrespondence;
-import ru.rsmu.tempoLW.entities.QuestionOpen;
-import ru.rsmu.tempoLW.entities.QuestionResult;
-import ru.rsmu.tempoLW.entities.QuestionSimple;
+import ru.rsmu.tempoLW.entities.*;
 
 /**
  * @author leonid.
@@ -26,6 +23,10 @@ public class QuestionForm {
 
     public boolean isQuestionCorrespondence() {
         return current.getQuestion() instanceof QuestionCorrespondence;
+    }
+
+   public boolean isQuestionSimpleOrder() {
+        return current.getQuestion() instanceof QuestionSimpleOrder;
     }
 
     public int getReadableNumber() {

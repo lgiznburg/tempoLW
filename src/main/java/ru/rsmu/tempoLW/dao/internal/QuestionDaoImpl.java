@@ -7,14 +7,13 @@ import ru.rsmu.tempoLW.dao.QuestionDao;
 import ru.rsmu.tempoLW.entities.*;
 
 import java.util.Collections;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
 /**
  * @author leonid.
  */
-public class ImplQuestionDao extends ImplBaseDao implements QuestionDao {
+public class QuestionDaoImpl extends BaseDaoImpl implements QuestionDao {
     @Override
     public SubTopic findTopicByName( String topicTitle ) {
         Criteria criteria = session.createCriteria( SubTopic.class )

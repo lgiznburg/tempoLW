@@ -1,5 +1,6 @@
 package ru.rsmu.tempoLW.services;
 
+import org.apache.shiro.codec.Base64;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.realm.Realm;
 import org.apache.tapestry5.SymbolConstants;
@@ -57,6 +58,9 @@ public class AppModule {
 
         configuration.add(SecuritySymbols.LOGIN_URL, "/login");
         configuration.add( SecuritySymbols.SUCCESS_URL, "/index");
+        //create rememberMe cipher key, 16 bytes long
+        byte[] cipherKeySource = {10, 33, 28, 77, 48, 115, 3, 47, 109, 75, 55, 55, 68, 121, 19, 63};
+        configuration.add( SecuritySymbols.REMEMBERME_CIPHERKERY, Base64.encodeToString( cipherKeySource ) );
     }
 
     /*
@@ -84,11 +88,14 @@ public class AppModule {
 
     public static void bind(ServiceBinder binder) {
         binder.bind(AuthorizingRealm.class, UserDetailsRealm.class).withId(UserDetailsRealm.class.getSimpleName());
+
+        binder.bind( SecurityUserHelper.class );
+
     }
 
     public static void contributeSecurityConfiguration(OrderedConfiguration<SecurityFilterChain> configuration,
                                                        SecurityFilterChainFactory factory) {
-        configuration.add("admin", factory.createChain("/admin/**").add(factory.anon()).build());
+        configuration.add("admin", factory.createChain("/admin/**").add(factory.roles(),"admin").build());
         configuration.add("loginform-anon",
                 factory.createChain("/login.loginform.tynamologinform").add(factory.anon()).build());
         configuration.add("anon", factory.createChain("/**").add(factory.anon()).build());

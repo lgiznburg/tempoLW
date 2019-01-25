@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <t:container xmlns="http://www.w3.org/1999/xhtml" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd" xmlns:p="tapestry:parameter">
 
-    <div id="questionPreview" class="row">
-        <h3>Вопрос № ${readableNumber}. ${current.question.questionInfo.name}</h3>
-        <blockquote><p style="font-size: 20pt;">${current.question.text}</p></blockquote>
+    <div id="questionView" class="row">
+        <h3>${message:question-num} ${readableNumber}. ${current.question.questionInfo.name}</h3>
+        <blockquote><p class="text-lg">${current.question.text}</p></blockquote>
     </div>
     <t:if test="questionSimple">
         <t:questionsimpleform questionResult="current"/>
@@ -13,6 +13,9 @@
     </t:if>
     <t:if test="questionCorrespondence">
         <t:questioncorrespondenceform questionResult="current"/>
+    </t:if>
+    <t:if test="questionSimpleOrder">
+        <t:questionsimpleorderform questionResult="current"/>
     </t:if>
 
 </t:container>

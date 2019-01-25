@@ -4,10 +4,17 @@
     <t:form t:id="questionSimpleForm" validate="questionResult" class="form-horizontal">
 
         <div class="form-group">
-            <t:label for="simpleAnswers" class="col-sm-4"/>
-            <div class="col-sm-8">
-                <t:checklist t:id="simpleAnswers" model="answerModel" selected="selectedAnswers" encoder="answerEncoder" />
+            <div style="padding-top: 2rem;">
+                <t:label for="simpleAnswers" class="col-sm-4"/>
             </div>
+
+            <div style="display: flex;">
+                <div class="col-sm-8 text-lg qso-element-div">
+                    <t:checklist t:id="simpleAnswers" model="answerModel" selected="selectedAnswers"
+                                 encoder="answerEncoder"/>
+                </div>
+            </div>
+
         </div>
         <div class="form-group">
             <div class="col-sm-4 col-sm-offset-4">

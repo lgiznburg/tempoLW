@@ -23,17 +23,22 @@
         <div class="collapse navbar-collapse" id="navbarsReque">
             <t:security.user>
                 <ul class="nav navbar-nav navbar-right">
-                    <li class="nav-item dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" id="userDropdown" aria-expanded="false">${message:navbar.welcome} ${username}.</a>
-                        <div class="dropdown-menu bg-light" aria-labelledby="userDropdown">
-                            <!--<t:actionlink id="logout">-->${message:navbar.logout}<!--</t:actionlink>-->
-                        </div>
+                    <li class="dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" id="userDropdown" aria-expanded="false">
+                        ${message:navbar.welcome} ${username}. <span class="caret"/></a>
+                        <ul class="dropdown-menu bg-light" aria-labelledby="userDropdown">
+                            <li><t:pagelink page="admin/subjects">${message:navbar.admin.subjects}</t:pagelink></li>
+                            <li><t:pagelink page="admin/testingplan/testingplanlist">${message:navbar.admin.testingplans}</t:pagelink></li>
+                            <li role="separator" class="divider"></li>
+                            <li><t:eventlink event="logout">${message:navbar.logout}</t:eventlink></li>
+
+                        </ul>
 
                     </li>
                 </ul>
                 <p:else>
                     <ul class="nav navbar-nav navbar-right">
-                        <li class="nav-item"><t:pagelink page="login" class="nav-link">${message:navbar.login}</t:pagelink></li>
+                        <li><t:pagelink page="login" class="nav-link">${message:navbar.login}</t:pagelink></li>
                     </ul>
                 </p:else>
             </t:security.user>

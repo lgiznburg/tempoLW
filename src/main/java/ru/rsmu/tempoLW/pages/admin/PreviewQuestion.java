@@ -16,6 +16,7 @@ import java.util.List;
 /**
  * @author leonid.
  */
+//@Import( stylesheet = {"context:/static/js/KaTeX/katex.css"})
 public class PreviewQuestion {
 
     @Inject
@@ -35,6 +36,22 @@ public class PreviewQuestion {
     @Path( "context:/static/js/myMathJaxConfig.js" )
     private Asset mathJaxConfig;
 
+    @Inject
+    @Path("context:/static/js/KaTeX/katex.js")
+    private Asset KaTeX;
+
+    @Inject
+    @Path( "context:/static/js/KaTeX/contrib/auto-render.js" )
+    private Asset autoRender;
+
+    @Inject
+    @Path( "context:/static/js/KaTeX/katex.css" )
+    private Asset katexCss;
+
+    @Inject
+    @Path( "context:/static/js/KaTeX/katexRun.js" )
+    private Asset katexRun;
+
     @Environmental
     private JavaScriptSupport javaScriptSupport;
 
@@ -42,6 +59,11 @@ public class PreviewQuestion {
         javaScriptSupport.importJavaScriptLibrary( mathJaxConfig );
         javaScriptSupport.importJavaScriptLibrary( mathJax );
         //javaScriptSupport.importJavaScriptLibrary( "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML" );
+
+        //javaScriptSupport.importJavaScriptLibrary( /*KaTeX*/ "https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/katex.js" );
+        //javaScriptSupport.importJavaScriptLibrary( /*autoRender*/ "https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/contrib/auto-render.min.js" );
+        //javaScriptSupport.importStylesheet( katexCss );
+        //javaScriptSupport.importJavaScriptLibrary( katexRun );
     }
 
     public Object  onActivate( EventContext context ) {

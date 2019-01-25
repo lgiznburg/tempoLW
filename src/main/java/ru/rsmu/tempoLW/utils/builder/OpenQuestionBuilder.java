@@ -31,7 +31,7 @@ public class OpenQuestionBuilder extends QuestionBuilder {
                 break; // empty row
             }
             String rowType = getCellValue( row, COLUMN_ROW_TYPE );
-            if ( rowType.equalsIgnoreCase( ANSWER_ROW ) ) {
+            if ( ANSWER_ROW.equalsIgnoreCase( rowType ) ) {
                 AnswerVariant answerVariant = new AnswerVariant();
                 answerVariant.setText( getCellValue( row, COLUMN_TEXT ) );
                 answerVariant.setCorrect( true );

@@ -40,7 +40,9 @@ public class EditSubject {
     }
 
     public void onPrepareForSubmit() {
-        subject = questionDao.find( TestSubject.class, subjectId );
+        if ( subjectId != null ) {
+            subject = questionDao.find( TestSubject.class, subjectId );
+        }
 
         if ( subject == null ) {
             subject = new TestSubject();

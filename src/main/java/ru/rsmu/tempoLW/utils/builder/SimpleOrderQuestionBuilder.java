@@ -2,16 +2,16 @@ package ru.rsmu.tempoLW.utils.builder;
 
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
-import ru.rsmu.tempoLW.dao.QuestionDao;
-import ru.rsmu.tempoLW.entities.*;
+import ru.rsmu.tempoLW.entities.AnswerVariant;
+import ru.rsmu.tempoLW.entities.QuestionSimple;
 
 import java.util.LinkedList;
 
 /**
  * @author leonid.
  */
-public class SimpleQuestionBuilder extends QuestionBuilder {
-    protected SimpleQuestionBuilder() {
+public class SimpleOrderQuestionBuilder extends QuestionBuilder{
+    protected SimpleOrderQuestionBuilder() {
     }
 
     @Override
@@ -22,6 +22,7 @@ public class SimpleQuestionBuilder extends QuestionBuilder {
         Row row = sheet.getRow( rowN );
         question.setText( getCellValue( row, COLUMN_TEXT ) );
 
+        int answerOrder = 1;
         do {
             row = sheet.getRow( ++rowN );
             if ( row == null || row.getCell( COLUMN_ROW_TYPE ) == null ) {
@@ -33,6 +34,9 @@ public class SimpleQuestionBuilder extends QuestionBuilder {
                 answerVariant.setText( getCellValue( row, COLUMN_TEXT ) );
                 answerVariant.setCorrect( getCellNumber( row, COLUMN_RIGHTNESS ) != null );
                 answerVariant.setQuestion( question );
+                if ( answerVariant.isCorrect() ) {
+                    answerVariant.setSequenceOrder( answerOrder++ );
+                }
                 question.getAnswerVariants().add( answerVariant );
             }
             else {

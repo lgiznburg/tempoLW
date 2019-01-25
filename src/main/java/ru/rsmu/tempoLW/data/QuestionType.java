@@ -7,6 +7,7 @@ public enum QuestionType {
     SIMPLE,
     OPEN,
     CORRESPONDENCE,
+    SIMPLE_ORDER,
     COMPLEX,
     SEQUENCE
 }

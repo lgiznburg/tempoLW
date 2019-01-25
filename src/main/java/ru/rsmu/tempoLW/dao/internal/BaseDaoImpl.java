@@ -12,7 +12,7 @@ import java.util.List;
  * @author leonid.
  */
 @SuppressWarnings( "unchecked" )
-public class ImplBaseDao implements BaseDao {
+public class BaseDaoImpl implements BaseDao {
     @Inject
     protected Session session;
 

@@ -13,7 +13,7 @@ import java.util.List;
  * @author leonid.
  */
 @Entity
-@Table(name = "user")
+@Table(name = "t_user")  // "user" is a key word in MsSQL
 public class User {
     private static final long serialVersionUID = 5682601783979092294L;
 
@@ -21,13 +21,21 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY )
     private long id;
 
-    @Column
+    @Column(unique = true)
     @Email
-    @Index( name = "username_index")
     private String username;
 
     @Column
     private String password;
+
+    @Column
+    private String firstName;
+
+    @Column
+    private String middleName;
+
+    @Column
+    private String lastName;
 
     @Column
     private boolean enabled = true;
@@ -80,5 +88,29 @@ public class User {
 
     public void setRoles( List<UserRole> roles ) {
         this.roles = roles;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName( String firstName ) {
+        this.firstName = firstName;
+    }
+
+    public String getMiddleName() {
+        return middleName;
+    }
+
+    public void setMiddleName( String middleName ) {
+        this.middleName = middleName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName( String lastName ) {
+        this.lastName = lastName;
     }
 }

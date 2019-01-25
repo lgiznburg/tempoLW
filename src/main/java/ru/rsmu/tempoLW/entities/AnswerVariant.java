@@ -1,6 +1,7 @@
 package ru.rsmu.tempoLW.entities;
 
 import org.apache.tapestry5.beaneditor.Validate;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -23,6 +24,10 @@ public class AnswerVariant implements Serializable, Comparable<AnswerVariant> {
 
     @Column
     private boolean correct = false;
+
+    @Column(name = "sequence_order")
+    @ColumnDefault( "0" )
+    private int sequenceOrder = 0;
 
     @ManyToOne
     private Question question;
@@ -60,6 +65,14 @@ public class AnswerVariant implements Serializable, Comparable<AnswerVariant> {
 
     public void setQuestion( Question question ) {
         this.question = question;
+    }
+
+    public int getSequenceOrder() {
+        return sequenceOrder;
+    }
+
+    public void setSequenceOrder( int sequenceOrder ) {
+        this.sequenceOrder = sequenceOrder;
     }
 
     @Override

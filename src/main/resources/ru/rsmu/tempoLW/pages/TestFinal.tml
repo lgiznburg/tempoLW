@@ -2,55 +2,70 @@
       xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
       xmlns:p="tapestry:parameter">
 
-<h2 class="align-center">Тестирование: ${testResult.testingPlan.subject.title} (${testResult.testingPlan.name})</h2>
-
 <div class="row">
-    <div class="col-sm-2 col-sm-offset-4">Баллы</div>
+    <h2 class="align-center">${message:testing-header} ${testResult.testingPlan.subject.title}
+    (${testResult.testingPlan.name})</h2>
 </div>
 
-<t:loop source="testResult.questionResults" value="questionResult">
-    <div class="row">
-    <t:if test="testResult.finished" >
-        <div class="col-sm-8">Вопрос № ${questionResult.viewNumber}. ${questionResult.question.questionInfo.name}</div>
-        <div class="col-sm-2">${questionResult.score}</div>
 
-        <p:else>
-            <div class="col-sm-8">
-                <t:pagelink page="testwizard" context="questionResult.orderNumber">Вопрос № ${questionResult.viewNumber}. ${questionResult.question.questionInfo.name}</t:pagelink>
-            </div>
-            <div class="col-sm-2">
-                <t:if test="questionResult.answered">
-                    <span class="glyphicon glyphicon-ok"></span>
+<div class="container text-lg" id="questionView">
+    <table class="table table-hover text-lg">
+        <tr>
+            <th>${message:question-column}</th>
+            <t:if test="testResult.finished">
+                <th>${message:score-column}</th>
+                <th>${message:mark-column}</th>
+                <p:else>
+                    <th>${message:answered-column}</th>
+                </p:else>
+            </t:if>
+        </tr>
+        <t:loop source="testResult.questionResults" value="questionResult">
+            <tr>
+                <t:if test="testResult.finished" >
+                    <td>${message:question-num} ${questionResult.viewNumber}. ${questionResult.question.questionInfo.name}</td>
+                    <td>${questionResult.score}</td>
+                    <td>${questionResult.mark}</td>
+
                     <p:else>
-                        <span class="glyphicon glyphicon-remove"></span>
+                        <td>
+                            <t:pagelink page="testwizard" context="questionResult.orderNumber">${message:question-num} ${questionResult.viewNumber}. ${questionResult.question.questionInfo.name}</t:pagelink>
+                        </td>
+                        <td>
+                            <t:if test="questionResult.answered">
+                                <span class="glyphicon glyphicon-ok"></span>
+                                <!--<p:else>
+                                    <span class="glyphicon glyphicon-minus"></span>
+                                </p:else>-->
+                            </t:if>
+                        </td>
                     </p:else>
                 </t:if>
-            </div>
-        </p:else>
-    </t:if>
-    </div>
-</t:loop>
+            </tr>
+        </t:loop>
+        <t:if test="testResult.finished">
+            <tr class="info">
+                <td>${message:final-mark}</td>
+                <td>&nbsp;</td>
+                <td>${testResult.markTotal}</td>
+            </tr>
+        </t:if>
+    </table>
+</div>
 
 
-<t:if test="testResult.finished">
-    <div class="row">
-        <div class="col-sm-8">Общая оценка</div>
-        <div class="col-sm-2">${testResult.markTotal}</div>
-    </div>
-    <div class="row">
 
+    <div class="row subquestion-nav">
         <div class="col-sm-4 col-sm-offset-2">
-            <t:pagelink page="index" class="btn btn-default">${message:go-home}</t:pagelink>
+            <t:if test="testResult.finished">
+                <t:pagelink page="index" class="btn btn-default">${message:go-home}</t:pagelink>
+                <p:else>
+                    <t:actionlink t:id="finish" class="btn btn-primary">${message:test-finish}</t:actionlink>
+                </p:else>
+            </t:if>
         </div>
-
     </div>
 
-    <p:else>
-        <div class="col-sm-4 col-sm-offset-2">
-            <t:actionlink t:id="finish" class="btn btn-primary">${message:test-finish}</t:actionlink>
-        </div>
-    </p:else>
-</t:if>
 
 
 </html>

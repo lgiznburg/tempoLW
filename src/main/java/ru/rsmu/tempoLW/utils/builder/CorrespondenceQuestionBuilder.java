@@ -33,7 +33,7 @@ public class CorrespondenceQuestionBuilder extends QuestionBuilder {
                 break; // empty row
             }
             String rowType = getCellValue( row, COLUMN_ROW_TYPE );
-            if ( rowType.equalsIgnoreCase( CORRESPONDENCE_ROW ) ) {
+            if ( CORRESPONDENCE_ROW.equalsIgnoreCase( rowType ) ) {
                 CorrespondenceVariant variant = new CorrespondenceVariant();
                 variant.setCorrectAnswers( new LinkedList<>() );
                 variant.setText( getCellValue( row, COLUMN_TEXT ) );
@@ -42,7 +42,7 @@ public class CorrespondenceQuestionBuilder extends QuestionBuilder {
                 String code = getCellValue( row, COLUMN_CODE );
                 variantMap.put( code, variant );
             }
-            else if ( rowType.equalsIgnoreCase( ANSWER_ROW ) ) {
+            else if ( ANSWER_ROW.equalsIgnoreCase( rowType ) ) {
                 AnswerVariant answerVariant = new AnswerVariant();
                 answerVariant.setText( getCellValue( row, COLUMN_TEXT ) );
                 answerVariant.setQuestion( question );

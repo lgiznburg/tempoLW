@@ -5,9 +5,14 @@
 
         <t:loop source="rows" t:id="correspondence" encoder="rowEncoder" value="row">
             <div class="form-group">
-                <div class="col-sm-4 text-lg">${row.correspondenceVariant.text}</div>
-                <div class="col-sm-8 text-lg">
-                    <t:checklist t:id="simpleAnswers" model="answerModel" selected="row.selectedAnswers" encoder="answerEncoder" />
+                <div class="col-sm-4 qc-variant-text">${row.correspondenceVariant.text}</div>
+                <div class="col-sm-8">
+                    <div style="display: flex;">
+                        <div class="qso-element-div">
+                            <t:checklist t:id="simpleAnswers" model="answerModel" selected="row.selectedAnswers"
+                                         encoder="answerEncoder"/>
+                        </div>
+                    </div>
                 </div>
             </div>
 

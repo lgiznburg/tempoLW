@@ -47,8 +47,8 @@
                 <tr>
                     <td>${rule.topic.title}</td>
                     <td>${rule.complexity}</td>
-                    <td><t:textfield t:id="questionCountField1" value="rule.questionCount"/></td>
-                    <td><t:textfield t:id="scoreCostField" value="rule.scoreCost"/></td>
+                    <td><t:textfield t:id="questionCountFieldAdd" value="rule.questionCount"/></td>
+                    <td><t:textfield t:id="scoreCostFieldAdd" value="rule.scoreCost"/></td>
                 </tr>
             </t:loop>
             </tbody>

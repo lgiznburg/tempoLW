@@ -57,11 +57,14 @@ public class QuestionSimpleForm {
     }
 
     public void onSuccess() {
+        // create elements if not exist
         if ( questionResult.getElements() == null ) {
             questionResult.setElements( new LinkedList<>() );
         }
+        // collect existed results for question result
         List<AnswerVariant> existedAnswers = new LinkedList<>();
         existedAnswers.addAll( questionResult.getElements().stream().map( element -> ((ResultSimple) element).getAnswerVariant() ).collect( Collectors.toList() )  );
+        //check if existed result is still checked, and remove it if it's needed
         for ( Iterator<ResultElement> elementIt = questionResult.getElements().iterator(); elementIt.hasNext(); ) {
             ResultElement element = elementIt.next();
             if ( !selectedAnswers.contains( ((ResultSimple)element).getAnswerVariant() ) ) {
@@ -69,6 +72,7 @@ public class QuestionSimpleForm {
                 elementIt.remove();
             }
         }
+        // add checked answer to result list
         for ( AnswerVariant variant : selectedAnswers ) {
             if ( !existedAnswers.contains( variant ) ) {
                 ResultSimple resultSimple = new ResultSimple();
