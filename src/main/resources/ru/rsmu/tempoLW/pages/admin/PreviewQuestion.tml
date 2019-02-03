@@ -4,6 +4,22 @@
 <body>
     <t:questionpreview question="question"/>
 
-    <t:pagelink page="admin/previewquestion" context="[subject,question]" class="btn btn-default">Next question</t:pagelink>
+    <!--<t:pagelink page="admin/previewquestion" context="[subject,question]" class="btn btn-default">Next question</t:pagelink>-->
+
+    <div class="row subquestion-nav">
+        <div class="col-sm-4 text-left">
+                <t:eventlink event="prevQuestion" class="btn btn-default">Previous question</t:eventlink>
+        </div>
+        <t:security.hasAnyRoles roles="admin,subject_admin">
+            <div class="col-sm-4 text-center">
+                <t:pagelink page="admin/question/questionedit" context="question" class="btn btn-default">Edit question</t:pagelink>
+            </div>
+        </t:security.hasAnyRoles>
+        <div class="col-sm-4 text-right">
+                <t:eventlink event="nextQuestion" class="btn btn-default">Next question</t:eventlink>
+        </div>
+
+    </div>
+
 </body>
 </html>

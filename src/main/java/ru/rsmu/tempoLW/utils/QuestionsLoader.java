@@ -25,6 +25,8 @@ public class QuestionsLoader extends ExcelLayout {
     private Workbook wb;
     private List<String> warning;
 
+    private ImagesExtractor imagesExtractor;
+
     public QuestionsLoader( QuestionDao questionDao, TestSubject subject ) {
         this.questionDao = questionDao;
         this.subject = subject;
@@ -50,13 +52,15 @@ public class QuestionsLoader extends ExcelLayout {
         do {
             Row row = sheet.getRow( rowN );
             // check if row is valid
-            if ( row == null || row.getCell( (short) 0 ) == null ) {
+            if ( row == null || row.getCell( COLUMN_ROW_TYPE ) == null ||
+                    getCellValue( row, COLUMN_ROW_TYPE ) == null ) {
                 if ( ignoreEmptyRow ) {
                     rowN++;
                     ignoreEmptyRow = false;
                     continue;
                 }
                 else {
+                    warning.add( String.format( "End reached: Line %d.", rowN ) );
                     break;
                 }
             }
@@ -126,5 +130,15 @@ public class QuestionsLoader extends ExcelLayout {
         return questionInfo;
     }
 
+    public ImagesExtractor getImagesExtractor() {
+        return imagesExtractor;
+    }
 
+    public void setImagesExtractor( ImagesExtractor imagesExtractor ) {
+        this.imagesExtractor = imagesExtractor;
+    }
+
+    public List<String> getWarning() {
+        return warning;
+    }
 }

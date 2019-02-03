@@ -7,7 +7,7 @@ import org.apache.tapestry5.ioc.annotations.Inject;
 import ru.rsmu.tempoLW.dao.QuestionDao;
 import ru.rsmu.tempoLW.entities.TestResult;
 import ru.rsmu.tempoLW.entities.TestingPlan;
-import ru.rsmu.tempoLW.utils.TestBuilder;
+import ru.rsmu.tempoLW.utils.ExamBuilder;
 
 import java.util.Date;
 
@@ -32,7 +32,7 @@ public class StartTest {
                 testResult.getQuestionResults() != null ) {
             return TestFinal.class;  // test has been already created and not finished
         }
-        testResult = new TestBuilder( questionDao ).buildTestVariant( testingPlan );
+        testResult = new ExamBuilder( questionDao ).buildTestVariant( testingPlan );
         testResult.setStartTime( new Date() );  //set now
         return null;
     }

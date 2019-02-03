@@ -2,7 +2,10 @@ package ru.rsmu.tempoLW.components;
 
 import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.annotations.Property;
+import org.apache.tapestry5.internal.services.LinkSource;
+import org.apache.tapestry5.ioc.annotations.Inject;
 import ru.rsmu.tempoLW.entities.*;
+import ru.rsmu.tempoLW.pages.QuestionImage;
 
 /**
  * @author leonid.
@@ -12,6 +15,9 @@ public class QuestionForm {
     @Parameter(required = true)
     @Property
     private QuestionResult current;
+
+    @Inject
+    private LinkSource linkSource;
 
     public boolean isQuestionSimple() {
         return current.getQuestion() instanceof QuestionSimple;
@@ -25,7 +31,7 @@ public class QuestionForm {
         return current.getQuestion() instanceof QuestionCorrespondence;
     }
 
-   public boolean isQuestionSimpleOrder() {
+    public boolean isQuestionSimpleOrder() {
         return current.getQuestion() instanceof QuestionSimpleOrder;
     }
 
@@ -33,4 +39,10 @@ public class QuestionForm {
         return current.getOrderNumber() + 1;
     }
 
+    public String getImageLink() {
+        if ( current.getQuestion().getImage() != null ) {
+            return linkSource.createPageRenderLink( QuestionImage.class.getSimpleName(), false, current.getQuestion().getImage().getId() ).toURI();
+        }
+        return "";
+    }
 }

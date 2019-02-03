@@ -1,7 +1,10 @@
 package ru.rsmu.tempoLW.components;
 
 import org.apache.tapestry5.annotations.Parameter;
+import org.apache.tapestry5.internal.services.LinkSource;
+import org.apache.tapestry5.ioc.annotations.Inject;
 import ru.rsmu.tempoLW.entities.*;
+import ru.rsmu.tempoLW.pages.QuestionImage;
 
 import java.util.Collections;
 import java.util.LinkedList;
@@ -18,6 +21,9 @@ public class QuestionPreview {
     private AnswerVariant answer;
 
     private CorrespondenceVariant correspondence;
+
+    @Inject
+    private LinkSource linkSource;
 
     public Question getQuestion() {
         return question;
@@ -87,5 +93,12 @@ public class QuestionPreview {
 
     public boolean isQuestionSimpleOrder() {
         return question instanceof QuestionSimpleOrder;
+    }
+
+    public String getImageLink() {
+        if ( question.getImage() != null ) {
+            return linkSource.createPageRenderLink(QuestionImage.class.getSimpleName(), false, question.getImage().getId() ).toURI();
+        }
+        return "";
     }
 }

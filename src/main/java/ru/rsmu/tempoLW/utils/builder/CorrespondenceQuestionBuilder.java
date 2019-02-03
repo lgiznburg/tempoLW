@@ -25,6 +25,11 @@ public class CorrespondenceQuestionBuilder extends QuestionBuilder {
         Row row = sheet.getRow( rowN );
         question.setText( getCellValue( row, COLUMN_TEXT ) );
 
+        UploadedImage uploadedImage = checkUploadedImage( row );
+        if ( uploadedImage != null ) {
+            question.setImage( uploadedImage );
+        }
+
         Map<String, CorrespondenceVariant> variantMap = new HashMap<>();
 
         do {
@@ -39,6 +44,10 @@ public class CorrespondenceQuestionBuilder extends QuestionBuilder {
                 variant.setText( getCellValue( row, COLUMN_TEXT ) );
                 variant.setQuestion( question );
                 question.getCorrespondenceVariants().add( variant );
+                uploadedImage = checkUploadedImage( row );
+                if ( uploadedImage != null ) {
+                    variant.setImage( uploadedImage );
+                }
                 String code = getCellValue( row, COLUMN_CODE );
                 variantMap.put( code, variant );
             }
@@ -47,6 +56,12 @@ public class CorrespondenceQuestionBuilder extends QuestionBuilder {
                 answerVariant.setText( getCellValue( row, COLUMN_TEXT ) );
                 answerVariant.setQuestion( question );
                 question.getAnswerVariants().add( answerVariant );
+
+                uploadedImage = checkUploadedImage( row );
+                if ( uploadedImage != null ) {
+                    answerVariant.setImage( uploadedImage );
+                }
+
                 String correct = getCellValue( row, COLUMN_RIGHTNESS );
                 if ( correct != null && !correct.isEmpty() ) {
                     String[] codes = correct.split( "," );

@@ -8,10 +8,10 @@ import java.util.LinkedList;
 /**
  * @author leonid.
  */
-public class TestBuilder {
+public class ExamBuilder {
     private QuestionDao questionDao;
 
-    public TestBuilder( QuestionDao questionDao ) {
+    public ExamBuilder( QuestionDao questionDao ) {
         this.questionDao = questionDao;
     }
 

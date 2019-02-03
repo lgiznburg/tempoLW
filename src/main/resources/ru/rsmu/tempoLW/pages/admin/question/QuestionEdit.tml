@@ -1,0 +1,69 @@
+<html t:type="layout" t:pageTitle="Администрирование:Редактирование предмета"
+      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
+      xmlns:p="tapestry:parameter">
+<div class="row">
+    <h2>${question.questionInfo.subject.title} : Edit Question </h2>
+</div>
+
+<div>
+    <t:form class="form-horizontal" t:id="questionForm" validate="question">
+        <div class="form-group">
+            <t:label for="subTopic" class="col-sm-3"/>
+            <div class="col-sm-6">
+                <t:select t:id="subTopic" value="question.questionInfo.topic" model="topicModel" encoder="topicEncoder"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <t:label for="questionName" class="col-sm-3"/>
+            <div class="col-sm-6">
+                <t:textfield t:id="questionName" value="question.questionInfo.name"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <t:label for="complexity" class="col-sm-3"/>
+            <div class="col-sm-6">
+                <t:select t:id="complexity" value="question.questionInfo.complexity" model="literal:1,2,3,4,5"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <t:label for="maxScore" class="col-sm-3"/>
+            <div class="col-sm-6">
+                <t:select t:id="maxScore" value="question.questionInfo.maxScore" model="literal:1,2,3,4,5"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <t:label for="questionText" class="col-sm-3"/>
+            <div class="col-sm-6">
+                <t:textarea t:id="questionText" value="question.text" />
+            </div>
+        </div>
+        <t:if test="question.image">
+            <div class="row">
+                <div class="col-sm-6 col-sm-offset-3">
+                    <img src="${imageLink}"/>
+                </div>
+            </div>
+        </t:if>
+        <div class="form-group">
+            <t:label for="questionImage" class="col-sm-3"/>
+            <div class="col-sm-6">
+                <input t:type="upload" t:id="questionImage" t:value="imageFile" style="height: auto;"/>
+            </div>
+            <t:if test="question.image">
+                <div class="col-sm-3">
+                    <t:eventlink t:id="deleteImage" event="deleteImage" class="btn btn-default">Delete image</t:eventlink>
+                </div>
+            </t:if>
+
+        </div>
+
+        <div class="form-group">
+            <div class="col-sm-6 col-sm-offset-3">
+                <input type="submit" class="btn btn-primary" value="Save"/>&nbsp;
+                <t:pagelink page="admin/previewquestion" context="[question.questionInfo.subject,question]" class="btn btn-default">Cancel</t:pagelink>
+            </div>
+        </div>
+    </t:form>
+
+</div>
+</html>

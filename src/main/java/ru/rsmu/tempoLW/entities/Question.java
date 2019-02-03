@@ -37,6 +37,10 @@ public abstract class Question implements Serializable {
     @Type( type = "org.hibernate.type.TextType" )
     private String text;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "uploaded_image_id")
+    private UploadedImage image;
+
     public long getId() {
         return id;
     }
@@ -74,6 +78,14 @@ public abstract class Question implements Serializable {
 
     public void setText( String text ) {
         this.text = text;
+    }
+
+    public UploadedImage getImage() {
+        return image;
+    }
+
+    public void setImage( UploadedImage image ) {
+        this.image = image;
     }
 
     abstract public int countErrors( List<ResultElement> elements );

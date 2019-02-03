@@ -27,9 +27,15 @@
                         <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" id="userDropdown" aria-expanded="false">
                         ${message:navbar.welcome} ${username}. <span class="caret"/></a>
                         <ul class="dropdown-menu bg-light" aria-labelledby="userDropdown">
-                            <li><t:pagelink page="admin/subjects">${message:navbar.admin.subjects}</t:pagelink></li>
-                            <li><t:pagelink page="admin/testingplan/testingplanlist">${message:navbar.admin.testingplans}</t:pagelink></li>
-                            <li role="separator" class="divider"></li>
+                            <t:security.hasAnyRoles roles="admin,subject_admin,teacher">
+                                <li><t:pagelink page="admin/subjects">${message:navbar.admin.subjects}</t:pagelink></li>
+                                <li><t:pagelink page="admin/testingplan/testingplanlist">${message:navbar.admin.testingplans}</t:pagelink></li>
+                                <li role="separator" class="divider"></li>
+                            </t:security.hasAnyRoles>
+                            <t:security.hasRole role="admin">
+                                <li><t:pagelink page="admin/users">${message:navbar.admin.users}</t:pagelink></li>
+                                <li role="separator" class="divider"></li>
+                            </t:security.hasRole>
                             <li><t:eventlink event="logout">${message:navbar.logout}</t:eventlink></li>
 
                         </ul>

@@ -3,10 +3,7 @@ package ru.rsmu.tempoLW.utils.builder;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import ru.rsmu.tempoLW.dao.QuestionDao;
-import ru.rsmu.tempoLW.entities.AnswerVariant;
-import ru.rsmu.tempoLW.entities.Question;
-import ru.rsmu.tempoLW.entities.QuestionOpen;
-import ru.rsmu.tempoLW.entities.TestSubject;
+import ru.rsmu.tempoLW.entities.*;
 
 import java.util.LinkedList;
 
@@ -24,6 +21,11 @@ public class OpenQuestionBuilder extends QuestionBuilder {
 
         Row row = sheet.getRow( rowN );
         question.setText( getCellValue( row, COLUMN_TEXT ) );
+
+        UploadedImage uploadedImage = checkUploadedImage( row );
+        if ( uploadedImage != null ) {
+            question.setImage( uploadedImage );
+        }
 
         do {
             row = sheet.getRow( ++rowN );

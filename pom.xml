@@ -152,6 +152,11 @@ of testing facilities designed for use with TestNG (http://testng.org/), so it's
             <version>4.0.0</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.8.1</version>
+        </dependency>
 
         <!-- Integration with Apache Shiro -->
         <dependency>

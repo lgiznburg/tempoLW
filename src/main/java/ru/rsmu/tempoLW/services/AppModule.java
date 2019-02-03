@@ -95,7 +95,8 @@ public class AppModule {
 
     public static void contributeSecurityConfiguration(OrderedConfiguration<SecurityFilterChain> configuration,
                                                        SecurityFilterChainFactory factory) {
-        configuration.add("admin", factory.createChain("/admin/**").add(factory.roles(),"admin").build());
+        configuration.add( "admin-users", factory.createChain( "/admin/users*/**" ).add( factory.roles(), "admin" ).build() );
+        configuration.add("admin-admin", factory.createChain("/admin/**").add( factory.user() ).build());
         configuration.add("loginform-anon",
                 factory.createChain("/login.loginform.tynamologinform").add(factory.anon()).build());
         configuration.add("anon", factory.createChain("/**").add(factory.anon()).build());

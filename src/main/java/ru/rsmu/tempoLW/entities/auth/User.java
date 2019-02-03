@@ -7,6 +7,7 @@ import org.hibernate.validator.constraints.Email;
 import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -14,7 +15,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "t_user")  // "user" is a key word in MsSQL
-public class User {
+public class User implements Serializable {
     private static final long serialVersionUID = 5682601783979092294L;
 
     @Id
@@ -112,5 +113,15 @@ public class User {
 
     public void setLastName( String lastName ) {
         this.lastName = lastName;
+    }
+
+    @Transient
+    public boolean isUserInRole( UserRoleName roleName ) {
+        for ( UserRole role : roles ) {
+            if ( role.getRoleName() == roleName ) {
+                return true;
+            }
+        }
+        return false;
     }
 }

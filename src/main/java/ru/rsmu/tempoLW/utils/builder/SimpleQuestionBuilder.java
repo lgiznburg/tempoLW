@@ -22,6 +22,11 @@ public class SimpleQuestionBuilder extends QuestionBuilder {
         Row row = sheet.getRow( rowN );
         question.setText( getCellValue( row, COLUMN_TEXT ) );
 
+        UploadedImage uploadedImage = checkUploadedImage( row );
+        if ( uploadedImage != null ) {
+            question.setImage( uploadedImage );
+        }
+
         do {
             row = sheet.getRow( ++rowN );
             if ( row == null || row.getCell( COLUMN_ROW_TYPE ) == null ) {
@@ -34,6 +39,10 @@ public class SimpleQuestionBuilder extends QuestionBuilder {
                 answerVariant.setCorrect( getCellNumber( row, COLUMN_RIGHTNESS ) != null );
                 answerVariant.setQuestion( question );
                 question.getAnswerVariants().add( answerVariant );
+                uploadedImage = checkUploadedImage( row );
+                if ( uploadedImage != null ) {
+                    answerVariant.setImage( uploadedImage );
+                }
             }
             else {
                 break;

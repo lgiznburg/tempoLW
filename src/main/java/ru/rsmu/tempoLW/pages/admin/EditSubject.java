@@ -1,5 +1,7 @@
 package ru.rsmu.tempoLW.pages.admin;
 
+import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.tapestry5.annotations.InjectComponent;
 import org.apache.tapestry5.annotations.PageActivationContext;
 import org.apache.tapestry5.annotations.Property;
@@ -12,6 +14,7 @@ import javax.inject.Inject;
 /**
  * @author leonid.
  */
+@RequiresRoles(value = {"admin","subject_admin"}, logical = Logical.OR )
 public class EditSubject {
     @Property
     @PageActivationContext

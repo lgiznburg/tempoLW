@@ -26,6 +26,7 @@ public abstract class ExcelLayout {
     public static short COLUMN_CODE = 7;
     public static short COLUMN_TEXT = 8;
     public static short COLUMN_RIGHTNESS = 9;
+    public static short COLUMN_IMAGE = 10;
 
     protected String getCellValue( Row row, short cellN ) {
         Cell cell = row.getCell( cellN );

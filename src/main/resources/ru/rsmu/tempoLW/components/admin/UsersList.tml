@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<t:container xmlns="http://www.w3.org/1999/xhtml" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd" xmlns:p="tapestry:parameter">
+
+    <div id="usersList">
+        <t:grid t:id="usersGrid" source="usersDataSource" row="user"
+                exclude="id,username,firstName,middleName,lastName,password,enabled,roles"
+                add="name" class="table table-bordered table-hover"
+                rowsPerPage="25" pagerPosition="bottom"
+                empty="block:emptyUsers">
+            <p:nameCell>
+                <t:eventLink event="userSelected" context="user.id" class="prop:linkCssClass">
+                    ${user.firstName} ${user.middleName} ${user.lastName}
+                </t:eventLink>
+            </p:nameCell>
+        </t:grid>
+
+        <t:block t:id="emptyUsers">
+            <div id="noUsers">No users found</div>
+        </t:block>
+    </div>
+
+</t:container>

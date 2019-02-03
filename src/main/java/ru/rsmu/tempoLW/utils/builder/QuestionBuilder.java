@@ -6,7 +6,11 @@ import ru.rsmu.tempoLW.dao.QuestionDao;
 import ru.rsmu.tempoLW.entities.Question;
 import ru.rsmu.tempoLW.entities.QuestionInfo;
 import ru.rsmu.tempoLW.entities.TestSubject;
+import ru.rsmu.tempoLW.entities.UploadedImage;
 import ru.rsmu.tempoLW.utils.ExcelLayout;
+import ru.rsmu.tempoLW.utils.ImagesExtractor;
+
+import java.awt.*;
 
 /**
  * @author leonid.
@@ -15,6 +19,7 @@ public abstract class QuestionBuilder extends ExcelLayout {
 
     protected Question result;
 
+    protected ImagesExtractor imagesExtractor;
 
     public static QuestionBuilder create( String questionType ) throws IllegalArgumentException {
         if ( questionType.equalsIgnoreCase( SIMPLE_TYPE ) ) {
@@ -36,5 +41,28 @@ public abstract class QuestionBuilder extends ExcelLayout {
 
     public Question getResult() {
         return result;
+    }
+
+    public ImagesExtractor getImagesExtractor() {
+        return imagesExtractor;
+    }
+
+    public void setImagesExtractor( ImagesExtractor imagesExtractor ) {
+        this.imagesExtractor = imagesExtractor;
+    }
+
+    public UploadedImage checkUploadedImage( Row row ) {
+        String imageName = getCellValue( row, COLUMN_IMAGE );
+        if ( imageName != null && !imageName.isEmpty() ) {
+            byte[] picture = imagesExtractor.getPicture( imageName );
+            if ( picture != null ) {
+                UploadedImage uploadedImage = new UploadedImage();
+                uploadedImage.setSourceName( imageName );
+                uploadedImage.setPicture( picture );
+                uploadedImage.setContentType( imagesExtractor.getContentType( imageName ) );
+                return uploadedImage;
+            }
+        }
+        return null;
     }
 }

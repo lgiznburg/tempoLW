@@ -32,6 +32,10 @@ public class AnswerVariant implements Serializable, Comparable<AnswerVariant> {
     @ManyToOne
     private Question question;
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "uploaded_image_id")
+    private UploadedImage image;
+
     @Transient
     private int sortOrder = 0;
 
@@ -73,6 +77,14 @@ public class AnswerVariant implements Serializable, Comparable<AnswerVariant> {
 
     public void setSequenceOrder( int sequenceOrder ) {
         this.sequenceOrder = sequenceOrder;
+    }
+
+    public UploadedImage getImage() {
+        return image;
+    }
+
+    public void setImage( UploadedImage image ) {
+        this.image = image;
     }
 
     @Override

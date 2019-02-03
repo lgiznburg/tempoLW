@@ -61,10 +61,29 @@ public class QuestionDaoImpl extends BaseDaoImpl implements QuestionDao {
     }
 
     @Override
+    public Question findPrevQuestion( long id, TestSubject subject ) {
+        if ( id <= 0 ) return null;
+        Criteria criteria = session.createCriteria( Question.class )
+                .createAlias( "questionInfo", "questionInfo" )
+                .add( Restrictions.eq( "questionInfo.subject", subject ) )
+                .addOrder( Order.desc( "id" ) )
+                .add( Restrictions.lt( "id", id ) )
+                .setMaxResults( 1 );
+        return (Question) criteria.uniqueResult();
+    }
+
+    @Override
     @SuppressWarnings( "unchecked" )
     public List<TestingPlan> findTestingPlans() {
         Criteria criteria = session.createCriteria( TestingPlan.class )
                 .add( Restrictions.eq( "enabled", true ) );
+        return criteria.list();
+    }
+
+    @Override
+    public List<SubTopic> findTopicsOfSubject( TestSubject subject ) {
+        Criteria criteria = session.createCriteria( SubTopic.class )
+                .add( Restrictions.eq( "subject", subject ) );
         return criteria.list();
     }
 

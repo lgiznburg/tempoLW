@@ -30,6 +30,10 @@ public class CorrespondenceVariant implements Serializable, Comparable<Correspon
     )
     private List<AnswerVariant> correctAnswers = new ArrayList<>();
 
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "uploaded_image_id")
+    private UploadedImage image;
+
     @ManyToOne
     private Question question;
 
@@ -66,6 +70,14 @@ public class CorrespondenceVariant implements Serializable, Comparable<Correspon
 
     public void setQuestion( Question question ) {
         this.question = question;
+    }
+
+    public UploadedImage getImage() {
+        return image;
+    }
+
+    public void setImage( UploadedImage image ) {
+        this.image = image;
     }
 
     @Override

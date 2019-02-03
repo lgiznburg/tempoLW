@@ -4,6 +4,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import ru.rsmu.tempoLW.entities.AnswerVariant;
 import ru.rsmu.tempoLW.entities.QuestionSimple;
+import ru.rsmu.tempoLW.entities.UploadedImage;
 
 import java.util.LinkedList;
 
@@ -22,6 +23,11 @@ public class SimpleOrderQuestionBuilder extends QuestionBuilder{
         Row row = sheet.getRow( rowN );
         question.setText( getCellValue( row, COLUMN_TEXT ) );
 
+        UploadedImage uploadedImage = checkUploadedImage( row );
+        if ( uploadedImage != null ) {
+            question.setImage( uploadedImage );
+        }
+
         int answerOrder = 1;
         do {
             row = sheet.getRow( ++rowN );
@@ -38,6 +44,10 @@ public class SimpleOrderQuestionBuilder extends QuestionBuilder{
                     answerVariant.setSequenceOrder( answerOrder++ );
                 }
                 question.getAnswerVariants().add( answerVariant );
+                uploadedImage = checkUploadedImage( row );
+                if ( uploadedImage != null ) {
+                    answerVariant.setImage( uploadedImage );
+                }
             }
             else {
                 break;
