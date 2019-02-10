@@ -20,7 +20,7 @@ public class TestWizard {
 
     @Property
     @SessionState
-    private TestResult testResult;
+    private ExamResult examResult;
 
     @Inject
     private QuestionDao questionDao;
@@ -45,15 +45,15 @@ public class TestWizard {
     }
 
     public Object onActivate() {
-        if ( testResult == null || testResult.getQuestionResults() == null ) {
+        if ( examResult == null || examResult.getQuestionResults() == null ) {
             return Index.class;
         }
         if ( questionNumber < 0 ||
-                questionNumber >= testResult.getQuestionResults().size() ) {
+                questionNumber >= examResult.getQuestionResults().size() ) {
             // check out of bounds
             questionNumber = 0;
         }
-        current = testResult.getQuestionResults().get( questionNumber );
+        current = examResult.getQuestionResults().get( questionNumber );
         if ( current.getElements() == null ) {
             current.setElements( new LinkedList<>() );
         }
@@ -65,14 +65,14 @@ public class TestWizard {
 
         //todo save
 
-        if ( testResult.getQuestionResults().size() -1 == questionNumber ) {
+        if ( examResult.getQuestionResults().size() -1 == questionNumber ) {
             return TestFinal.class;
         }
         return onNextQuestion();
     }
 
     public Object onNextQuestion() {
-        if ( testResult.getQuestionResults().size()-1 > questionNumber ) {
+        if ( examResult.getQuestionResults().size()-1 > questionNumber ) {
             questionNumber++;
         }
         return this;
@@ -86,7 +86,7 @@ public class TestWizard {
     }
 
     public boolean isNextExist() {
-        return questionNumber < (testResult.getQuestionResults().size() - 1);
+        return questionNumber < (examResult.getQuestionResults().size() - 1);
     }
 
     public boolean isPrevExist() {

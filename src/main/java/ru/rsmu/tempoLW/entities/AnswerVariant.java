@@ -2,6 +2,7 @@ package ru.rsmu.tempoLW.entities;
 
 import org.apache.tapestry5.beaneditor.Validate;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -20,6 +21,7 @@ public class AnswerVariant implements Serializable, Comparable<AnswerVariant> {
 
     @Column
     @Validate( "required" )
+    @Type( type = "org.hibernate.type.TextType" )
     private String text = "";
 
     @Column

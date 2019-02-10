@@ -4,10 +4,10 @@
     <div id="questionPreview" class="row">
         <h3>${question.questionInfo.name}</h3>
         <blockquote>
-            <p class="text-lg">${question.text}</p>
-            <t:if test="question.image">
+            <t:if class="question-image" test="question.image">
                 <img src="${imageLink}"/>
             </t:if>
+            <p class="text-lg">${question.text}</p>
         </blockquote>
     </div>
     <div class="row">

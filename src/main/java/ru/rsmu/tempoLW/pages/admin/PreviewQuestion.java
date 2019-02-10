@@ -10,7 +10,7 @@ import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.javascript.JavaScriptSupport;
 import ru.rsmu.tempoLW.dao.QuestionDao;
 import ru.rsmu.tempoLW.entities.Question;
-import ru.rsmu.tempoLW.entities.TestSubject;
+import ru.rsmu.tempoLW.entities.ExamSubject;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -30,7 +30,7 @@ public class PreviewQuestion {
     private Question question;
 
     @Property
-    private TestSubject subject;
+    private ExamSubject subject;
 
     @Inject
     @Path("context:/static/js/MathJax/MathJax.js")
@@ -62,6 +62,9 @@ public class PreviewQuestion {
     @Inject
     private LinkSource linkSource;
 
+    @InjectPage
+    private Subjects subjectsPage;
+
     public void setupRender() {
         javaScriptSupport.importJavaScriptLibrary( mathJaxConfig );
         javaScriptSupport.importJavaScriptLibrary( mathJax );
@@ -77,7 +80,7 @@ public class PreviewQuestion {
         if (context.getCount() >= 1) {
             long subjectId = context.get(Long.class, 0);
 
-            subject = questionDao.find( TestSubject.class, subjectId );
+            subject = questionDao.find( ExamSubject.class, subjectId );
 
             if ( subject != null ) {
                 if ( context.getCount() >= 2 ) {
@@ -103,17 +106,23 @@ public class PreviewQuestion {
     public Object onNextQuestion() {
         Question next = questionDao.findNextQuestion( question.getId(), subject );
         if ( next == null ) {
-            return Subjects.class;
+            subjectsPage.set( subject.getId() );
+            return subjectsPage;
         }
-        return linkSource.createPageRenderLink( "admin/" + PreviewQuestion.class.getSimpleName(), false, subject.getId(), next.getId() );
+        question = next;
+        return this;
+        //linkSource.createPageRenderLink( "admin/" + PreviewQuestion.class.getSimpleName(), false, subject.getId(), next.getId() );
     }
 
 
     public Object onPrevQuestion() {
         Question prev = questionDao.findPrevQuestion( question.getId(), subject );
         if ( prev == null ) {
-            return Subjects.class;
+            subjectsPage.set( subject.getId() );
+            return subjectsPage;
         }
-        return linkSource.createPageRenderLink(  "admin/" + PreviewQuestion.class.getSimpleName(), false, subject.getId(), prev.getId() );
+        question = prev;
+        return this;
+        //linkSource.createPageRenderLink(  "admin/" + PreviewQuestion.class.getSimpleName(), false, subject.getId(), prev.getId() );
     }
 }

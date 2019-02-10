@@ -3,6 +3,7 @@ package ru.rsmu.tempoLW.services;
 import org.apache.shiro.subject.Subject;
 import org.tynamo.security.services.SecurityService;
 import ru.rsmu.tempoLW.dao.UserDao;
+import ru.rsmu.tempoLW.entities.auth.SubjectManager;
 import ru.rsmu.tempoLW.entities.auth.User;
 import ru.rsmu.tempoLW.entities.auth.UserRoleName;
 
@@ -27,5 +28,9 @@ public class SecurityUserHelper {
         String username = (String) securityService.getSubject().getPrincipal();
         User user = userDao.findByUsername( username );
         return user;
+    }
+
+    public SubjectManager getSubjectManager( User user ) {
+        return userDao.findSubjectsForUser( user );
     }
 }

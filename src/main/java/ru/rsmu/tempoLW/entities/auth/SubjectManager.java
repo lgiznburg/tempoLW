@@ -1,6 +1,6 @@
 package ru.rsmu.tempoLW.entities.auth;
 
-import ru.rsmu.tempoLW.entities.TestSubject;
+import ru.rsmu.tempoLW.entities.ExamSubject;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -27,7 +27,7 @@ public class SubjectManager implements Serializable {
             joinColumns = @JoinColumn(name = "subject_id"),
             inverseJoinColumns = @JoinColumn(name = "manager_id")
     )
-    private List<TestSubject> subjects;
+    private List<ExamSubject> subjects;
 
     public long getId() {
         return id;
@@ -45,11 +45,11 @@ public class SubjectManager implements Serializable {
         this.user = user;
     }
 
-    public List<TestSubject> getSubjects() {
+    public List<ExamSubject> getSubjects() {
         return subjects;
     }
 
-    public void setSubjects( List<TestSubject> subjects ) {
+    public void setSubjects( List<ExamSubject> subjects ) {
         this.subjects = subjects;
     }
 }

@@ -40,7 +40,7 @@ public class ImagesExtractor {
     }
 
     public String getContentType( String imageName ) {
-        if ( imageName.matches( ".*\\.((gif)|(jpeg)|(jpg)|(png))$" ) ) {
+        if ( imageName.matches( ".*\\.((gif)|(jpeg)|(jpg)|(png)|(svg)|(svgz))$" ) ) {
             if ( imageName.matches( ".*\\.gif$" ) ) {
                 return "image/gif";
             }
@@ -49,6 +49,9 @@ public class ImagesExtractor {
             }
             else if ( imageName.matches( ".*\\.png$" ) ) {
                 return "image/png";
+            }
+            else if ( imageName.matches( ".*\\.((svg)|(svgz))$" ) ) {
+                return "image/svg+xml";
             }
         }
         return null;

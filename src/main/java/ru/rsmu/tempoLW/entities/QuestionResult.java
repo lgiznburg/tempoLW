@@ -22,7 +22,7 @@ public class QuestionResult implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "test_result_id")
-    private TestResult testResult;
+    private ExamResult examResult;
 
     @OneToMany( mappedBy = "questionResult", cascade = CascadeType.ALL )
     private List<ResultElement> elements;
@@ -62,12 +62,12 @@ public class QuestionResult implements Serializable {
         this.question = question;
     }
 
-    public TestResult getTestResult() {
-        return testResult;
+    public ExamResult getExamResult() {
+        return examResult;
     }
 
-    public void setTestResult( TestResult testResult ) {
-        this.testResult = testResult;
+    public void setExamResult( ExamResult examResult ) {
+        this.examResult = examResult;
     }
 
     public List<ResultElement> getElements() {

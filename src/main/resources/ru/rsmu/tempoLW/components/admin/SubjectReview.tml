@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<t:container xmlns="http://www.w3.org/1999/xhtml" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd" xmlns:p="tapestry:parameter">
+
+    <div id="subjectReview">
+        <div class="row">
+            <h4>${subject.title}</h4>
+        </div>
+        <div class="row">
+            <div class="col-sm-10">
+                <ul class="list-group">
+                    <li class="list-group-item">
+                        <span class="badge">${questionsCount}</span>
+                        Total questions
+                    </li>
+                    <li class="list-group-item">
+                        <span class="badge">${topicsCount}</span>
+                        Topics
+                    </li>
+                </ul>
+            </div>
+
+
+            <!-- stats here -->
+        </div>
+
+        <div class="row">
+            <h5>Testing plans</h5>
+            <div class="col-sm-10">
+                <ul class="list-group">
+                    <t:loop source="plans" value="plan" empty="block:createPlan">
+                        <li class="list-group-item">
+                            <t:if test="plan.enabled">
+                                <span class="badge"><span class="glyphicon glyphicon-ok"/></span>
+                            </t:if>
+                            <t:pagelink page="admin/testingplan/testingplanedit" context="plan">${plan.name}</t:pagelink>
+                        </li>
+                    </t:loop>
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="row">
+            <t:eventlink class="btn btn-primary" event="toUpdate" context="subjectId">Update</t:eventlink>
+            <t:eventlink class="btn btn-primary" event="toUpload" context="subjectId">Upload Questions</t:eventlink>
+            <t:pagelink page="admin/previewquestion" class="btn btn-primary" context="[subject,0]">Preview Questions</t:pagelink>
+            <!-- delete -->
+        </div>
+    </div>
+
+    <t:block t:id="createPlan">
+        <li class="list-group-item">
+            <t:pagelink page="admin/testingplan/testingplancreate" context="subject" class="btn btn-primary">Create new plan</t:pagelink>
+        </li>
+    </t:block>
+</t:container>

@@ -2,16 +2,21 @@ package ru.rsmu.tempoLW.pages.admin.testingplan;
 
 import org.apache.tapestry5.ValueEncoder;
 import org.apache.tapestry5.annotations.InjectComponent;
+import org.apache.tapestry5.annotations.InjectPage;
 import org.apache.tapestry5.annotations.PageActivationContext;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.corelib.components.Form;
 import org.apache.tapestry5.ioc.annotations.Inject;
+import ru.rsmu.tempoLW.consumabales.CrudMode;
 import ru.rsmu.tempoLW.dao.QuestionDao;
 import ru.rsmu.tempoLW.entities.TestingPlan;
 import ru.rsmu.tempoLW.entities.TestingPlanRule;
+import ru.rsmu.tempoLW.pages.admin.Subjects;
 
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author leonid.
@@ -39,6 +44,8 @@ public class TestingPlanEdit {
     @Property
     private final ValueEncoder<TestingPlanRule> ruleEncoder = new TestingPlanRuleEncoder();
 
+    @InjectPage
+    private Subjects subjectsPage;
 
     public void onPrepareForRender() {
         //check if form exists
@@ -81,7 +88,10 @@ public class TestingPlanEdit {
             }
         }
         questionDao.save( testingPlan );
-        return TestingPlanList.class;
+
+        subjectsPage.set( testingPlan.getSubject().getId() );
+        return subjectsPage;
+        //return TestingPlanList.class;
     }
 
 
@@ -103,5 +113,12 @@ public class TestingPlanEdit {
             }
             return new TestingPlanRule();
         }
+    }
+
+    public Map getLinkParams() {
+        Map<String,Object> params = new HashMap<>();
+        params.put( "mode", CrudMode.REVIEW );
+        params.put( "subjectId", testingPlan.getSubject().getId() );
+        return params;
     }
 }

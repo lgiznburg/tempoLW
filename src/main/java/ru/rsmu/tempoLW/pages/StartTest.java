@@ -5,7 +5,7 @@ import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.annotations.SessionState;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import ru.rsmu.tempoLW.dao.QuestionDao;
-import ru.rsmu.tempoLW.entities.TestResult;
+import ru.rsmu.tempoLW.entities.ExamResult;
 import ru.rsmu.tempoLW.entities.TestingPlan;
 import ru.rsmu.tempoLW.utils.ExamBuilder;
 
@@ -22,22 +22,22 @@ public class StartTest {
 
     @Property
     @SessionState
-    private TestResult testResult;
+    private ExamResult examResult;
 
     @Inject
     private QuestionDao questionDao;
 
     public Object onActivate() {
-        if ( testResult != null && !testResult.isFinished() &&
-                testResult.getQuestionResults() != null ) {
+        if ( examResult != null && !examResult.isFinished() &&
+                examResult.getQuestionResults() != null ) {
             return TestFinal.class;  // test has been already created and not finished
         }
-        testResult = new ExamBuilder( questionDao ).buildTestVariant( testingPlan );
-        testResult.setStartTime( new Date() );  //set now
+        examResult = new ExamBuilder( questionDao ).buildTestVariant( testingPlan );
+        examResult.setStartTime( new Date() );  //set now
         return null;
     }
 
     public int getQuestionNumber() {
-        return testResult.getQuestionResults().size();
+        return examResult.getQuestionResults().size();
     }
 }

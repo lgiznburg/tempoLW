@@ -1,6 +1,7 @@
 package ru.rsmu.tempoLW.entities;
 
 import org.apache.tapestry5.beaneditor.Validate;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -21,6 +22,7 @@ public class CorrespondenceVariant implements Serializable, Comparable<Correspon
 
     @Column
     @Validate( "required" )
+    @Type( type = "org.hibernate.type.TextType" )
     private String text = "";
 
     @ManyToMany(cascade = CascadeType.ALL)

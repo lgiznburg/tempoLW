@@ -33,7 +33,7 @@ public class QuestionInfo implements Serializable {
     private int complexity;
 
     @ManyToOne
-    private TestSubject subject;
+    private ExamSubject subject;
 
     @ManyToOne
     private SubTopic topic;
@@ -81,11 +81,11 @@ public class QuestionInfo implements Serializable {
         this.complexity = complexity;
     }
 
-    public TestSubject getSubject() {
+    public ExamSubject getSubject() {
         return subject;
     }
 
-    public void setSubject( TestSubject subject ) {
+    public void setSubject( ExamSubject subject ) {
         this.subject = subject;
     }
 

@@ -10,7 +10,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "test_result")
-public class TestResult implements Serializable {
+public class ExamResult implements Serializable {
     private static final long serialVersionUID = -702151829561118151L;
 
     @Id
@@ -32,7 +32,7 @@ public class TestResult implements Serializable {
     @JoinColumn(name = "testing_plan_id")
     private TestingPlan testingPlan;
 
-    @OneToMany( mappedBy = "testResult", cascade = CascadeType.ALL )
+    @OneToMany( mappedBy = "examResult", cascade = CascadeType.ALL )
     private List<QuestionResult> questionResults;
 
     //todo link to testee

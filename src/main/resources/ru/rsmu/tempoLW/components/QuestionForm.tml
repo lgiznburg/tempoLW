@@ -5,10 +5,10 @@
     <div id="questionView" class="row">
         <h3>${message:question-num} ${readableNumber}. ${current.question.questionInfo.name}</h3>
         <blockquote>
-            <p class="text-lg">${current.question.text}</p>
             <t:if test="current.question.image">
-                <img src="${imageLink}"/>
+                <img class="question-image" src="${imageLink}"/>
             </t:if>
+            <p class="text-lg">${current.question.text}</p>
         </blockquote>
     </div>
     <t:if test="questionSimple">

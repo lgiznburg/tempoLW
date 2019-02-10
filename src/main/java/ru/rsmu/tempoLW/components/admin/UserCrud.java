@@ -14,7 +14,7 @@ import org.apache.tapestry5.services.SelectModelFactory;
 import ru.rsmu.tempoLW.consumabales.CrudMode;
 import ru.rsmu.tempoLW.dao.QuestionDao;
 import ru.rsmu.tempoLW.dao.UserDao;
-import ru.rsmu.tempoLW.entities.TestSubject;
+import ru.rsmu.tempoLW.entities.ExamSubject;
 import ru.rsmu.tempoLW.entities.auth.SubjectManager;
 import ru.rsmu.tempoLW.entities.auth.User;
 import ru.rsmu.tempoLW.entities.auth.UserRole;
@@ -89,7 +89,7 @@ public class UserCrud {
 
     private List<UserRole> roles;
 
-    private List<TestSubject> subjects;
+    private List<ExamSubject> subjects;
 
 
     public void setupRender() {
@@ -226,7 +226,7 @@ public class UserCrud {
         }
         roles = userDao.findAll( UserRole.class );
         rolesModel = modelFactory.create( roles, "roleName" );
-        subjects = questionDao.findAll( TestSubject.class );
+        subjects = questionDao.findAll( ExamSubject.class );
         subjectsModel = modelFactory.create( subjects, "title" );
     }
 
@@ -250,17 +250,17 @@ public class UserCrud {
         };
     }
 
-    public ValueEncoder<TestSubject> getSubjectEncoder() {
-        return new ValueEncoder<TestSubject>() {
+    public ValueEncoder<ExamSubject> getSubjectEncoder() {
+        return new ValueEncoder<ExamSubject>() {
             @Override
-            public String toClient( TestSubject value ) {
+            public String toClient( ExamSubject value ) {
                 return String.valueOf( value.getId() );
             }
 
             @Override
-            public TestSubject toValue( String clientValue ) {
+            public ExamSubject toValue( String clientValue ) {
                 long id = Long.parseLong( clientValue );
-                for ( TestSubject subject : subjects ) {
+                for ( ExamSubject subject : subjects ) {
                     if ( subject.getId() == id ) {
                         return subject;
                     }
@@ -278,7 +278,7 @@ public class UserCrud {
 
     public String getSubjectTitles() {
         if ( subjectManager == null ) return "";
-        List<String> subjectTitles = subjectManager.getSubjects().stream().map( TestSubject::getTitle ).collect( Collectors.toList() );
+        List<String> subjectTitles = subjectManager.getSubjects().stream().map( ExamSubject::getTitle ).collect( Collectors.toList() );
         return StringUtils.join( subjectTitles, ", " );
     }
 }

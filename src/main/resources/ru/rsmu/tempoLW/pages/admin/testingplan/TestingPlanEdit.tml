@@ -56,10 +56,8 @@
         </div>
 
         <div class="form-group">
-            <div class="btn-group">
-                <t:submit class="btn btn-primary" value="message:save"/>
-                <t:pagelink page="admin/subjects" class="btn btn-default">${message:cancel}</t:pagelink>
-            </div>
+            <t:submit class="btn btn-primary" value="message:save"/>
+            <t:pagelink page="admin/subjects" parameters="linkParams" class="btn btn-default">${message:cancel}</t:pagelink>
         </div>
     </t:form>
 </div>

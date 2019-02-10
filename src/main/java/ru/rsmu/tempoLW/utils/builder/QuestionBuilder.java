@@ -2,15 +2,10 @@ package ru.rsmu.tempoLW.utils.builder;
 
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
-import ru.rsmu.tempoLW.dao.QuestionDao;
 import ru.rsmu.tempoLW.entities.Question;
-import ru.rsmu.tempoLW.entities.QuestionInfo;
-import ru.rsmu.tempoLW.entities.TestSubject;
 import ru.rsmu.tempoLW.entities.UploadedImage;
 import ru.rsmu.tempoLW.utils.ExcelLayout;
 import ru.rsmu.tempoLW.utils.ImagesExtractor;
-
-import java.awt.*;
 
 /**
  * @author leonid.

@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<t:container xmlns="http://www.w3.org/1999/xhtml" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd" xmlns:p="tapestry:parameter">
+
+    <div id="subjectsList">
+        <div class="list-group">
+            <t:loop source="subjects" value="subject" >
+                <t:eventlink event="subjectSelected" context="subject.id" class="list-group-item ${linkCssClass}">${subject.title}</t:eventlink>
+            </t:loop>
+        </div>
+    </div>
+</t:container>

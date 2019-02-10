@@ -3,8 +3,8 @@
       xmlns:p="tapestry:parameter">
 
 <div class="row">
-    <h2 class="align-center">${message:testing-header} ${testResult.testingPlan.subject.title}
-    (${testResult.testingPlan.name})</h2>
+    <h2 class="align-center">${message:testing-header} ${examResult.testingPlan.subject.title}
+    (${examResult.testingPlan.name})</h2>
 </div>
 
 
@@ -12,7 +12,7 @@
     <table class="table table-hover text-lg">
         <tr>
             <th>${message:question-column}</th>
-            <t:if test="testResult.finished">
+            <t:if test="examResult.finished">
                 <th>${message:score-column}</th>
                 <th>${message:mark-column}</th>
                 <p:else>
@@ -20,9 +20,9 @@
                 </p:else>
             </t:if>
         </tr>
-        <t:loop source="testResult.questionResults" value="questionResult">
+        <t:loop source="examResult.questionResults" value="questionResult">
             <tr>
-                <t:if test="testResult.finished" >
+                <t:if test="examResult.finished" >
                     <td>${message:question-num} ${questionResult.viewNumber}. ${questionResult.question.questionInfo.name}</td>
                     <td>${questionResult.score}</td>
                     <td>${questionResult.mark}</td>
@@ -43,11 +43,11 @@
                 </t:if>
             </tr>
         </t:loop>
-        <t:if test="testResult.finished">
+        <t:if test="examResult.finished">
             <tr class="info">
                 <td>${message:final-mark}</td>
                 <td>&nbsp;</td>
-                <td>${testResult.markTotal}</td>
+                <td>${examResult.markTotal}</td>
             </tr>
         </t:if>
     </table>
@@ -57,7 +57,7 @@
 
     <div class="row subquestion-nav">
         <div class="col-sm-4 col-sm-offset-2">
-            <t:if test="testResult.finished">
+            <t:if test="examResult.finished">
                 <t:pagelink page="index" class="btn btn-default">${message:go-home}</t:pagelink>
                 <p:else>
                     <t:actionlink t:id="finish" class="btn btn-primary">${message:test-finish}</t:actionlink>

@@ -19,7 +19,7 @@ public class SubTopic implements Serializable {
     private String title;
 
     @ManyToOne
-    private TestSubject subject;
+    private ExamSubject subject;
 
 
     public long getId() {
@@ -38,11 +38,11 @@ public class SubTopic implements Serializable {
         this.title = title;
     }
 
-    public TestSubject getSubject() {
+    public ExamSubject getSubject() {
         return subject;
     }
 
-    public void setSubject( TestSubject subject ) {
+    public void setSubject( ExamSubject subject ) {
         this.subject = subject;
     }
 }

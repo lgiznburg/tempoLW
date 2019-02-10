@@ -7,5 +7,8 @@ public enum CrudMode {
     CREATE,
     REVIEW,
     UPDATE,
-    DELETE
+    DELETE,
+
+    UPLOAD
+
 }

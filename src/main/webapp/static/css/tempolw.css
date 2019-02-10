@@ -93,6 +93,10 @@ button.bg-dark:focus {
     border-color: #004a51;
 }
 
+.btn {
+    margin-right: 1rem;
+}
+
 /*
 .text-lg {
     font-size: x-large;
@@ -164,3 +168,6 @@ h1, h2, h3, h4 {
 }
 /*  ---- */
 
+.question-image {
+    float: right;
+}

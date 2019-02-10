@@ -35,7 +35,7 @@ public class QuestionDaoImpl extends BaseDaoImpl implements QuestionDao {
 
     @SuppressWarnings( "unchecked" )
     @Override
-    public List<TestingPlanRule> prepareTestingPlan( TestSubject subject ) {
+    public List<TestingPlanRule> prepareTestingPlan( ExamSubject subject ) {
         Criteria criteria = session.createCriteria( QuestionInfo.class )
                 .add( Restrictions.eq( "subject", subject ) )
                 .setProjection( Projections.projectionList()
@@ -48,7 +48,7 @@ public class QuestionDaoImpl extends BaseDaoImpl implements QuestionDao {
     }
 
     @Override
-    public Question findNextQuestion( long id, TestSubject subject ) {
+    public Question findNextQuestion( long id, ExamSubject subject ) {
         Criteria criteria = session.createCriteria( Question.class )
                 .createAlias( "questionInfo", "questionInfo" )
                 .add( Restrictions.eq( "questionInfo.subject", subject ) )
@@ -61,7 +61,7 @@ public class QuestionDaoImpl extends BaseDaoImpl implements QuestionDao {
     }
 
     @Override
-    public Question findPrevQuestion( long id, TestSubject subject ) {
+    public Question findPrevQuestion( long id, ExamSubject subject ) {
         if ( id <= 0 ) return null;
         Criteria criteria = session.createCriteria( Question.class )
                 .createAlias( "questionInfo", "questionInfo" )
@@ -81,10 +81,37 @@ public class QuestionDaoImpl extends BaseDaoImpl implements QuestionDao {
     }
 
     @Override
-    public List<SubTopic> findTopicsOfSubject( TestSubject subject ) {
+    @SuppressWarnings( "unchecked" )
+    public List<TestingPlan> findTestingPlan( ExamSubject subject ) {
+        Criteria criteria = session.createCriteria( TestingPlan.class )
+                .add( Restrictions.eq( "subject", subject ) );
+        return criteria.list();
+    }
+
+    @Override
+    @SuppressWarnings( "unchecked" )
+    public List<SubTopic> findTopicsOfSubject( ExamSubject subject ) {
         Criteria criteria = session.createCriteria( SubTopic.class )
                 .add( Restrictions.eq( "subject", subject ) );
         return criteria.list();
+    }
+
+    @Override
+    public long findTopicsCount( ExamSubject subject ) {
+        Criteria criteria = session.createCriteria( SubTopic.class )
+                .add( Restrictions.eq( "subject", subject ) )
+                .setProjection( Projections.rowCount() );
+        return (long) criteria.uniqueResult();
+    }
+
+    @Override
+    public long findQuestionsCount( ExamSubject subject ) {
+        Criteria criteria = session.createCriteria( Question.class )
+                .createAlias( "questionInfo", "questionInfo" )
+                .add( Restrictions.eq( "questionInfo.subject", subject ) )
+                .setProjection( Projections.rowCount() );
+
+        return (long) criteria.uniqueResult();
     }
 
     @Override
@@ -111,6 +138,7 @@ public class QuestionDaoImpl extends BaseDaoImpl implements QuestionDao {
     }
 
     @Override
+    @SuppressWarnings( "unchecked" )
     public List<Question> findRandomQuestions( TestingPlanRule rule ) {
 
         Criteria criteria = session.createCriteria( Question.class )

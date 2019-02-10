@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<t:container xmlns="http://www.w3.org/1999/xhtml" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd" xmlns:p="tapestry:parameter">
+
+    <t:form t:id="uploadForm">
+        <div class="row">
+            <h4>${subject.title} : Upload questions</h4>  <!--  class="text-center" -->
+        </div>
+        <t:errors/>
+        <div class="form-group row">
+            <t:label for="file">Questions</t:label>
+            <input t:type="upload" t:id="file" t:value="file" validate="required" style="height: auto;"/>
+        </div>
+        <div class="form-group row">
+            <t:label for="imagesZipFile">Images ZIP file</t:label>
+            <input t:type="upload" t:id="imagesZipFile" t:value="imagesZipFile"  style="height: auto;"/>
+        </div>
+        <div class="form-group row">
+            <input type="submit" value="Upload" class="btn btn-primary"/>
+            <t:eventlink event="cancelUpload" context="subjectId" class="btn btn-default">Back to Subjects</t:eventlink>
+        </div>
+    </t:form>
+
+</t:container>

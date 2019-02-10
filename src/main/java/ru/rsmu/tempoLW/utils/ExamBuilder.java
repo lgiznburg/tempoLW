@@ -15,9 +15,9 @@ public class ExamBuilder {
         this.questionDao = questionDao;
     }
 
-    public TestResult buildTestVariant( TestingPlan plan ) {
-        TestResult testResult = new TestResult();
-        testResult.setQuestionResults( new LinkedList<>() );
+    public ExamResult buildTestVariant( TestingPlan plan ) {
+        ExamResult examResult = new ExamResult();
+        examResult.setQuestionResults( new LinkedList<>() );
 
         int questionNum = 0;
         for ( TestingPlanRule rule : plan.getRules() ) {
@@ -25,12 +25,12 @@ public class ExamBuilder {
                 QuestionResult questionResult = new QuestionResult();
                 questionResult.setQuestion( question );
                 questionResult.setOrderNumber( questionNum++ );
-                questionResult.setTestResult( testResult );
+                questionResult.setExamResult( examResult );
                 questionResult.setScoreCost( rule.getScoreCost() );
-                testResult.getQuestionResults().add( questionResult );
+                examResult.getQuestionResults().add( questionResult );
             }
         }
-        testResult.setTestingPlan( plan );
-        return testResult;
+        examResult.setTestingPlan( plan );
+        return examResult;
     }
 }

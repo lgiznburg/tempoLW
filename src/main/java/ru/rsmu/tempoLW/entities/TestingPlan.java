@@ -17,7 +17,7 @@ public class TestingPlan implements Serializable {
     private long id;
 
     @ManyToOne
-    private TestSubject subject;
+    private ExamSubject subject;
 
     @OneToMany(mappedBy = "testingPlan", cascade = CascadeType.ALL )
     private List<TestingPlanRule> rules;
@@ -36,11 +36,11 @@ public class TestingPlan implements Serializable {
         this.id = id;
     }
 
-    public TestSubject getSubject() {
+    public ExamSubject getSubject() {
         return subject;
     }
 
-    public void setSubject( TestSubject subject ) {
+    public void setSubject( ExamSubject subject ) {
         this.subject = subject;
     }
 

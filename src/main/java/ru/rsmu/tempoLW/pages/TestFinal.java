@@ -5,7 +5,7 @@ import org.apache.tapestry5.annotations.SessionState;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import ru.rsmu.tempoLW.dao.QuestionDao;
 import ru.rsmu.tempoLW.entities.QuestionResult;
-import ru.rsmu.tempoLW.entities.TestResult;
+import ru.rsmu.tempoLW.entities.ExamResult;
 
 import java.util.Date;
 
@@ -15,7 +15,7 @@ import java.util.Date;
 public class TestFinal {
     @Property
     @SessionState
-    private TestResult testResult;
+    private ExamResult examResult;
 
     @Property
     private QuestionResult questionResult;
@@ -27,18 +27,18 @@ public class TestFinal {
     private QuestionResult current;
 
     public Object onActivate() {
-        if ( testResult == null || testResult.getQuestionResults() == null ) {
+        if ( examResult == null || examResult.getQuestionResults() == null ) {
             return Index.class;
         }
         int finalMark = 0;
-        for ( QuestionResult questionResult : testResult.getQuestionResults() ) {
+        for ( QuestionResult questionResult : examResult.getQuestionResults() ) {
             finalMark += questionResult.getMark();
         }
-        testResult.setMarkTotal( finalMark );
+        examResult.setMarkTotal( finalMark );
         return null;
     }
 
     public void onActionFromFinish() {
-        testResult.setEndTime( new Date() );
+        examResult.setEndTime( new Date() );
     }
 }

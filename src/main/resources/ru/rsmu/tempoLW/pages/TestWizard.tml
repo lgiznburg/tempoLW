@@ -3,7 +3,7 @@
       xmlns:p="tapestry:parameter">
 
 <div class="row">
-<h2>${message:testing-header} ${testResult.testingPlan.subject.title} (${testResult.testingPlan.name})</h2>
+<h2>${message:testing-header} ${examResult.testingPlan.subject.title} (${examResult.testingPlan.name})</h2>
 </div>
 
 <t:questionform current="current"/>

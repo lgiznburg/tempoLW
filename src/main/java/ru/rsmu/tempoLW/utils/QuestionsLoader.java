@@ -7,7 +7,7 @@ import ru.rsmu.tempoLW.dao.QuestionDao;
 import ru.rsmu.tempoLW.entities.Question;
 import ru.rsmu.tempoLW.entities.QuestionInfo;
 import ru.rsmu.tempoLW.entities.SubTopic;
-import ru.rsmu.tempoLW.entities.TestSubject;
+import ru.rsmu.tempoLW.entities.ExamSubject;
 import ru.rsmu.tempoLW.utils.builder.QuestionBuilder;
 
 import java.io.IOException;
@@ -20,14 +20,14 @@ import java.util.List;
  */
 public class QuestionsLoader extends ExcelLayout {
     private QuestionDao questionDao;
-    private TestSubject subject;
+    private ExamSubject subject;
 
     private Workbook wb;
     private List<String> warning;
 
     private ImagesExtractor imagesExtractor;
 
-    public QuestionsLoader( QuestionDao questionDao, TestSubject subject ) {
+    public QuestionsLoader( QuestionDao questionDao, ExamSubject subject ) {
         this.questionDao = questionDao;
         this.subject = subject;
     }
