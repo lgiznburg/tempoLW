@@ -68,7 +68,10 @@ public class QuestionSimpleForm {
         for ( Iterator<ResultElement> elementIt = questionResult.getElements().iterator(); elementIt.hasNext(); ) {
             ResultElement element = elementIt.next();
             if ( !selectedAnswers.contains( ((ResultSimple)element).getAnswerVariant() ) ) {
-                // todo questionDao.delete( element );
+                if ( element.getId() != 0 ) {
+                    // delete element from DB if exists.
+                    questionDao.delete( element );
+                }
                 elementIt.remove();
             }
         }
@@ -81,6 +84,8 @@ public class QuestionSimpleForm {
                 questionResult.getElements().add( resultSimple );
             }
         }
+
+        //TODO save result and log
     }
 
     public ValueEncoder<AnswerVariant> getAnswerEncoder() {

@@ -29,6 +29,9 @@ public abstract class QuestionBuilder extends ExcelLayout {
         else if ( questionType.equalsIgnoreCase( SIMPLE_ORDER_TYPE )) {
             return  new SimpleOrderQuestionBuilder();
         }
+        else if ( questionType.equalsIgnoreCase( TREE_TYPE )) {
+            return  new TreeQuestionBuilder();
+        }
         throw new IllegalArgumentException( "Incorrect type of question" );
     }
 

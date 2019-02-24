@@ -69,7 +69,7 @@ public class QuestionCorrespondenceForm {
         }
 
         rows.addAll( rowMap.values() );
-        Collections.shuffle( rows );
+        //Collections.shuffle( rows );
     }
 
     public void onSuccess() {

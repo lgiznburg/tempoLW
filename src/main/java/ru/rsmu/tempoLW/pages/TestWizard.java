@@ -12,6 +12,7 @@ import java.util.LinkedList;
 /**
  * @author leonid.
  */
+@Import( stylesheet = {"katex/katex.css"})
 public class TestWizard {
 
     @Property
@@ -28,20 +29,13 @@ public class TestWizard {
     @Property
     private QuestionResult current;
 
-    @Inject
-    @Path("context:/static/js/MathJax/MathJax.js")
-    private Asset mathJax;
-
-    @Inject
-    @Path( "context:/static/js/myMathJaxConfig.js" )
-    private Asset mathJaxConfig;
-
     @Environmental
     private JavaScriptSupport javaScriptSupport;
 
     public void setupRender() {
-        javaScriptSupport.importJavaScriptLibrary( mathJaxConfig );
-        javaScriptSupport.importJavaScriptLibrary( mathJax );
+
+        javaScriptSupport.require( "katex/katex" );
+        javaScriptSupport.require( "katex/contrib/auto-render" ).invoke( "renderMathInElementOfClass" ).with( "container" );
     }
 
     public Object onActivate() {

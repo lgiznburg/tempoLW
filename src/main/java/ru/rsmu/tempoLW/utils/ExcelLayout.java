@@ -15,6 +15,7 @@ public abstract class ExcelLayout {
     public static String OPEN_TYPE = "Откр";
     public static String CORRESPONDENCE_TYPE = "Соот";
     public static String SIMPLE_ORDER_TYPE = "Посл";
+    public static String TREE_TYPE = "Дер";
 
     public static short COLUMN_ROW_TYPE = 0;
     public static short COLUMN_QUESTION_TYPE = 1;

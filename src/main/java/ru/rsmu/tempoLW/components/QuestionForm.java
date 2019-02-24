@@ -35,6 +35,10 @@ public class QuestionForm {
         return current.getQuestion() instanceof QuestionSimpleOrder;
     }
 
+    public boolean isQuestionTree() {
+        return current.getQuestion() instanceof QuestionTree;
+    }
+
     public int getReadableNumber() {
         return current.getOrderNumber() + 1;
     }

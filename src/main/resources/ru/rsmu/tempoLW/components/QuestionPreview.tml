@@ -50,7 +50,7 @@
                         <dd>
                             <ul>
                                 <t:loop source="correspondence.correctAnswers" value="answer">
-                                    <li>${answer.text}</li>
+                                    <li class="alert-success">${answer.text}</li>
                                 </t:loop>
                             </ul>
                         </dd>
@@ -61,6 +61,26 @@
                         <li>${answer.text}</li>
                     </t:loop>
                 </ul>
+
+            </t:if>
+            <t:if test="questionTree">
+                <dl>
+                    <t:loop source="correspondenceVariants" value="correspondence">
+                        <dt>${correspondence.text}</dt>
+                        <dd>
+                            <ul>
+                                <t:loop source="correspondence.correctAnswers" value="answer">
+                                    <li>
+                                        <t:if test="answer.correct">
+                                            <span class="alert-success">${answer.text}</span>
+                                            <p:else>${answer.text}</p:else>
+                                        </t:if>
+                                    </li>
+                                </t:loop>
+                            </ul>
+                        </dd>
+                    </t:loop>
+                </dl>
 
             </t:if>
         </div>

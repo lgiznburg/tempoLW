@@ -17,16 +17,12 @@ import ru.rsmu.tempoLW.services.SecurityUserHelper;
  */
 @Import(stylesheet = {"context:/static/css/jquery-ui.min.css", "context:/static/css/tempolw.css",
     "context:/static/css/ubuntu.css"},
-        module = {"bootstrap/dropdown"}/*,
-library = {"context:/static/js/bootstrap.min.js", "context:/static/js/popper.min.js"}*/)
+        module = {"bootstrap/dropdown"})
 public class Layout {
 
     @Property
     @Parameter(required = true, defaultPrefix = BindingConstants.LITERAL)
     private String pageTitle;
-
-    //@Property
-    //private String username = "";
 
     @Inject
     private SecurityService securityService;

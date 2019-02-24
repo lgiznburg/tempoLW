@@ -76,6 +76,9 @@ public class QuestionPreview {
         if ( question instanceof QuestionCorrespondence ) {
             return ((QuestionCorrespondence)question).getCorrespondenceVariants();
         }
+        if ( question instanceof QuestionTree ) {
+            return ((QuestionTree)question).getCorrespondenceVariants();
+        }
         return Collections.emptyList();
     }
 
@@ -94,6 +97,11 @@ public class QuestionPreview {
     public boolean isQuestionSimpleOrder() {
         return question instanceof QuestionSimpleOrder;
     }
+
+    public boolean isQuestionTree() {
+        return question instanceof QuestionTree;
+    }
+
 
     public String getImageLink() {
         if ( question.getImage() != null ) {
