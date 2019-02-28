@@ -5,7 +5,7 @@
 
     <div class="form-group">
         <t:label for="openAnswer" class="col-sm-4"/>
-        <div class="col-sm-8 text-lg">
+        <div class="col-sm-8">
             <t:textfield t:id="openAnswer" value="resultOpen.value" autocomplete="off"/>
         </div>
     </div>

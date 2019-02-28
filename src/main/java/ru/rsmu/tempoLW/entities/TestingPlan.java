@@ -3,6 +3,7 @@ package ru.rsmu.tempoLW.entities;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author leonid.
@@ -66,5 +67,21 @@ public class TestingPlan implements Serializable {
 
     public void setEnabled( boolean enabled ) {
         this.enabled = enabled;
+    }
+
+    @Override
+    public boolean equals( Object o ) {
+        if ( this == o ) return true;
+        if ( o == null || getClass() != o.getClass() ) return false;
+        TestingPlan that = (TestingPlan) o;
+        return id == that.id &&
+                enabled == that.enabled &&
+                Objects.equals( subject, that.subject ) &&
+                Objects.equals( name, that.name );
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash( id, subject, name, enabled );
     }
 }

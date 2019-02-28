@@ -164,16 +164,20 @@ public class QuestionTreeForm {
                 }
             }
             String text = previousVariant.getText();
+            String replacement = "<span class=\"alert alert-danger\" style=\"padding:1px 10px;\">...</span>"; //no answer
             if ( currentAnswers.size() > 0 ) {
-                if ( text.contains( "…" ) ) {
-                    answers.add( text.replace( "…", StringUtils.join( currentAnswers, ", " ) ) );
+                String spanClass = "alert-warning";
+                if ( previousVariant == currentVariant ) {
+                    spanClass = "alert-info";
                 }
-                else {
-                    answers.add( text + " : " + StringUtils.join( currentAnswers, ", "  ) );
-                }
+                replacement = String.format( "<span class=\"alert %s\" style=\"padding:1px 10px;\"> %s </span>", spanClass,  StringUtils.join( currentAnswers, ", " ) );
+            }
+
+            if ( text.contains( "…" ) || text.contains( "..." ) ) {
+                answers.add( text.replaceAll( "(…)|(\\.\\.\\.)", replacement ) );
             }
             else {
-                answers.add( text );
+                answers.add( text + " : " + replacement );
             }
         }
         return answers;
@@ -181,6 +185,10 @@ public class QuestionTreeForm {
 
     public boolean isPreviousStepPresent() {
         return internalStep > 0;
+    }
+
+    public boolean isNextStepPresent() {
+        return ((QuestionTree) questionResult.getQuestion()).getCorrespondenceVariants().size() - 1 > internalStep;
     }
 
     public void onOneStepBack() {

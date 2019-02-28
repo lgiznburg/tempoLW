@@ -5,7 +5,7 @@
 
         <div class="form-group">
             <div class="col-sm-4"><label class="control-label">${message:SimpleOrderAnswer-label}</label></div>
-            <div class="col-sm-8 text-lg ">
+            <div class="col-sm-8">
                 <div style="display: flex;">
                     <div class="qso-elements-group">
                         <t:loop source="resultElements" value="resultElement" encoder="resultEncoder">

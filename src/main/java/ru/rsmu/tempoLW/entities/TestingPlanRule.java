@@ -2,6 +2,7 @@ package ru.rsmu.tempoLW.entities;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * @author leonid.
@@ -96,5 +97,23 @@ public class TestingPlanRule implements Serializable, Comparable<TestingPlanRule
         int firstCompare = this.complexity - o.complexity;
 
         return  (firstCompare == 0) ? this.getTopic().getTitle().compareTo( o.getTopic().getTitle() ) : firstCompare;
+    }
+
+    @Override
+    public boolean equals( Object o ) {
+        if ( this == o ) return true;
+        if ( o == null || getClass() != o.getClass() ) return false;
+        TestingPlanRule that = (TestingPlanRule) o;
+        return id == that.id &&
+                complexity == that.complexity &&
+                questionCount == that.questionCount &&
+                scoreCost == that.scoreCost &&
+                Objects.equals( testingPlan, that.testingPlan ) &&
+                Objects.equals( topic, that.topic );
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash( id, testingPlan, topic, complexity, questionCount, scoreCost );
     }
 }

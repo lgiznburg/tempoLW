@@ -7,6 +7,7 @@ import ru.rsmu.tempoLW.data.QuestionType;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author leonid.
@@ -89,4 +90,20 @@ public abstract class Question implements Serializable {
     }
 
     abstract public int countErrors( List<ResultElement> elements );
+
+    @Override
+    public boolean equals( Object o ) {
+        if ( this == o ) return true;
+        if ( !(o instanceof Question) ) return false;
+        Question question = (Question) o;
+        return id == question.id &&
+                type == question.type &&
+                questionInfo.equals( question.questionInfo ) &&
+                Objects.equals( text, question.text );
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash( id, type, questionInfo, text );
+    }
 }

@@ -5,6 +5,7 @@ import org.apache.tapestry5.beaneditor.Validate;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author leonid.
@@ -103,5 +104,23 @@ public class QuestionInfo implements Serializable {
 
     public void setQuestions( List<Question> questions ) {
         this.questions = questions;
+    }
+
+    @Override
+    public boolean equals( Object o ) {
+        if ( this == o ) return true;
+        if ( o == null || getClass() != o.getClass() ) return false;
+        QuestionInfo that = (QuestionInfo) o;
+        return id == that.id &&
+                code == that.code &&
+                maxScore == that.maxScore &&
+                complexity == that.complexity &&
+                Objects.equals( name, that.name ) &&
+                Objects.equals( topic, that.topic );
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash( id, name, code, maxScore, complexity, topic );
     }
 }

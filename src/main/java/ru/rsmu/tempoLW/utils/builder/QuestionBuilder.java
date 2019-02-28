@@ -50,15 +50,17 @@ public abstract class QuestionBuilder extends ExcelLayout {
     }
 
     public UploadedImage checkUploadedImage( Row row ) {
-        String imageName = getCellValue( row, COLUMN_IMAGE );
-        if ( imageName != null && !imageName.isEmpty() ) {
-            byte[] picture = imagesExtractor.getPicture( imageName );
-            if ( picture != null ) {
-                UploadedImage uploadedImage = new UploadedImage();
-                uploadedImage.setSourceName( imageName );
-                uploadedImage.setPicture( picture );
-                uploadedImage.setContentType( imagesExtractor.getContentType( imageName ) );
-                return uploadedImage;
+        if ( imagesExtractor != null ) {
+            String imageName = getCellValue( row, COLUMN_IMAGE );
+            if ( imageName != null && !imageName.isEmpty() ) {
+                byte[] picture = imagesExtractor.getPicture( imageName );
+                if ( picture != null ) {
+                    UploadedImage uploadedImage = new UploadedImage();
+                    uploadedImage.setSourceName( imageName );
+                    uploadedImage.setPicture( picture );
+                    uploadedImage.setContentType( imagesExtractor.getContentType( imageName ) );
+                    return uploadedImage;
+                }
             }
         }
         return null;

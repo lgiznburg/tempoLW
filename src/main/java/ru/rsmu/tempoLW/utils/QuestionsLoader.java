@@ -71,6 +71,7 @@ public class QuestionsLoader extends ExcelLayout {
                 if ( questionInfo != null ) {
                     String questionType = getCellValue( row, COLUMN_QUESTION_TYPE );
                     QuestionBuilder builder = QuestionBuilder.create( questionType );
+                    builder.setImagesExtractor( imagesExtractor );
                     rowN = builder.parse( sheet, rowN );
                     Question question = builder.getResult();
                     question.setQuestionInfo( questionInfo );

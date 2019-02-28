@@ -6,6 +6,7 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * @author leonid.
@@ -98,5 +99,21 @@ public class AnswerVariant implements Serializable, Comparable<AnswerVariant> {
             o.sortOrder = (int) Math.ceil( Math.random() * 100d );
         }
         return sortOrder - o.sortOrder;
+    }
+
+    @Override
+    public boolean equals( Object o ) {
+        if ( this == o ) return true;
+        if ( o == null || getClass() != o.getClass() ) return false;
+        AnswerVariant that = (AnswerVariant) o;
+        return id == that.id &&
+                correct == that.correct &&
+                sequenceOrder == that.sequenceOrder &&
+                Objects.equals( text, that.text );
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash( id, text, correct, sequenceOrder );
     }
 }

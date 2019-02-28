@@ -8,10 +8,14 @@
                 <t:label for="simpleAnswers" class="col-sm-4"/>
             </div>
 
-            <div style="display: flex;">
-                <div class="col-sm-8 text-lg qso-element-div">
-                    <t:checklist t:id="simpleAnswers" model="answerModel" selected="selectedAnswers"
-                                 encoder="answerEncoder"/>
+            <div class="col-sm-8">
+                <div style="display: flex;">
+                    <div class="qso-elements-group">
+                        <div class="qso-element-div">
+                            <t:checklist t:id="simpleAnswers" model="answerModel" selected="selectedAnswers"
+                                         encoder="answerEncoder"/>
+                        </div>
+                    </div>
                 </div>
             </div>
 

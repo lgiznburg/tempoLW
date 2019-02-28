@@ -4,6 +4,7 @@ import org.hibernate.annotations.Type;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * @author leonid.
@@ -56,5 +57,20 @@ public class UploadedImage implements Serializable {
 
     public void setSourceName( String sourceName ) {
         this.sourceName = sourceName;
+    }
+
+    @Override
+    public boolean equals( Object o ) {
+        if ( this == o ) return true;
+        if ( o == null || getClass() != o.getClass() ) return false;
+        UploadedImage that = (UploadedImage) o;
+        return Objects.equals( id, that.id ) &&
+                Objects.equals( contentType, that.contentType ) &&
+                Objects.equals( sourceName, that.sourceName );
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash( id, contentType, sourceName );
     }
 }

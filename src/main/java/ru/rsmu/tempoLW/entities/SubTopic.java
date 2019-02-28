@@ -2,6 +2,7 @@ package ru.rsmu.tempoLW.entities;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * @author leonid.
@@ -44,5 +45,20 @@ public class SubTopic implements Serializable {
 
     public void setSubject( ExamSubject subject ) {
         this.subject = subject;
+    }
+
+    @Override
+    public boolean equals( Object o ) {
+        if ( this == o ) return true;
+        if ( o == null || getClass() != o.getClass() ) return false;
+        SubTopic subTopic = (SubTopic) o;
+        return id == subTopic.id &&
+                Objects.equals( title, subTopic.title ) &&
+                Objects.equals( subject, subTopic.subject );
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash( id, title, subject );
     }
 }

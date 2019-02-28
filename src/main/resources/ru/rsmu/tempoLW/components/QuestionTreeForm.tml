@@ -3,7 +3,7 @@
 
     <div class="row">
         <t:loop source="previousAnswers" value="previousAnswerText">
-            <div class="col-sm-10 col-sm-offset-2">${previousAnswerText}</div>
+            <div class="col-sm-10 col-sm-offset-2 text-lg"><t:outputraw value="previousAnswerText"/></div>
         </t:loop>
     </div>
 
@@ -14,10 +14,14 @@
                 <t:label for="simpleAnswers" class="col-sm-6">${currentVariant.text}</t:label>
             </div>
 
-            <div style="display: flex;">
-                <div class="col-sm-6 text-lg qso-element-div">
-                    <t:checklist t:id="simpleAnswers" model="answerModel" selected="selectedAnswers"
-                                 encoder="answerEncoder"/>
+            <div class="col-sm-6">
+                <div style="display: flex;">
+                    <div class="qso-elements-group">
+                        <div class="qso-element-div">
+                            <t:checklist t:id="simpleAnswers" model="answerModel" selected="selectedAnswers"
+                                         encoder="answerEncoder"/>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -29,7 +33,12 @@
                 </t:if>
             </div>
             <div class="col-sm-4">
-                <t:submit value="message:save" class="btn btn-primary"/>
+                <t:if test="nextStepPresent">
+                    <t:submit value="message:oneStepForward" class="btn btn-primary"/>
+                    <p:else>
+                        <t:submit value="message:save" class="btn btn-primary"/>
+                    </p:else>
+                </t:if>
             </div>
         </div>
 

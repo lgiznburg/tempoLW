@@ -78,7 +78,7 @@ public class UploadQuestions {
             if ( file.getFileName().matches( ".*\\.xlsx?" ) ) {
                 QuestionsLoader loader = new QuestionsLoader( questionDao, subject );
                 if ( imagesExtractor != null ) {
-
+                    loader.setImagesExtractor( imagesExtractor );
                 }
                 loader.createWorkbook( file.getStream(), file.getFileName().matches( ".*\\.xls" ) )
                 .loadFromFile( file.getStream() );

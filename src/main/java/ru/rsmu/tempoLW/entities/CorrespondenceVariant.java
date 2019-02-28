@@ -7,6 +7,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author leonid.
@@ -91,5 +92,19 @@ public class CorrespondenceVariant implements Serializable, Comparable<Correspon
             o.sortOrder = (int) Math.ceil( Math.random() * 100d );
         }
         return sortOrder - o.sortOrder;
+    }
+
+    @Override
+    public boolean equals( Object o ) {
+        if ( this == o ) return true;
+        if ( o == null || getClass() != o.getClass() ) return false;
+        CorrespondenceVariant that = (CorrespondenceVariant) o;
+        return id == that.id &&
+                Objects.equals( text, that.text );
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash( id, text );
     }
 }

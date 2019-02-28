@@ -2,6 +2,7 @@ package ru.rsmu.tempoLW.entities;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Objects;
 
 /**
  * @author leonid.
@@ -49,4 +50,19 @@ public abstract class ResultElement implements Serializable {
     }
 
     abstract public void checkCorrectness();
+
+    @Override
+    public boolean equals( Object o ) {
+        if ( this == o ) return true;
+        if ( !(o instanceof ResultElement) ) return false;
+        ResultElement element = (ResultElement) o;
+        return id == element.id &&
+                correct == element.correct &&
+                Objects.equals( questionResult, element.questionResult );
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash( id, questionResult, correct );
+    }
 }
