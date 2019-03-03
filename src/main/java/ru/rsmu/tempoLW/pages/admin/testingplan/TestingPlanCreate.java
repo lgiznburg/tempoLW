@@ -1,28 +1,30 @@
 package ru.rsmu.tempoLW.pages.admin.testingplan;
 
-import org.apache.tapestry5.annotations.InjectComponent;
-import org.apache.tapestry5.annotations.InjectPage;
-import org.apache.tapestry5.annotations.PageActivationContext;
-import org.apache.tapestry5.annotations.Property;
+import org.apache.tapestry5.OptionGroupModel;
+import org.apache.tapestry5.OptionModel;
+import org.apache.tapestry5.SelectModel;
+import org.apache.tapestry5.ValueEncoder;
+import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.corelib.components.Form;
+import org.apache.tapestry5.internal.OptionModelImpl;
 import org.apache.tapestry5.ioc.annotations.Inject;
+import org.apache.tapestry5.util.AbstractSelectModel;
 import ru.rsmu.tempoLW.consumabales.CrudMode;
 import ru.rsmu.tempoLW.consumabales.FieldCopy;
 import ru.rsmu.tempoLW.dao.QuestionDao;
 import ru.rsmu.tempoLW.encoders.SubTopicEncoder;
 import ru.rsmu.tempoLW.entities.ExamSubject;
+import ru.rsmu.tempoLW.entities.SubTopic;
 import ru.rsmu.tempoLW.entities.TestingPlan;
 import ru.rsmu.tempoLW.entities.TestingPlanRule;
 import ru.rsmu.tempoLW.pages.admin.Subjects;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author leonid.
  */
+@Import(module = "testingplan")
 public class TestingPlanCreate {
 
     @Property
@@ -35,24 +37,16 @@ public class TestingPlanCreate {
     @InjectComponent("testingPlanForm")
     private Form testingPlanForm;
 
-/*
-    @InjectComponent("questionCountField")
-    private TextField questionCountField;
-*/
-
     @Inject
     private QuestionDao questionDao;
-
-    //
-    private int rowNum;
-    private Map<Integer, FieldCopy> questionCountFieldMap;
 
     @Property
     private TestingPlanRule rule;
 
-
     @InjectPage
-    private Subjects subjectsPage;
+    private TestingPlanEdit testingPlanEditPage;
+
+    private Map<String,Long> topicCounts = new HashMap<>();
 
     public void onPrepareForRender() {
         //check if form exists
@@ -65,17 +59,28 @@ public class TestingPlanCreate {
         prepareTestingPlan( subject );
     }
 
-    public SubTopicEncoder getSubTopicEncoder() {
-        return new SubTopicEncoder( questionDao );
-    }
-
     private void prepareTestingPlan( ExamSubject subject ) {
         testingPlan = new TestingPlan();
         testingPlan.setSubject( subject );
-        testingPlan.setRules( questionDao.prepareTestingPlan( subject ) );
-        for ( TestingPlanRule rule : testingPlan.getRules() ) {
-            rule.setTestingPlan( testingPlan );
+        List<TestingPlanRule> rules = questionDao.prepareTestingPlan( subject );
+        Map<String, TestingPlanRule> rulesMap = new HashMap<>();
+        for ( TestingPlanRule rule : rules ) {
+            String key = String.format( "%d:%d", rule.getComplexity(), rule.getMaxScore() );
+            TestingPlanRule actualRule = rulesMap.get( key );
+            if ( actualRule == null ) {
+                rulesMap.put( key, rule );
+                actualRule = rule;
+                actualRule.setTestingPlan( testingPlan );
+            }
+            if ( actualRule.getTopics() == null ) {
+                actualRule.setTopics( new ArrayList<>() );
+            }
+            actualRule.getTopics().add( rule.getTopic() );
+            actualRule.setTotalQuestions( actualRule.getTotalQuestions() + (actualRule != rule ? rule.getTotalQuestions() : 0) );
+            topicCounts.put( String.format( "%d-%d-%d", rule.getComplexity(), rule.getMaxScore(), rule.getTopic().getId() ), rule.getTotalQuestions() );
         }
+
+        testingPlan.setRules( new ArrayList<>( rulesMap.values() ) );
         Collections.sort( testingPlan.getRules() );
     }
 
@@ -86,15 +91,25 @@ public class TestingPlanCreate {
                 ruleIterator.remove();
                 continue;
             }
-            if ( currentRule.getQuestionCount() > currentRule.getTotalQuestions() ) {
-                currentRule.setQuestionCount( (int)currentRule.getTotalQuestions() );
+            if ( currentRule.getTopics().size() == 0 ) {
+                ruleIterator.remove();
+                continue;
+            }
+            // check question count does not exceed total question quantity
+            // this check may be redundant
+            long questionQuantity = 0;
+            for ( SubTopic topic : currentRule.getTopics() ) {
+                Long quantity = topicCounts.get( String.format( "%d-%d-%d", currentRule.getComplexity(), currentRule.getMaxScore(), topic.getId() ) );
+                questionQuantity += quantity != null ? quantity : 0;
+            }
+            if ( currentRule.getQuestionCount() > questionQuantity ) {
+                currentRule.setQuestionCount( (int)questionQuantity );
             }
         }
         questionDao.save( testingPlan );
 
-        subjectsPage.set( subject.getId() );
-        return subjectsPage;
-        //return TestingPlanList.class;
+        testingPlanEditPage.set( testingPlan );
+        return testingPlanEditPage;
     }
 
     public Map getLinkParams() {
@@ -102,5 +117,45 @@ public class TestingPlanCreate {
         params.put( "mode", CrudMode.REVIEW );
         params.put( "subjectId", subject.getId() );
         return params;
+    }
+
+    public SelectModel getCurrentSelectModel() {
+        return new AbstractSelectModel() {
+            @Override
+            public List<OptionGroupModel> getOptionGroups() {
+                return null;
+            }
+
+            @Override
+            public List<OptionModel> getOptions() {
+                List<OptionModel> options = new ArrayList<OptionModel>();
+                for ( SubTopic topic : rule.getTopics() ) {
+                    Long quantity = topicCounts.get( String.format( "%d-%d-%d", rule.getComplexity(), rule.getMaxScore(), topic.getId() ) );
+                    options.add( new OptionModelImpl( String.format( "%s (%d)", topic.getTitle(), quantity != null? quantity:0 ), topic ) );
+                }
+                return options;
+            }
+        };
+    }
+
+    public ValueEncoder<SubTopic> getTopicEncoder() {
+        return new ValueEncoder<SubTopic>() {
+            List<SubTopic> topics = questionDao.findTopicsOfSubject( subject );
+            @Override
+            public String toClient( SubTopic value ) {
+                return String.valueOf( value.getId() );
+            }
+
+            @Override
+            public SubTopic toValue( String clientValue ) {
+                Long id = Long.parseLong( clientValue );
+                for ( SubTopic topic : topics ) {
+                    if ( id == topic.getId() ) {
+                        return topic;
+                    }
+                }
+                return null;
+            }
+        };
     }
 }

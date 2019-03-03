@@ -1,7 +1,10 @@
 package ru.rsmu.tempoLW.entities;
 
+import org.hibernate.annotations.Formula;
+
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -20,11 +23,27 @@ public class TestingPlanRule implements Serializable, Comparable<TestingPlanRule
     @JoinColumn(name = "testing_plan_id")
     private TestingPlan testingPlan;
 
-    @ManyToOne
+    @Transient
     private SubTopic topic;
 
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable( name = "rule_topics",
+            joinColumns = @JoinColumn(name = "testing_plan_id"),
+            inverseJoinColumns = @JoinColumn(name = "topic_id")
+    )
+    private List<SubTopic> topics;
+
+    /**
+     * Complexity of questions
+     */
     @Column
     private int complexity;
+
+    /**
+     * Max score of questions
+     */
+    @Column(name = "max_score",nullable = false)
+    private int maxScore;
 
     @Column(name = "question_count")
     private int questionCount;
@@ -35,6 +54,9 @@ public class TestingPlanRule implements Serializable, Comparable<TestingPlanRule
 
     @Transient
     private long totalQuestions;
+
+    @Formula( "max_score * score_cost" )
+    private int maxMark;
 
     public long getId() {
         return id;
@@ -92,11 +114,36 @@ public class TestingPlanRule implements Serializable, Comparable<TestingPlanRule
         this.scoreCost = scoreCost;
     }
 
+    public int getMaxScore() {
+        return maxScore;
+    }
+
+    public void setMaxScore( int maxScore ) {
+        this.maxScore = maxScore;
+    }
+
+    public int getMaxMark() {
+        return maxMark;
+    }
+
+    public void setMaxMark( int maxMark ) {
+        this.maxMark = maxMark;
+    }
+
+    public List<SubTopic> getTopics() {
+        return topics;
+    }
+
+    public void setTopics( List<SubTopic> topics ) {
+        this.topics = topics;
+    }
+
     @Override
     public int compareTo( TestingPlanRule o ) {
         int firstCompare = this.complexity - o.complexity;
-
-        return  (firstCompare == 0) ? this.getTopic().getTitle().compareTo( o.getTopic().getTitle() ) : firstCompare;
+        if ( firstCompare != 0 ) return firstCompare;
+        int secondCompare = this.maxScore - o.maxScore;
+        return  (secondCompare == 0) ? ( this.getTopics().size() - o.getTopics().size() ) : secondCompare;
     }
 
     @Override
@@ -109,11 +156,35 @@ public class TestingPlanRule implements Serializable, Comparable<TestingPlanRule
                 questionCount == that.questionCount &&
                 scoreCost == that.scoreCost &&
                 Objects.equals( testingPlan, that.testingPlan ) &&
-                Objects.equals( topic, that.topic );
+                //Objects.equals( topic, that.topic ) &&
+                // long and complicates comparison of two lists
+                // check they both are null or contains the same elements
+                (
+                    (topics == null && that.topics == null) ||
+                    (
+                        topics != null &&
+                        that.topics != null &&
+                        topics.containsAll( that.topics ) &&
+                        that.topics.containsAll( topics )
+                    )
+                );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash( id, testingPlan, topic, complexity, questionCount, scoreCost );
+        int hash = Objects.hash( id, testingPlan, /*topic,*/ complexity, questionCount, scoreCost );
+        if ( topics != null ) {
+            for ( SubTopic topic : topics ) {
+                hash = 31 * hash + topic.hashCode();
+            }
+        }
+        return hash;
     }
+
+/*
+    @Override
+    public String toString() {
+        return String.format( "%s (%d-%d)", topic.getTitle(), complexity, maxScore );
+    }
+*/
 }

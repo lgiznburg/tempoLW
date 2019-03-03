@@ -3,6 +3,7 @@ package ru.rsmu.tempoLW.utils;
 import ru.rsmu.tempoLW.dao.QuestionDao;
 import ru.rsmu.tempoLW.entities.*;
 
+import java.util.Collections;
 import java.util.LinkedList;
 
 /**
@@ -18,6 +19,7 @@ public class ExamBuilder {
     public ExamResult buildTestVariant( TestingPlan plan ) {
         ExamResult examResult = new ExamResult();
         examResult.setQuestionResults( new LinkedList<>() );
+        Collections.sort( plan.getRules() );
 
         int questionNum = 0;
         for ( TestingPlanRule rule : plan.getRules() ) {
@@ -30,7 +32,7 @@ public class ExamBuilder {
                 examResult.getQuestionResults().add( questionResult );
             }
         }
-        examResult.setTestingPlan( plan );
+        examResult.setTitle( String.format( "%s (%s)", plan.getSubject().getTitle(), plan.getName() ) );
         return examResult;
     }
 }

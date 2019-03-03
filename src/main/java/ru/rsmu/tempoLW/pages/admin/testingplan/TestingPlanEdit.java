@@ -1,28 +1,29 @@
 package ru.rsmu.tempoLW.pages.admin.testingplan;
 
+import org.apache.tapestry5.OptionGroupModel;
+import org.apache.tapestry5.OptionModel;
+import org.apache.tapestry5.SelectModel;
 import org.apache.tapestry5.ValueEncoder;
-import org.apache.tapestry5.annotations.InjectComponent;
-import org.apache.tapestry5.annotations.InjectPage;
-import org.apache.tapestry5.annotations.PageActivationContext;
-import org.apache.tapestry5.annotations.Property;
+import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.corelib.components.Form;
+import org.apache.tapestry5.internal.OptionModelImpl;
 import org.apache.tapestry5.ioc.annotations.Inject;
+import org.apache.tapestry5.util.AbstractSelectModel;
 import ru.rsmu.tempoLW.consumabales.CrudMode;
 import ru.rsmu.tempoLW.dao.QuestionDao;
+import ru.rsmu.tempoLW.entities.SubTopic;
 import ru.rsmu.tempoLW.entities.TestingPlan;
 import ru.rsmu.tempoLW.entities.TestingPlanRule;
 import ru.rsmu.tempoLW.pages.admin.Subjects;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author leonid.
  *
  * Page to edit Testing Plan
  */
+@Import(module = "testingplan")
 public class TestingPlanEdit {
 
     @Property
@@ -44,8 +45,12 @@ public class TestingPlanEdit {
     @Property
     private final ValueEncoder<TestingPlanRule> ruleEncoder = new TestingPlanRuleEncoder();
 
-    @InjectPage
-    private Subjects subjectsPage;
+    private Map<String,Long> topicCounts = new HashMap<>();
+
+
+    public void set( TestingPlan testingPlan ) {
+        this.testingPlan = testingPlan;
+    }
 
     public void onPrepareForRender() {
         //check if form exists
@@ -59,41 +64,85 @@ public class TestingPlanEdit {
     }
 
     private void prepareAdditionalRules() {
-        additionalRules = questionDao.prepareTestingPlan( testingPlan.getSubject() );
-
-        for ( Iterator<TestingPlanRule> ruleIterator = additionalRules.iterator(); ruleIterator.hasNext(); ) {
-            TestingPlanRule addRule = ruleIterator.next();
-            for ( TestingPlanRule existedRule : testingPlan.getRules() ) {
-                if ( existedRule.compareTo( addRule ) == 0 ) {
-                    ruleIterator.remove();
-                }
-                else {
-                    addRule.setTestingPlan( testingPlan );
-                }
+        // put existed rule topics into topicCount map.
+        // so the map will be also used as flag for topics that already has a rule
+        for (TestingPlanRule existedRule : testingPlan.getRules() ) {
+            for ( SubTopic topic : existedRule.getTopics() ) {
+                String key = createCountKey( existedRule, topic );
+                topicCounts.put( key, -1l );  // dummy value
             }
         }
+        List<TestingPlanRule> rules = questionDao.prepareTestingPlan( testingPlan.getSubject() );
+        Map<String, TestingPlanRule> rulesMap = new HashMap<>();
+        for ( TestingPlanRule rule : rules ) {
+            String countersKey = createCountKey( rule, rule.getTopic() );
+            Long quantity = topicCounts.get( createCountKey( rule, rule.getTopic() ) );
+            if ( quantity == null || quantity > 0 ) {
+                String key = String.format( "%d:%d", rule.getComplexity(), rule.getMaxScore() );
+                TestingPlanRule actualRule = rulesMap.get( key );
+                if ( actualRule == null ) {
+                    rulesMap.put( key, rule );
+                    actualRule = rule;
+                    actualRule.setTestingPlan( testingPlan );
+                }
+                if ( actualRule.getTopics() == null ) {
+                    actualRule.setTopics( new ArrayList<>() );
+                }
+                actualRule.getTopics().add( rule.getTopic() );
+                actualRule.setTotalQuestions( actualRule.getTotalQuestions() + (actualRule != rule ? rule.getTotalQuestions() : 0) );
+            }
+            topicCounts.put( countersKey, rule.getTotalQuestions() );
+        }
+        additionalRules = new ArrayList<>( rulesMap.values() );
+
+        //count actual questions quantity for rules
+        for ( TestingPlanRule rule : testingPlan.getRules() ) {
+            for ( SubTopic topic : rule.getTopics() ) {
+                Long quantity = topicCounts.get( createCountKey( rule, topic ) );
+                rule.setTotalQuestions( rule.getTotalQuestions() + (quantity != null ? quantity : 0)  );
+            }
+        }
+        Collections.sort( testingPlan.getRules() );
+
     }
 
     public Object onSuccess() {
         for ( Iterator<TestingPlanRule> ruleIterator = testingPlan.getRules().iterator(); ruleIterator.hasNext(); ) {
             TestingPlanRule removing = ruleIterator.next();
-            if ( removing.getQuestionCount() <= 0 ) {
+            if ( removing.getQuestionCount() <= 0 || removing.getTopics().size() == 0 ) {
                 ruleIterator.remove();
                 questionDao.delete( removing );
+                continue;
             }
+            checkQuestionCount( removing ); // not removing here :)
         }
         for ( TestingPlanRule addRule : additionalRules ) {
-            if ( addRule.getQuestionCount() > 0 ) {
+            if ( addRule.getQuestionCount() > 0 && addRule.getTopics().size() > 0 ) {
+                checkQuestionCount( addRule );
                 testingPlan.getRules().add( addRule );
             }
         }
         questionDao.save( testingPlan );
 
-        subjectsPage.set( testingPlan.getSubject().getId() );
-        return subjectsPage;
-        //return TestingPlanList.class;
+        return null; // stay here to edit possible additional rules
     }
 
+    private void checkQuestionCount( TestingPlanRule currentRule ) {
+        // check question count does not exceed total question quantity
+        // this check may be redundant
+        long questionQuantity = 0;
+        for ( SubTopic topic : currentRule.getTopics() ) {
+            Long quantity = topicCounts.get( createCountKey( currentRule, topic ) );
+            questionQuantity += quantity != null ? quantity : 0;
+        }
+        if ( currentRule.getQuestionCount() > questionQuantity ) {
+            currentRule.setQuestionCount( (int)questionQuantity );
+        }
+    }
+
+    private String createCountKey( TestingPlanRule rule, SubTopic topic ) {
+        return String.format( "%d-%d-%d", rule.getComplexity(), rule.getMaxScore(), topic.getId() );
+    }
 
     // This encoder is used in our loop
     public class TestingPlanRuleEncoder implements ValueEncoder<TestingPlanRule> {
@@ -120,5 +169,45 @@ public class TestingPlanEdit {
         params.put( "mode", CrudMode.REVIEW );
         params.put( "subjectId", testingPlan.getSubject().getId() );
         return params;
+    }
+
+    public SelectModel getCurrentSelectModel() {
+        return new AbstractSelectModel() {
+            @Override
+            public List<OptionGroupModel> getOptionGroups() {
+                return null;
+            }
+
+            @Override
+            public List<OptionModel> getOptions() {
+                List<OptionModel> options = new ArrayList<OptionModel>();
+                for ( SubTopic topic : rule.getTopics() ) {
+                    Long quantity = topicCounts.get( createCountKey( rule, topic ) );
+                    options.add( new OptionModelImpl( String.format( "%s (%d)", topic.getTitle(), quantity != null? quantity:0 ), topic ) );
+                }
+                return options;
+            }
+        };
+    }
+
+    public ValueEncoder<SubTopic> getTopicEncoder() {
+        return new ValueEncoder<SubTopic>() {
+            List<SubTopic> topics = questionDao.findTopicsOfSubject( testingPlan.getSubject() );
+            @Override
+            public String toClient( SubTopic value ) {
+                return String.valueOf( value.getId() );
+            }
+
+            @Override
+            public SubTopic toValue( String clientValue ) {
+                Long id = Long.parseLong( clientValue );
+                for ( SubTopic topic : topics ) {
+                    if ( id == topic.getId() ) {
+                        return topic;
+                    }
+                }
+                return null;
+            }
+        };
     }
 }

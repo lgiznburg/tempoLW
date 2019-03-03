@@ -27,7 +27,7 @@
             <h5>Testing plans</h5>
             <div class="col-sm-10">
                 <ul class="list-group">
-                    <t:loop source="plans" value="plan" empty="block:createPlan">
+                    <t:loop source="plans" value="plan">
                         <li class="list-group-item">
                             <t:if test="plan.enabled">
                                 <span class="badge"><span class="glyphicon glyphicon-ok"/></span>
@@ -35,6 +35,9 @@
                             <t:pagelink page="admin/testingplan/testingplanedit" context="plan">${plan.name}</t:pagelink>
                         </li>
                     </t:loop>
+                    <li class="list-group-item">
+                        <t:pagelink page="admin/testingplan/testingplancreate" context="subject" class="btn btn-primary">Create new plan</t:pagelink>
+                    </li>
                 </ul>
             </div>
 
@@ -48,9 +51,4 @@
         </div>
     </div>
 
-    <t:block t:id="createPlan">
-        <li class="list-group-item">
-            <t:pagelink page="admin/testingplan/testingplancreate" context="subject" class="btn btn-primary">Create new plan</t:pagelink>
-        </li>
-    </t:block>
 </t:container>

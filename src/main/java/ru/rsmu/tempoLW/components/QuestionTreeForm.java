@@ -151,16 +151,17 @@ public class QuestionTreeForm {
     }
 
     public List<String> getPreviousAnswers() {
-        int step = 0;
+        int existedAnswers = questionResult.getElements().size();
         List<String> answers = new ArrayList<>();
         for ( CorrespondenceVariant previousVariant : ((QuestionTree)questionResult.getQuestion()).getCorrespondenceVariants() ) {
-            /*if ( previousVariant == currentVariant ) {
-                break;  // do not pass over current step
-            }*/
+            if ( existedAnswers <= 0 ) {
+                break;  // do not go if no more answers present
+            }
             List<String> currentAnswers = new ArrayList<>();
             for ( ResultElement resultTree : questionResult.getElements() ) {
                 if ( ((ResultTree)resultTree).getCorrespondenceVariant() == previousVariant ) {
                     currentAnswers.add( ((ResultTree)resultTree).getAnswerVariant().getText() );
+                    existedAnswers--;
                 }
             }
             String text = previousVariant.getText();

@@ -11,6 +11,12 @@
             </div>
         </div>
         <div class="form-group">
+            <label for="examMaxResult" class="control-label col-sm-4">Максимальный результат</label>
+            <div class="col-sm-8">
+                <input type="text" id="examMaxResult" value="0" disabled="disabled" class="form-control"/>
+            </div>
+        </div>
+        <div class="form-group">
             <t:label for="enabled" class="col-sm-4"/>
             <div class="col-sm-8">
                 <t:checkbox value="testingPlan.enabled" t:id="enabled"/>
@@ -21,18 +27,24 @@
             <thead>
             <tr>
                 <th>${message:topic-title}</th>
+                <th>${message:admin.plan.total-questions}</th>
                 <th>${message:complexity}</th>
-                <th>${message:question-count}</th>
+                <th>${message:admin.plan.max-score}</th>
                 <th>${message:score-cost}</th>
+                <th>${message:admin.plan.max-mark}</th>
+                <th>${message:question-count}</th>
             </tr>
             </thead>
             <tbody>
             <t:loop source="testingPlan.rules" value="rule" encoder="ruleEncoder">
                 <tr>
-                    <td>${rule.topic.title}</td>
+                    <td><t:checklist selected="rule.topics" model="currentSelectModel" encoder="topicEncoder"/></td>
+                    <td>${rule.totalQuestions}</td>
                     <td>${rule.complexity}</td>
-                    <td><t:textfield t:id="questionCountField" value="rule.questionCount"/></td>
+                    <td><t:textfield t:id="maxScore" value="rule.maxScore" disabled="true"/></td>
                     <td><t:textfield t:id="scoreCostField" value="rule.scoreCost"/></td>
+                    <td><t:textfield t:id="maxMark" value="rule.maxMark" disabled="true"/></td>
+                    <td><t:textfield t:id="questionCountField" value="rule.questionCount"/></td>
                 </tr>
             </t:loop>
             <t:if test="additionalRules">
@@ -45,10 +57,13 @@
 
             <t:loop source="additionalRules" value="rule" formstate="ITERATION">
                 <tr>
-                    <td>${rule.topic.title}</td>
+                    <td><t:checklist selected="rule.topics" model="currentSelectModel" encoder="topicEncoder"/></td>
+                    <td>${rule.totalQuestions}</td>
                     <td>${rule.complexity}</td>
-                    <td><t:textfield t:id="questionCountFieldAdd" value="rule.questionCount"/></td>
+                    <td><t:textfield t:id="maxScoreAdd" value="rule.maxScore" disabled="true"/><!--${rule.maxScore}--></td>
                     <td><t:textfield t:id="scoreCostFieldAdd" value="rule.scoreCost"/></td>
+                    <td><t:textfield t:id="maxMarkAdd" value="rule.maxMark" disabled="true"/></td>
+                    <td><t:textfield t:id="questionCountFieldAdd" value="rule.questionCount"/></td>
                 </tr>
             </t:loop>
             </tbody>
@@ -57,7 +72,7 @@
 
         <div class="form-group">
             <t:submit class="btn btn-primary" value="message:save"/>
-            <t:pagelink page="admin/subjects" parameters="linkParams" class="btn btn-default">${message:cancel}</t:pagelink>
+            <t:pagelink page="admin/subjects" parameters="linkParams" class="btn btn-default">${message:back-to-subjects}</t:pagelink>
         </div>
     </t:form>
 </div>

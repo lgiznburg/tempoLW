@@ -6,6 +6,7 @@ import org.hibernate.transform.AliasToBeanResultTransformer;
 import ru.rsmu.tempoLW.dao.QuestionDao;
 import ru.rsmu.tempoLW.entities.*;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
@@ -39,9 +40,10 @@ public class QuestionDaoImpl extends BaseDaoImpl implements QuestionDao {
         Criteria criteria = session.createCriteria( QuestionInfo.class )
                 .add( Restrictions.eq( "subject", subject ) )
                 .setProjection( Projections.projectionList()
-                                .add( Projections.groupProperty( "topic" ), "topic" )
-                                .add( Projections.groupProperty( "complexity" ), "complexity" )
-                                .add( Projections.rowCount(), "totalQuestions" )
+                        .add( Projections.groupProperty( "topic" ), "topic" )
+                        .add( Projections.groupProperty( "complexity" ), "complexity" )
+                        .add( Projections.groupProperty( "maxScore" ), "maxScore" )
+                        .add( Projections.rowCount(), "totalQuestions" )
                 )
                 .setResultTransformer( new AliasToBeanResultTransformer( TestingPlanRule.class ) );
         return (List<TestingPlanRule>) criteria.list();
@@ -114,28 +116,6 @@ public class QuestionDaoImpl extends BaseDaoImpl implements QuestionDao {
         return (long) criteria.uniqueResult();
     }
 
-    @Override
-    public Question findRandomQuestion( TestingPlanRule rule ) {
-        Question question = null;
-        Criterion restrictions = Restrictions.conjunction()
-                .add( Restrictions.eq( "questionInfo.complexity", rule.getComplexity() ) )
-                .add( Restrictions.eq( "questionInfo.topic", rule.getTopic() ) );
-
-        Criteria criteria = session.createCriteria( Question.class )
-                .createAlias( "questionInfo", "questionInfo" )
-                .add( restrictions )
-                .setProjection( Projections.rowCount() );
-        int count = ((Number) criteria.uniqueResult()).intValue();
-        if (0 != count) {
-            int index = new Random().nextInt(count);
-            criteria = session.createCriteria( Question.class )
-                    .createAlias( "questionInfo", "questionInfo" )
-                    .add( restrictions )
-                    .setFirstResult( index ).setMaxResults( 1 );
-            question = (Question) criteria.uniqueResult();
-        }
-        return question;
-    }
 
     @Override
     @SuppressWarnings( "unchecked" )
@@ -144,9 +124,26 @@ public class QuestionDaoImpl extends BaseDaoImpl implements QuestionDao {
         Criteria criteria = session.createCriteria( Question.class )
                 .createAlias( "questionInfo", "questionInfo" )
                 .add( Restrictions.eq( "questionInfo.complexity", rule.getComplexity() ) )
-                .add( Restrictions.eq( "questionInfo.topic", rule.getTopic() ) );
+                .add( Restrictions.in( "questionInfo.topic", rule.getTopics() ) );
         List<Question> questions = criteria.list();
         Collections.shuffle( questions );
-        return questions.subList( 0, rule.getQuestionCount() );
+        Collections.shuffle( rule.getTopics() );
+        List<Question> resultQuestions = new ArrayList<>();
+        while ( questions.size() > 0 && resultQuestions.size() < rule.getQuestionCount() ) {
+            for ( SubTopic topic : rule.getTopics() ) {
+                for ( Question question :questions ) {
+                    if ( question.getQuestionInfo().getTopic().equals( topic ) && !resultQuestions.contains( question ) ) {
+                        resultQuestions.add( question );
+                        if ( resultQuestions.size() == rule.getQuestionCount() ) {
+                            break;
+                        }
+                    }
+                }
+                if ( resultQuestions.size() == rule.getQuestionCount() ) {
+                    break;
+                }
+            }
+        }
+        return resultQuestions;
     }
 }

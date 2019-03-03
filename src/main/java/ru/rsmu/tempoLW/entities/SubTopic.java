@@ -1,5 +1,7 @@
 package ru.rsmu.tempoLW.entities;
 
+import org.hibernate.annotations.Formula;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
@@ -22,6 +24,8 @@ public class SubTopic implements Serializable {
     @ManyToOne
     private ExamSubject subject;
 
+    @Formula( "(select count(*) from question_info qi where qi.topic_id = id)" )
+    private long questionsCount;
 
     public long getId() {
         return id;
@@ -45,6 +49,14 @@ public class SubTopic implements Serializable {
 
     public void setSubject( ExamSubject subject ) {
         this.subject = subject;
+    }
+
+    public long getQuestionsCount() {
+        return questionsCount;
+    }
+
+    public void setQuestionsCount( long questionsCount ) {
+        this.questionsCount = questionsCount;
     }
 
     @Override
