@@ -5,7 +5,12 @@
 
         <t:loop source="rows" t:id="correspondence" encoder="rowEncoder" value="row">
             <div class="form-group">
-                <div class="col-sm-4 qc-variant-text">${row.correspondenceVariant.text}</div>
+                <div class="col-sm-4 qc-variant-text">
+                    ${row.correspondenceVariant.text}
+                    <t:if test="row.correspondenceVariant.image">
+                        <img class="question-image" src="${row.imageLink}"/>
+                    </t:if>
+                </div>
                 <div class="col-sm-8">
                     <div style="display: flex;">
                         <div class="qso-element-div">

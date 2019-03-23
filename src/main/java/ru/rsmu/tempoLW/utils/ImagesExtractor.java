@@ -25,10 +25,11 @@ public class ImagesExtractor {
             ZipEntry zipEntry = zipInputStream.getNextEntry();
             while ( zipEntry != null ) {
                 String imageName = zipEntry.getName();
-                if ( imageName.matches( ".*\\.((gif)|(jpeg)|(jpg)|(png))$" ) ) {
+                if ( imageName.matches( ".*\\.((gif)|(jpeg)|(jpg)|(png)|(svg)|(svgz))$" ) ) {
                     byte[] imageBytes = IOUtils.toByteArray( zipInputStream );
                     imagesMap.put( imageName, imageBytes );
                 }
+                zipEntry = zipInputStream.getNextEntry();
             }
         } catch (IOException e) {
             e.printStackTrace();

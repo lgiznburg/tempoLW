@@ -29,6 +29,9 @@ public class QuestionSimpleForm {
     @Property
     private SelectModel answerModel;
 
+    @Property
+    private boolean plural = false;
+
     @Inject
     private SelectModelFactory modelFactory;
 
@@ -53,7 +56,16 @@ public class QuestionSimpleForm {
         questionDao.refresh( questionResult.getQuestion() );
         Collections.shuffle( ((QuestionSimple)questionResult.getQuestion()).getAnswerVariants() );
         answerModel = modelFactory.create( ((QuestionSimple)questionResult.getQuestion()).getAnswerVariants(), "text" );
-
+        int count = 0;
+        for ( AnswerVariant variant : ((QuestionSimple)questionResult.getQuestion()).getAnswerVariants() ) {
+            if ( variant.isCorrect() ) {
+                count++;
+            }
+            if ( count > 1 ) {
+                plural = true;
+                break;
+            }
+        }
     }
 
     public void onSuccess() {

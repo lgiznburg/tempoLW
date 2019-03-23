@@ -69,7 +69,7 @@ public class QuestionsLoader extends ExcelLayout {
                 ignoreEmptyRow = true;
                 QuestionInfo questionInfo = createQuestionInfo( row );
                 if ( questionInfo != null ) {
-                    String questionType = getCellValue( row, COLUMN_QUESTION_TYPE );
+                    String questionType = getCellValue( row, COLUMN_QUESTION_TYPE ).trim();
                     QuestionBuilder builder = QuestionBuilder.create( questionType );
                     builder.setImagesExtractor( imagesExtractor );
                     rowN = builder.parse( sheet, rowN );
@@ -88,7 +88,7 @@ public class QuestionsLoader extends ExcelLayout {
 
     protected QuestionInfo createQuestionInfo( Row row ) {
         String topicTitle = getCellValue( row, COLUMN_TOPIC );
-        SubTopic topic = questionDao.findTopicByName( topicTitle );
+        SubTopic topic = questionDao.findTopicByName( topicTitle, subject );
         if ( topic == null ) {
             topic = new SubTopic();
             topic.setTitle( topicTitle );

@@ -4,10 +4,12 @@ import org.apache.tapestry5.SelectModel;
 import org.apache.tapestry5.ValueEncoder;
 import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.annotations.Property;
+import org.apache.tapestry5.internal.services.LinkSource;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.SelectModelFactory;
 import ru.rsmu.tempoLW.dao.QuestionDao;
 import ru.rsmu.tempoLW.entities.*;
+import ru.rsmu.tempoLW.pages.QuestionImage;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -34,6 +36,10 @@ public class QuestionCorrespondenceForm {
 
     @Inject
     private QuestionDao questionDao;
+
+    @Inject
+    private LinkSource linkSource;
+
 
     public void setupRender() {
         prepare();
@@ -139,6 +145,13 @@ public class QuestionCorrespondenceForm {
 
         public void setCorrespondenceVariant( CorrespondenceVariant correspondenceVariant ) {
             this.correspondenceVariant = correspondenceVariant;
+        }
+
+        public String getImageLink() {
+            if ( correspondenceVariant.getImage() != null ) {
+                return linkSource.createPageRenderLink( QuestionImage.class.getSimpleName(), false, correspondenceVariant.getImage().getId() ).toURI();
+            }
+            return "";
         }
     }
 

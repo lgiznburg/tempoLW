@@ -28,17 +28,14 @@ public class ExamResult implements Serializable {
     @Column(name = "mark_total")
     private int markTotal;
 
-    //@ManyToOne
-    //@JoinColumn(name = "testing_plan_id")
-    //private TestingPlan testingPlan;
-
     @Column
     private String title;
 
     @OneToMany( mappedBy = "examResult", cascade = CascadeType.ALL )
     private List<QuestionResult> questionResults;
 
-    //todo link to testee
+    @ManyToOne
+    private Testee testee;
 
     public long getId() {
         return id;
@@ -72,16 +69,6 @@ public class ExamResult implements Serializable {
         this.markTotal = markTotal;
     }
 
-/*
-    public TestingPlan getTestingPlan() {
-        return testingPlan;
-    }
-
-    public void setTestingPlan( TestingPlan testingPlan ) {
-        this.testingPlan = testingPlan;
-    }
-*/
-
     public String getTitle() {
         return title;
     }
@@ -96,6 +83,14 @@ public class ExamResult implements Serializable {
 
     public void setQuestionResults( List<QuestionResult> questionResults ) {
         this.questionResults = questionResults;
+    }
+
+    public Testee getTestee() {
+        return testee;
+    }
+
+    public void setTestee( Testee testee ) {
+        this.testee = testee;
     }
 
     @Transient

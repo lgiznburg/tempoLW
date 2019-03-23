@@ -1,5 +1,8 @@
 package ru.rsmu.tempoLW.entities;
 
+import org.apache.tapestry5.beaneditor.Validate;
+import org.hibernate.validator.constraints.NotEmpty;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
@@ -24,6 +27,7 @@ public class TestingPlan implements Serializable {
     private List<TestingPlanRule> rules;
 
     @Column
+    @Validate( "required" )
     private String name;
 
     @Column

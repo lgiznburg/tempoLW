@@ -9,6 +9,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author leonid.
@@ -123,5 +124,22 @@ public class User implements Serializable {
             }
         }
         return false;
+    }
+
+    @Override
+    public boolean equals( Object o ) {
+        if ( this == o ) return true;
+        if ( o == null || getClass() != o.getClass() ) return false;
+        User user = (User) o;
+        return id == user.id &&
+                Objects.equals( username, user.username ) &&
+                Objects.equals( firstName, user.firstName ) &&
+                Objects.equals( middleName, user.middleName ) &&
+                Objects.equals( lastName, user.lastName );
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash( id, username, firstName, middleName, lastName );
     }
 }

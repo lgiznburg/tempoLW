@@ -24,7 +24,7 @@ import java.util.Set;
  */
 public class UserDetailsRealm extends AuthorizingRealm {
 
-    protected final HibernateSessionManager sessionManager;
+    private final HibernateSessionManager sessionManager;
 
     public UserDetailsRealm( HibernateSessionManager sessionManager ) {
         super(new MemoryConstrainedCacheManager());

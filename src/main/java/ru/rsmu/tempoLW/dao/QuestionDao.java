@@ -8,7 +8,7 @@ import java.util.List;
  * @author leonid.
  */
 public interface QuestionDao extends BaseDao {
-    SubTopic findTopicByName( String topicTitle );
+    SubTopic findTopicByName( String topicTitle, ExamSubject subject );
 
     QuestionInfo findQuestionInfoByName( String name, SubTopic topic, int complexity );
 

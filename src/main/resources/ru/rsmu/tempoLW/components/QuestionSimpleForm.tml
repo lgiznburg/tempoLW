@@ -5,15 +5,26 @@
 
         <div class="form-group">
             <div style="padding-top: 2rem;">
-                <t:label for="simpleAnswers" class="col-sm-4"/>
+                <t:if test="plural">
+                    <t:label for="simpleAnswers" class="col-sm-4"/>
+                    <p:else>
+                        <t:label for="simpleAnswer" class="col-sm-4"/>
+                    </p:else>
+                </t:if>
             </div>
 
             <div class="col-sm-8">
                 <div style="display: flex;">
                     <div class="qso-elements-group">
                         <div class="qso-element-div">
-                            <t:checklist t:id="simpleAnswers" model="answerModel" selected="selectedAnswers"
-                                         encoder="answerEncoder"/>
+                            <t:if test="plural">
+                                <t:checklist t:id="simpleAnswers" model="answerModel" selected="selectedAnswers"
+                                             encoder="answerEncoder"/>
+                                <p:else>
+                                    <t:checklist t:id="simpleAnswer" model="answerModel" selected="selectedAnswers"
+                                                 encoder="answerEncoder"/>
+                                </p:else>
+                            </t:if>
                         </div>
                     </div>
                 </div>

@@ -109,4 +109,12 @@ public class QuestionPreview {
         }
         return "";
     }
+
+    public String getCorrespondenceImageLink() {
+        if ( correspondence != null && correspondence.getImage() != null ) {
+            return linkSource.createPageRenderLink(QuestionImage.class.getSimpleName(), false, correspondence.getImage().getId() ).toURI();
+        }
+        return "";
+
+    }
 }

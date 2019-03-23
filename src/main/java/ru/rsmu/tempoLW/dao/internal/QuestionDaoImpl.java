@@ -9,16 +9,16 @@ import ru.rsmu.tempoLW.entities.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 /**
  * @author leonid.
  */
 public class QuestionDaoImpl extends BaseDaoImpl implements QuestionDao {
     @Override
-    public SubTopic findTopicByName( String topicTitle ) {
+    public SubTopic findTopicByName( String topicTitle, ExamSubject subject ) {
         Criteria criteria = session.createCriteria( SubTopic.class )
                 .add( Restrictions.eq( "title", topicTitle ) )
+                .add( Restrictions.eq( "subject", subject ) )
                 .setMaxResults( 1 );
         return (SubTopic) criteria.uniqueResult();
     }
@@ -78,7 +78,9 @@ public class QuestionDaoImpl extends BaseDaoImpl implements QuestionDao {
     @SuppressWarnings( "unchecked" )
     public List<TestingPlan> findTestingPlans() {
         Criteria criteria = session.createCriteria( TestingPlan.class )
-                .add( Restrictions.eq( "enabled", true ) );
+                .createAlias( "subject", "subject" )
+                .add( Restrictions.eq( "enabled", true ) )
+                .addOrder( Order.asc( "subject.title" ) );
         return criteria.list();
     }
 
@@ -124,6 +126,7 @@ public class QuestionDaoImpl extends BaseDaoImpl implements QuestionDao {
         Criteria criteria = session.createCriteria( Question.class )
                 .createAlias( "questionInfo", "questionInfo" )
                 .add( Restrictions.eq( "questionInfo.complexity", rule.getComplexity() ) )
+                .add( Restrictions.eq( "questionInfo.maxScore", rule.getMaxScore()) )
                 .add( Restrictions.in( "questionInfo.topic", rule.getTopics() ) );
         List<Question> questions = criteria.list();
         Collections.shuffle( questions );
@@ -134,9 +137,7 @@ public class QuestionDaoImpl extends BaseDaoImpl implements QuestionDao {
                 for ( Question question :questions ) {
                     if ( question.getQuestionInfo().getTopic().equals( topic ) && !resultQuestions.contains( question ) ) {
                         resultQuestions.add( question );
-                        if ( resultQuestions.size() == rule.getQuestionCount() ) {
-                            break;
-                        }
+                        break;
                     }
                 }
                 if ( resultQuestions.size() == rule.getQuestionCount() ) {

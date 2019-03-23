@@ -32,7 +32,7 @@ public class Layout {
 
     public String getUsername() {
         User user = securityUserHelper.getCurrentUser();
-        return user != null ? user.getFirstName() : "";
+        return user != null ? user.getFirstName() + " " +user.getMiddleName() : "";
     }
 
     /**
