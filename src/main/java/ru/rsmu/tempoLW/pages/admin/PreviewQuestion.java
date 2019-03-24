@@ -4,13 +4,20 @@ import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.tapestry5.Asset;
 import org.apache.tapestry5.EventContext;
+import org.apache.tapestry5.SelectModel;
 import org.apache.tapestry5.annotations.*;
+import org.apache.tapestry5.corelib.components.Zone;
 import org.apache.tapestry5.internal.services.LinkSource;
 import org.apache.tapestry5.ioc.annotations.Inject;
+import org.apache.tapestry5.services.Request;
+import org.apache.tapestry5.services.SelectModelFactory;
+import org.apache.tapestry5.services.ajax.AjaxResponseRenderer;
 import org.apache.tapestry5.services.javascript.JavaScriptSupport;
 import ru.rsmu.tempoLW.dao.QuestionDao;
+import ru.rsmu.tempoLW.encoders.SubTopicEncoder;
 import ru.rsmu.tempoLW.entities.Question;
 import ru.rsmu.tempoLW.entities.ExamSubject;
+import ru.rsmu.tempoLW.entities.SubTopic;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -41,6 +48,25 @@ public class PreviewQuestion {
     @InjectPage
     private Subjects subjectsPage;
 
+    //search form params
+    @Property
+    private SubTopic topic;
+
+    @Property
+    private Integer complexity;
+
+    @Property
+    private Integer maxScore;
+
+    @Property
+    private String text;
+
+    @Property
+    private SelectModel topicModel;
+
+    @Inject
+    private SelectModelFactory modelFactory;
+
     public void setupRender() {
 
         javaScriptSupport.require( "katex/katex" );
@@ -60,7 +86,16 @@ public class PreviewQuestion {
                     if ( question == null || question.getQuestionInfo().getSubject().getId() != subjectId ) {
                         question = questionDao.findNextQuestion( questionId, subject );
                     }
-                    return null;
+
+                    if ( question != null ) {
+                        topic = question.getQuestionInfo().getTopic();
+                        complexity = question.getQuestionInfo().getComplexity();
+                        maxScore = question.getQuestionInfo().getMaxScore();
+
+                        topicModel = modelFactory.create( questionDao.findTopicsOfSubject( subject ), "title" );
+
+                        return null;
+                    }
                 }
             }
         }
@@ -82,7 +117,6 @@ public class PreviewQuestion {
         }
         question = next;
         return this;
-        //linkSource.createPageRenderLink( "admin/" + PreviewQuestion.class.getSimpleName(), false, subject.getId(), next.getId() );
     }
 
 
@@ -94,6 +128,17 @@ public class PreviewQuestion {
         }
         question = prev;
         return this;
-        //linkSource.createPageRenderLink(  "admin/" + PreviewQuestion.class.getSimpleName(), false, subject.getId(), prev.getId() );
+    }
+
+    public SubTopicEncoder getTopicEncoder() {
+        return new SubTopicEncoder( questionDao );
+    }
+
+    public Object onValidateFromQuestionSearch() {
+        Question search = questionDao.findQuestionByFilter( topic, complexity, maxScore, text );
+        if ( search != null ) {
+            question = search;
+        }
+        return this;
     }
 }

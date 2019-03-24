@@ -4,21 +4,42 @@
 <body>
     <t:questionpreview question="question"/>
 
-    <!--<t:pagelink page="admin/previewquestion" context="[subject,question]" class="btn btn-default">Next question</t:pagelink>-->
-
     <div class="row subquestion-nav">
         <div class="col-sm-4 text-left">
-                <t:eventlink event="prevQuestion" class="btn btn-default">Previous question</t:eventlink>
+                <t:eventlink event="prevQuestion" class="btn btn-default"><!--Previous question-->&larr;</t:eventlink>
         </div>
         <t:security.hasAnyRoles roles="admin,subject_admin">
             <div class="col-sm-4 text-center">
-                <t:pagelink page="admin/question/questionedit" context="question" class="btn btn-primary">Edit question</t:pagelink>
+                <t:pagelink page="admin/question/questionedit" context="question" class="btn btn-primary">${message:editQuestion}</t:pagelink>
             </div>
         </t:security.hasAnyRoles>
         <div class="col-sm-4 text-right">
-                <t:eventlink event="nextQuestion" class="btn btn-default">Next question</t:eventlink>
+                <t:eventlink event="nextQuestion" class="btn btn-default"><!--Next question-->&rarr;</t:eventlink>
         </div>
 
+    </div>
+    <div class="row question-filter">
+        <t:form t:id="questionSearch" class="form-inline">
+            <div class="form-group col-sm-4">
+                <t:label for="topic"/>:
+                <t:select t:id="topic" value="topic" model="topicModel" encoder="topicEncoder" class="form-control" />
+            </div>
+            <div class="form-group">
+                <t:label for="complexity"/>:
+                <t:select t:id="complexity" value="complexity" model="literal:1,2,3,4,5"  class="form-control"/>
+            </div>
+            <div class="form-group">
+                <t:label for="maxScore"/>:
+                <t:select t:id="maxScore" value="maxScore" model="literal:1,2,3,4,5" class="form-control"/>
+            </div>
+            <div class="form-group">
+                <t:label for="searchText"/>:
+                <t:textfield value="text" t:id="searchText" class="form-control"/>
+            </div>
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary" value="${message:searсh}"/>
+            </div>
+        </t:form>
     </div>
 
 </body>

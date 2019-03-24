@@ -1,5 +1,6 @@
 package ru.rsmu.tempoLW.dao.internal;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.*;
 import org.hibernate.transform.AliasToBeanResultTransformer;
@@ -106,6 +107,26 @@ public class QuestionDaoImpl extends BaseDaoImpl implements QuestionDao {
                 .add( Restrictions.eq( "subject", subject ) )
                 .setProjection( Projections.rowCount() );
         return (long) criteria.uniqueResult();
+    }
+
+    @Override
+    public Question findQuestionByFilter( SubTopic topic, Integer complexity, Integer maxScore, String text ) {
+        Criteria criteria = session.createCriteria( Question.class )
+                .createAlias( "questionInfo", "questionInfo" );
+        if ( topic != null ) {
+            criteria.add( Restrictions.eq( "questionInfo.topic", topic ) );
+        }
+        if ( complexity != null ) {
+            criteria.add( Restrictions.eq( "questionInfo.complexity", complexity ) );
+        }
+        if ( maxScore != null ) {
+            criteria.add( Restrictions.eq( "questionInfo.maxScore", maxScore ) );
+        }
+        if ( StringUtils.isNoneBlank( text ) ) {
+            criteria.add( Restrictions.like( "text", "%"+text + "%" ) );
+        }
+        criteria.setMaxResults( 1 );
+        return ((Question) criteria.uniqueResult());
     }
 
     @Override

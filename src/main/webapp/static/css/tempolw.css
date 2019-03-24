@@ -120,6 +120,18 @@ button.bg-dark:focus {
     padding-top: 4rem;
 }
 
+.question-filter {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+}
+
+.question-filter .form-inline .form-control {
+    margin: 0 10px 0 4px;
+}
+.question-filter #topic {
+    width: 80%;
+}
+
 body {
     font-family: ubuntu;
     font-weight: 300;

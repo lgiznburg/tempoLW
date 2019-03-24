@@ -27,4 +27,6 @@ public interface QuestionDao extends BaseDao {
     long findQuestionsCount( ExamSubject subject );
 
     long findTopicsCount( ExamSubject subject );
+
+    Question findQuestionByFilter( SubTopic topic, Integer complexity, Integer maxScore, String text );
 }
