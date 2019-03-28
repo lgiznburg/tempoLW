@@ -91,6 +91,8 @@ public class AppModule {
 
         binder.bind( SecurityUserHelper.class );
 
+        //binder.bind( LiquidbaseService.class, LiquibaseServiceImpl.class );
+
     }
 
     public static void contributeSecurityConfiguration(OrderedConfiguration<SecurityFilterChain> configuration,
@@ -105,4 +107,23 @@ public class AppModule {
     public static void contributeWebSecurityManager(Configuration<Realm> configuration, @InjectService("UserDetailsRealm") AuthorizingRealm userRealm) {
         configuration.add(userRealm);
     }
+
+    /*public static void contributeRegistryStartup(
+            final Logger logger, final LiquidbaseService liquibaseService,
+            OrderedConfiguration<Runnable> configuration)
+    {
+        configuration.add("Liquibase", new Runnable()
+        {
+            public void run()
+            {
+                logger.info("Updating database by liquibase service...");
+                try {
+                    liquibaseService.update();
+                } catch (Exception e) {
+                    logger.error( "Liquibase exception", e );
+                }
+                logger.info("update-db done.");
+            }
+        }, "before:HibernateStartup");
+    }*/
 }
