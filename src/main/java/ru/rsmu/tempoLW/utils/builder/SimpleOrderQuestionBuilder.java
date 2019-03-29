@@ -4,6 +4,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import ru.rsmu.tempoLW.entities.AnswerVariant;
 import ru.rsmu.tempoLW.entities.QuestionSimple;
+import ru.rsmu.tempoLW.entities.QuestionSimpleOrder;
 import ru.rsmu.tempoLW.entities.UploadedImage;
 
 import java.util.LinkedList;
@@ -17,7 +18,7 @@ public class SimpleOrderQuestionBuilder extends QuestionBuilder{
 
     @Override
     public int parse( Sheet sheet, int rowN ) {
-        QuestionSimple question = new QuestionSimple();
+        QuestionSimpleOrder question = new QuestionSimpleOrder();
         question.setAnswerVariants( new LinkedList<>() );
 
         Row row = sheet.getRow( rowN );
