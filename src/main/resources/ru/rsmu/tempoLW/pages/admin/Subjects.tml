@@ -8,7 +8,7 @@
 <div class="row">
     <div class="col-sm-3">
         <t:admin.subjectslist subjectId="subjectId" t:id="list"/>
-        <t:eventlink t:id="toCreate" event="toCreate" class="btn btn-primary">Create new subject</t:eventlink>
+        <t:eventlink t:id="toCreate" event="toCreate" class="btn btn-primary">${message:create-new-subject}</t:eventlink>
     </div>
     <div class="col-sm-9">
         <t:if test="isMode('REVIEW')">

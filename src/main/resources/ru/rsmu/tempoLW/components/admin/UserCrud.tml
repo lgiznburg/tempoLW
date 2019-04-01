@@ -2,7 +2,7 @@
 <t:container xmlns="http://www.w3.org/1999/xhtml" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd" xmlns:p="tapestry:parameter">
 
     <t:if test="modeCreate">
-        <div class="row"><h4 class="text-center">Create</h4></div>
+        <div class="row"><h4 class="text-center">${message:create}</h4></div>
 
         <t:form t:id="createForm" class="form-horizontal" validate="user">
             <t:errors globalOnly="true"/>
@@ -11,7 +11,7 @@
             <div class="form-group">
                 <div class="col-sm-4 col-sm-offset-4">
                     <t:submit value="Save" class="btn btn-primary"/>
-                    <t:eventlink event="cancelCreate" class="btn btn-default">Cancel</t:eventlink>
+                    <t:eventlink event="cancelCreate" class="btn btn-default">${message:cancel}</t:eventlink>
                 </div>
             </div>
         </t:form>
@@ -25,24 +25,24 @@
             </div>
 
             <div class="row">
-                <div class="col-sm-3 text-right">Login:</div>
+                <div class="col-sm-3 text-right">${message:usercrud-login}:</div>
                 <div class="col-sm-8">${user.username}</div>
             </div>
 
             <div class="row">
-                <div class="col-sm-3 text-right">Roles:</div>
+                <div class="col-sm-3 text-right">${message:roles-label}:</div>
                 <div class="col-sm-8">${roleNames}</div>
             </div>
 
             <t:if test="subjectManager">
                 <div class="row">
-                    <div class="col-sm-3 text-right">Subjects:</div>
+                    <div class="col-sm-3 text-right">${message:subjects-label}:</div>
                     <div class="col-sm-8">${subjectTitles}</div>
                 </div>
             </t:if>
             <div class="buttons row">
                 <div class="col-sm-4 col-sm-offset-3">
-                    <t:eventlink event="toUpdate" context="user.id" class="btn btn-primary">Update</t:eventlink>
+                    <t:eventlink event="toUpdate" context="user.id" class="btn btn-primary">${message:user-update}</t:eventlink>
                     <!--
                                     <t:eventlink event="delete" context="[person.id,person.version]"
                                                  t:mixins="Confirm" Confirm.message="Delete ${person.firstName} ${person.lastName}?">Delete...</t:eventlink>
@@ -58,7 +58,7 @@
     </t:if>
 
     <t:if test="modeUpdate">
-        <div class="row"><h4 class="text-center">Update</h4></div>
+        <div class="row"><h4 class="text-center">${message:user-update}</h4></div>
         <t:form t:id="updateForm" class="form-horizontal" validate="user">
             <t:errors globalOnly="true"/>
 
@@ -67,14 +67,14 @@
 
                 <div class="form-group">
                     <div class="col-sm-4 col-sm-offset-4">
-                        <t:submit class="btn btn-primary" value="Save" />
-                        <t:eventlink event="cancelUpdate" context="userId" class="btn btn-default">Cancel</t:eventlink>
+                        <t:submit class="btn btn-primary" value="${message:save}" />
+                        <t:eventlink event="cancelUpdate" context="userId" class="btn btn-default">${message:cancel}</t:eventlink>
                     </div>
                 </div>
             </t:if>
 
             <t:if test="!user">
-                User does not exist.<br/><br/>
+                ${message:user-doesnt-exist}<br/><br/>
             </t:if>
         </t:form>
     </t:if>
