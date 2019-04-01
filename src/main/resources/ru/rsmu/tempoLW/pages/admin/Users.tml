@@ -7,7 +7,7 @@
     <div class="row">
         <div class="col-sm-3">
             <t:admin.userslist userId="listUserId" t:id="list"/>
-            <t:eventlink t:id="toCreate" event="toCreate" class="btn btn-primary">Create new user</t:eventlink>
+            <t:eventlink t:id="toCreate" event="toCreate" class="btn btn-primary">${message:create-new-user}</t:eventlink>
         </div>
         <div class="col-sm-9">
             <t:admin.usercrud userId="userId" mode="mode" t:id="editor"/>

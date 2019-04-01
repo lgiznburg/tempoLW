@@ -20,7 +20,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <hibernate.version>4.2.2.Final</hibernate.version>
-        <mysql.version>5.1.32</mysql.version>
+        <mysql.version>8.0.15</mysql.version>
         <spring-release-version>2.0.8</spring-release-version>
     </properties>
 
@@ -260,10 +260,10 @@ Original project defines some incompatible dependency
             </activation>
 
             <properties>
-                <hibernate.connection.driver_class>com.mysql.jdbc.Driver</hibernate.connection.driver_class>
-                <hibernate.connection.url>jdbc:mysql://127.0.0.1/tempo_db?autoReconnect=true</hibernate.connection.url>
+                <hibernate.connection.driver_class>com.mysql.cj.jdbc.Driver</hibernate.connection.driver_class>
+                <hibernate.connection.url>jdbc:mysql://127.0.0.1/tempo_db?serverTimezone=Europe/Moscow</hibernate.connection.url>
                 <hibernate.dialect>org.hibernate.dialect.MySQL5InnoDBDialect</hibernate.dialect>
-                <hibernate.default_schema/>
+                <hibernate.default_schema>tempo_db</hibernate.default_schema>
                 <hibernate.connection.username>tempo</hibernate.connection.username>
                 <hibernate.connection.password>neonka</hibernate.connection.password>
             </properties>

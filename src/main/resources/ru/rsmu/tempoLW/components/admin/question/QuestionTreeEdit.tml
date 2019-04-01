@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <t:container xmlns="http://www.w3.org/1999/xhtml" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd" xmlns:p="tapestry:parameter">
 
-    <h4 class="col-sm-offset-2">Variants</h4>
+    <h4 class="col-sm-offset-2">${message:variants}</h4>
     <t:loop source="questionTree.correspondenceVariants" value="correspondenceVariant" encoder="correspondenceVariantEncoder">
         <div class="form-group">
             <div class="col-sm-8 col-sm-offset-2">
                 <t:textarea value="correspondenceVariant.text"/>
             </div>
         </div>
-        <h5 class="col-sm-offset-2">Answers</h5>
+        <h5 class="col-sm-offset-2">${message:answers}</h5>
         <div class="row">
-            <div class="col-sm-6 col-sm-offset-2"><strong>Text</strong></div>
-            <div class="col-sm-4"><strong>Correctness</strong></div>
+            <div class="col-sm-6 col-sm-offset-2"><strong>${message:text}</strong></div>
+            <div class="col-sm-4"><strong>${message:correctness}</strong></div>
         </div>
         <t:loop source="correspondenceVariant.correctAnswers" value="answerVariant" encoder="answerVariantEncoder">
             <div class="form-group">

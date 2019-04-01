@@ -15,7 +15,7 @@
         </t:grid>
 
         <t:block t:id="emptyUsers">
-            <div id="noUsers">No users found</div>
+            <div id="noUsers">${message:no-users-found}</div>
         </t:block>
     </div>
 
