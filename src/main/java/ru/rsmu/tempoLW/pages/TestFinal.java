@@ -3,6 +3,7 @@ package ru.rsmu.tempoLW.pages;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.annotations.SessionState;
 import org.apache.tapestry5.ioc.annotations.Inject;
+import ru.rsmu.tempoLW.dao.ExamDao;
 import ru.rsmu.tempoLW.dao.QuestionDao;
 import ru.rsmu.tempoLW.entities.QuestionResult;
 import ru.rsmu.tempoLW.entities.ExamResult;
@@ -23,6 +24,9 @@ public class TestFinal {
     @Inject
     private QuestionDao questionDao;
 
+    @Inject
+    private ExamDao examDao;
+
     @Property
     private QuestionResult current;
 
@@ -40,5 +44,9 @@ public class TestFinal {
 
     public void onActionFromFinish() {
         examResult.setEndTime( new Date() );
+        //save only existed result
+        if ( examResult.getId() > 0 ) {
+            examDao.save( examResult );
+        }
     }
 }

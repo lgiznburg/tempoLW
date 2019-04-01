@@ -6,7 +6,9 @@ import org.apache.tapestry5.ioc.OrderedConfiguration;
 import org.apache.tapestry5.ioc.ServiceBinder;
 import org.apache.tapestry5.ioc.annotations.Contribute;
 import org.apache.tapestry5.ioc.annotations.Match;
+import ru.rsmu.tempoLW.dao.internal.ExamDaoImpl;
 import ru.rsmu.tempoLW.dao.internal.QuestionDaoImpl;
+import ru.rsmu.tempoLW.dao.internal.TesteeDaoImpl;
 import ru.rsmu.tempoLW.dao.internal.UserDaoImpl;
 import ru.rsmu.tempoLW.entities.auth.User;
 import ru.rsmu.tempoLW.entities.auth.UserRole;
@@ -24,6 +26,8 @@ public class HibernateModule {
     {
         binder.bind( QuestionDao.class, QuestionDaoImpl.class);
         binder.bind( UserDao.class, UserDaoImpl.class );
+        binder.bind( TesteeDao.class, TesteeDaoImpl.class );
+        binder.bind( ExamDao.class, ExamDaoImpl.class );
 
         //seed entity - initial DB population
         binder.bind(SeedEntity.class, SeedEntityImpl.class);

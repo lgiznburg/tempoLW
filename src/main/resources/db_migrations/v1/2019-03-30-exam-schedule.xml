@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                   http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet id="2019-03-30--01-exam-schedule" author="leonid">
+        <createTable tableName="exam_schedule">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="exam_date" type="date" >
+                <constraints nullable="false"/>
+            </column>
+            <column name="testing_plan_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="2019-03-30--02-exam-schedule" author="leonid">
+        <createTable tableName="exam_testees">
+            <column name="exam_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="testee_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+    <changeSet id="2019-03-30--03-exam-schedule" author="leonid">
+        <addForeignKeyConstraint baseTableName="exam_schedule" baseColumnNames="testing_plan_id"
+                                 constraintName="FK_schedule_testing_plans"
+                                 referencedTableName="testing_plan" referencedColumnNames="id"
+                                 deferrable="false" initiallyDeferred="false"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION" validate="true"/>
+    </changeSet>
+    <changeSet id="2019-03-30--04-exam-schedule" author="leonid">
+        <addForeignKeyConstraint baseTableName="exam_testees" baseColumnNames="exam_id"
+                                 constraintName="FK_testee_exam_reference"
+                                 referencedTableName="exam_schedule" referencedColumnNames="id"
+                                 deferrable="false" initiallyDeferred="false"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION" validate="true"/>
+        <addForeignKeyConstraint baseTableName="exam_testees" baseColumnNames="testee_id"
+                                 constraintName="FK_exam_testee_inverse_reference"
+                                 referencedTableName="testee" referencedColumnNames="id"
+                                 deferrable="false" initiallyDeferred="false"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION" validate="true"/>
+    </changeSet>
+
+</databaseChangeLog>

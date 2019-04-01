@@ -343,7 +343,10 @@
         <addForeignKeyConstraint baseColumnNames="question_result_id" baseTableName="result_element" constraintName="FK_32jv5jl9k150ldlqdv7e0d7jd" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="question_result" validate="true"/>
     </changeSet>
     <changeSet author="leonid (generated)" id="1553644568160-42">
-        <addForeignKeyConstraint baseColumnNames="correspondence_variant_id" baseTableName="result_element" constraintName="FK_423284hjtd9ts8ye0rc284tpk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="correspondence_variant" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="correspondence_variant_id" baseTableName="result_element"
+                                 constraintName="FK_423284hjtd9ts8ye0rc284tpk"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="correspondence_variant" validate="true"/>
     </changeSet>
     <changeSet author="leonid (generated)" id="1553644568160-43">
         <addForeignKeyConstraint baseColumnNames="correspondence_id" baseTableName="correspondence_answers" constraintName="FK_69mv92i7dft9b7p4kv3ux5amu" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="correspondence_variant" validate="true"/>
