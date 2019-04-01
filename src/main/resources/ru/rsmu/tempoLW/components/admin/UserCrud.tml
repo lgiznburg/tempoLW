@@ -30,13 +30,13 @@
             </div>
 
             <div class="row">
-                <div class="col-sm-3 text-right">${message:usercrud-roles}:</div>
+                <div class="col-sm-3 text-right">${message:roles-label}:</div>
                 <div class="col-sm-8">${roleNames}</div>
             </div>
 
             <t:if test="subjectManager">
                 <div class="row">
-                    <div class="col-sm-3 text-right">${message:usercrud-subjects}:</div>
+                    <div class="col-sm-3 text-right">${message:subjects-label}:</div>
                     <div class="col-sm-8">${subjectTitles}</div>
                 </div>
             </t:if>
@@ -81,13 +81,13 @@
 
     <t:block t:id="editor">
         <div class="form-group">
-            <t:label for="username" class="col-sm-4">${message:username}</t:label>
+            <t:label for="username" class="col-sm-4"/>
             <div class="col-sm-8">
                 <t:textfield value="user.username" t:id="username"/>
             </div>
         </div>
         <div class="form-group">
-            <t:label for="password" class="col-sm-4">${message:password}</t:label>
+            <t:label for="password" class="col-sm-4"/>
             <div class="col-sm-8">
                 <t:passwordfield value="userPassword" t:id="password" autocomplete="new-password"
                                  onblur="this.setAttribute('readonly', 'readonly');"
@@ -96,7 +96,7 @@
         </div>
 
         <div class="form-group">
-            <t:label for="passwordConfirm" class="col-sm-4">${message:password-confirm}</t:label>
+            <t:label for="passwordConfirm" class="col-sm-4"/>
             <div class="col-sm-8">
                 <t:passwordfield value="userPasswordConfirm" t:id="passwordConfirm" autocomplete="new-password"
                                  onblur="this.setAttribute('readonly', 'readonly');"
@@ -105,33 +105,33 @@
         </div>
 
         <div class="form-group">
-            <t:label for="firstName" class="col-sm-4">${message:firstname}</t:label>
+            <t:label for="firstName" class="col-sm-4"/>
             <div class="col-sm-8">
                 <t:textfield value="user.firstName" t:id="firstName"/>
             </div>
         </div>
         <div class="form-group">
-            <t:label for="middleName" class="col-sm-4">${message:middlename}</t:label>
+            <t:label for="middleName" class="col-sm-4"/>
             <div class="col-sm-8">
                 <t:textfield value="user.middleName" t:id="middleName"/>
             </div>
         </div>
         <div class="form-group">
-            <t:label for="lastName" class="col-sm-4">${message:lastname}</t:label>
+            <t:label for="lastName" class="col-sm-4"/>
             <div class="col-sm-8">
                 <t:textfield value="user.lastName" t:id="lastName"/>
             </div>
         </div>
 
         <div class="form-group">
-            <t:label for="roles" class="col-sm-4">${message:usercrud-roles}</t:label>
+            <t:label for="roles" class="col-sm-4"/>
             <div class="col-sm-8">
                 <t:checklist t:id="roles" model="rolesModel" selected="user.roles" encoder="roleEncoder"/>
             </div>
         </div>
 
         <div class="form-group">
-            <t:label for="subjects" class="col-sm-4">${message:usercrud-subjects}</t:label>
+            <t:label for="subjects" class="col-sm-4"/>
             <div class="col-sm-8">
                 <t:checklist t:id="subjects" model="subjectsModel" selected="subjectManager.subjects" encoder="subjectEncoder"/>
             </div>

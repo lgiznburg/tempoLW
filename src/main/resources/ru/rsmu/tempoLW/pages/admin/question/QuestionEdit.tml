@@ -20,19 +20,19 @@
             </div>
         </div>
         <div class="form-group">
-            <t:label for="complexity" class="col-sm-3">${message:question-complexity}</t:label>
+            <t:label for="complexity" class="col-sm-3"/>
             <div class="col-sm-6">
                 <t:select t:id="complexity" value="question.questionInfo.complexity" model="literal:1,2,3,4,5"/>
             </div>
         </div>
         <div class="form-group">
-            <t:label for="maxScore" class="col-sm-3">${message:question-max-score}</t:label>
+            <t:label for="maxScore" class="col-sm-3"/>
             <div class="col-sm-6">
                 <t:select t:id="maxScore" value="question.questionInfo.maxScore" model="literal:1,2,3,4,5"/>
             </div>
         </div>
         <div class="form-group">
-            <t:label for="questionText" class="col-sm-3">${message:question-text}</t:label>
+            <t:label for="questionText" class="col-sm-3"/>
             <div class="col-sm-6">
                 <t:textarea t:id="questionText" value="question.text" />
             </div>
@@ -45,7 +45,7 @@
             </div>
         </t:if>
         <div class="form-group">
-            <t:label for="questionImage" class="col-sm-3">${message:question-image}</t:label>
+            <t:label for="questionImage" class="col-sm-3"/>
             <div class="col-sm-6">
                 <input t:type="upload" t:id="questionImage" t:value="imageFile" style="height: auto;"/>
             </div>
