@@ -1,5 +1,6 @@
 package com.anjlab.tapestry5.services.liquibase;
 
+import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.tapestry5.ioc.MappedConfiguration;
 import org.apache.tapestry5.ioc.MethodAdviceReceiver;
@@ -155,12 +156,24 @@ public class AutoConfigureLiquibaseDatasourceModule {
         String username = props.get( "hibernate.connection.username" );
         String password = props.get( "hibernate.connection.password" );
 
-        BasicDataSource ds = new BasicDataSource();
-        ds.setDriverClassName( connectorClass );
-        ds.setUrl( connectionUrl );
-        ds.setDefaultSchema( schema );
-        ds.setUsername( username );
-        ds.setPassword( password );
+        DataSource ds;
+        if ( connectorClass.contains( "com.microsoft.sqlserver" ) ) {
+            SQLServerDataSource msDs = new SQLServerDataSource();
+            msDs.setURL( connectionUrl );
+            msDs.setUser( username );
+            msDs.setPassword( password );
+
+            ds = msDs;
+        }
+        else {
+            BasicDataSource bds = new BasicDataSource();
+            bds.setDriverClassName( connectorClass );
+            bds.setUrl( connectionUrl );
+            bds.setDefaultSchema( schema );
+            bds.setUsername( username );
+            bds.setPassword( password );
+            ds = bds;
+        }
 
         return ds;
     }
