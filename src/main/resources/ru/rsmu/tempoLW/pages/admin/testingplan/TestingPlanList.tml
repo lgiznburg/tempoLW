@@ -12,7 +12,7 @@
             </t:pagelink>
         </p:editCell>
         <p:empty>
-            <p class="empty-result">No results</p>
+            <p class="empty-result">${message:no-results}</p>
         </p:empty>
     </t:grid>
 

@@ -5,13 +5,13 @@
 <div>
     <t:form t:id="testingPlanForm" validate="testingPlan">
         <div class="form-group">
-            <t:label for="name" class="col-sm-4"/>
+            <t:label for="planName" class="col-sm-4"/>
             <div class="col-sm-8">
-                <t:textfield value="testingPlan.name" t:id="name"/>
+                <t:textfield value="testingPlan.name" t:id="planName"/>
             </div>
         </div>
         <div class="form-group">
-            <label for="examMaxResult" class="control-label col-sm-4">Максимальный результат</label>
+            <label for="examMaxResult" class="control-label col-sm-4">${message:max-result-label}</label>
             <div class="col-sm-8">
                 <input type="text" id="examMaxResult" value="0" disabled="disabled" class="form-control"/>
             </div>

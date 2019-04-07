@@ -10,11 +10,11 @@
                 <ul class="list-group">
                     <li class="list-group-item">
                         <span class="badge">${questionsCount}</span>
-                        Total questions
+                        ${message:review-total-questions}
                     </li>
                     <li class="list-group-item">
                         <span class="badge">${topicsCount}</span>
-                        Topics
+                        ${message:review-topics}
                     </li>
                 </ul>
             </div>
@@ -24,7 +24,7 @@
         </div>
 
         <div class="row">
-            <h5>Testing plans</h5>
+            <h5>${message:review-testing-plans}</h5>
             <div class="col-sm-10">
                 <ul class="list-group">
                     <t:loop source="plans" value="plan">
@@ -36,7 +36,7 @@
                         </li>
                     </t:loop>
                     <li class="list-group-item">
-                        <t:pagelink page="admin/testingplan/testingplancreate" context="subject" class="btn btn-primary">Create new plan</t:pagelink>
+                        <t:pagelink page="admin/testingplan/testingplancreate" context="subject" class="btn btn-primary">${message:review-create-new-plan}</t:pagelink>
                     </li>
                 </ul>
             </div>
@@ -44,9 +44,9 @@
         </div>
 
         <div class="row">
-            <t:eventlink class="btn btn-primary" event="toUpdate" context="subjectId">Update</t:eventlink>
-            <t:eventlink class="btn btn-primary" event="toUpload" context="subjectId">Upload Questions</t:eventlink>
-            <t:pagelink page="admin/previewquestion" class="btn btn-primary" context="[subject,0]">Preview Questions</t:pagelink>
+            <t:eventlink class="btn btn-primary" event="toUpdate" context="subjectId">${message:review-update}</t:eventlink>
+            <t:eventlink class="btn btn-primary" event="toUpload" context="subjectId">${message:review-upload-questions}</t:eventlink>
+            <t:pagelink page="admin/previewquestion" class="btn btn-primary" context="[subject,0]">${message:review-preview-questions}</t:pagelink>
             <!-- delete -->
         </div>
     </div>

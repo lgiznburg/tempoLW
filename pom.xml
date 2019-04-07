@@ -20,7 +20,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
         <hibernate.version>4.2.2.Final</hibernate.version>
-        <mysql.version>5.1.32</mysql.version>
+        <mysql.version>8.0.15</mysql.version>
         <spring-release-version>2.0.8</spring-release-version>
     </properties>
 
@@ -29,6 +29,13 @@
         <repository>
             <id>bintray-jcenter</id>
             <url>http://jcenter.bintray.com</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>IDA-repository</id>
+            <url>http://ida.fel.cvut.cz/maven</url>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
@@ -44,12 +51,27 @@
             <scope>compile</scope>
         </dependency>
 
+<!--  it's not a good driver, unimplemented interface 'Connection'
+      liquibase and commons-dbcp can't work with it
         <dependency>
             <groupId>net.sourceforge.jtds</groupId>
             <artifactId>jtds</artifactId>
             <version>1.3.1</version>
         </dependency>
+-->
 
+        <dependency>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>mssql-jdbc</artifactId>
+            <version>7.2.1.jre8</version>
+        </dependency>
+<!--
+        <dependency>
+            <groupId>com.microsoft.sqlserver</groupId>
+            <artifactId>sqljdbc42</artifactId>
+            <version>6.0.8112</version>
+        </dependency>
+-->
 
         <!-- To set up an application with a database, change the artifactId below to
               tapestry-hibernate, and add a dependency on your JDBC driver. You'll also
@@ -260,10 +282,10 @@ Original project defines some incompatible dependency
             </activation>
 
             <properties>
-                <hibernate.connection.driver_class>com.mysql.jdbc.Driver</hibernate.connection.driver_class>
-                <hibernate.connection.url>jdbc:mysql://127.0.0.1/tempo_db?autoReconnect=true</hibernate.connection.url>
+                <hibernate.connection.driver_class>com.mysql.cj.jdbc.Driver</hibernate.connection.driver_class>
+                <hibernate.connection.url>jdbc:mysql://127.0.0.1/tempo_db?serverTimezone=Europe/Moscow</hibernate.connection.url>
                 <hibernate.dialect>org.hibernate.dialect.MySQL5InnoDBDialect</hibernate.dialect>
-                <hibernate.default_schema/>
+                <hibernate.default_schema>tempo_db</hibernate.default_schema>
                 <hibernate.connection.username>tempo</hibernate.connection.username>
                 <hibernate.connection.password>neonka</hibernate.connection.password>
             </properties>
@@ -273,8 +295,12 @@ Original project defines some incompatible dependency
             <id>qa</id>
 
             <properties>
+<!--
                 <hibernate.connection.driver_class>net.sourceforge.jtds.jdbc.Driver</hibernate.connection.driver_class>
                 <hibernate.connection.url>jdbc:jtds:sqlserver://172.18.1.27:1433/tempo_db</hibernate.connection.url>
+-->
+                <hibernate.connection.driver_class>com.microsoft.sqlserver.jdbc.SQLServerDriver</hibernate.connection.driver_class>
+                <hibernate.connection.url>jdbc:sqlserver://172.18.1.27;databaseName=tempo_db</hibernate.connection.url>
                 <hibernate.dialect>ru.rsmu.tempoLW.hibernate.dialect.UnicodeSQLServerDialect</hibernate.dialect>
                 <hibernate.default_schema>dbo</hibernate.default_schema>
                 <hibernate.connection.username>tandem</hibernate.connection.username>
