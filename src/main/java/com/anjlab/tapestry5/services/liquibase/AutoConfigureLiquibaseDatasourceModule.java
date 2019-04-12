@@ -1,5 +1,6 @@
 package com.anjlab.tapestry5.services.liquibase;
 
+import com.microsoft.sqlserver.jdbc.SQLServerConnectionPoolDataSource;
 import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
 import org.apache.commons.dbcp2.BasicDataSource;
 import org.apache.tapestry5.ioc.MappedConfiguration;
@@ -158,7 +159,7 @@ public class AutoConfigureLiquibaseDatasourceModule {
 
         DataSource ds;
         if ( connectorClass.contains( "com.microsoft.sqlserver" ) ) {
-            SQLServerDataSource msDs = new SQLServerDataSource();
+            SQLServerDataSource msDs = new SQLServerConnectionPoolDataSource();
             msDs.setURL( connectionUrl );
             msDs.setUser( username );
             msDs.setPassword( password );
