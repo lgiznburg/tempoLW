@@ -37,6 +37,14 @@ public class ExamResult implements Serializable {
     @ManyToOne
     private Testee testee;
 
+    @ManyToOne
+    @JoinColumn(name = "testing_plan_id")
+    private TestingPlan testingPlan;
+
+    @ManyToOne
+    @JoinColumn(name = "exam_id")
+    private ExamSchedule exam;
+
     public long getId() {
         return id;
     }
@@ -91,6 +99,22 @@ public class ExamResult implements Serializable {
 
     public void setTestee( Testee testee ) {
         this.testee = testee;
+    }
+
+    public TestingPlan getTestingPlan() {
+        return testingPlan;
+    }
+
+    public void setTestingPlan( TestingPlan testingPlan ) {
+        this.testingPlan = testingPlan;
+    }
+
+    public ExamSchedule getExam() {
+        return exam;
+    }
+
+    public void setExam( ExamSchedule exam ) {
+        this.exam = exam;
     }
 
     @Transient

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<t:container xmlns="http://www.w3.org/1999/xhtml" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd" xmlns:p="tapestry:parameter">
+
+    <div id="examsList">
+        <t:grid t:id="usersGrid" source="exams" row="exam"
+                exclude="id,name,testingPlan,testees,durationHours,durationMinutes,examDate"
+                add="title" class="table table-bordered table-hover"
+                rowsPerPage="25" pagerPosition="bottom"
+                empty="block:emptyExams">
+            <p:titleCell>
+                <t:eventLink event="examSelected" context="exam.id" class="prop:linkCssClass">
+                    ${exam.name} / ${exam.testingPlan.subject.title} / <t:output format="literal:dd/MM/yy" value="exam.examDate"/>
+                </t:eventLink>
+            </p:titleCell>
+        </t:grid>
+
+        <t:block t:id="emptyExams">
+            <div id="noExams">${message:no-exams}</div>
+        </t:block>
+    </div>
+
+</t:container>

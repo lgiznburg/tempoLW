@@ -16,4 +16,11 @@ public class TesteeDaoImpl extends BaseDaoImpl implements TesteeDao {
         return (Testee) criteria.uniqueResult();
 
     }
+
+    @Override
+    public Testee findByCaseNumber( String caseNumber ) {
+        Criteria criteria = session.createCriteria( Testee.class )
+                .add( Restrictions.eq( "caseNumber", caseNumber ) );
+        return (Testee) criteria.uniqueResult();
+    }
 }

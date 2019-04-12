@@ -95,6 +95,7 @@ public class AppModule {
 
     public static void bind(ServiceBinder binder) {
         binder.bind(AuthorizingRealm.class, UserDetailsRealm.class).withId(UserDetailsRealm.class.getSimpleName());
+        binder.bind( AuthorizingRealm.class, TesteeRealm.class ).withId( TesteeRealm.class.getSimpleName() );
 
         binder.bind( SecurityUserHelper.class );
 
@@ -109,8 +110,11 @@ public class AppModule {
         configuration.add("anon", factory.createChain("/**").add(factory.anon()).build());
     }
 
-    public static void contributeWebSecurityManager(Configuration<Realm> configuration, @InjectService("UserDetailsRealm") AuthorizingRealm userRealm) {
+    public static void contributeWebSecurityManager(Configuration<Realm> configuration,
+                                                    @InjectService("UserDetailsRealm") AuthorizingRealm userRealm,
+                                                    @InjectService( "TesteeRealm" ) AuthorizingRealm testeeRealm ) {
         configuration.add(userRealm);
+        configuration.add( testeeRealm );
     }
 
 }

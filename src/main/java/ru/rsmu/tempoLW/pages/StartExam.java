@@ -7,6 +7,7 @@ import org.apache.tapestry5.ioc.annotations.Inject;
 import ru.rsmu.tempoLW.dao.ExamDao;
 import ru.rsmu.tempoLW.dao.QuestionDao;
 import ru.rsmu.tempoLW.entities.ExamResult;
+import ru.rsmu.tempoLW.entities.ExamSchedule;
 import ru.rsmu.tempoLW.entities.Testee;
 import ru.rsmu.tempoLW.entities.TestingPlan;
 import ru.rsmu.tempoLW.services.SecurityUserHelper;
@@ -17,11 +18,10 @@ import java.util.Date;
 /**
  * @author leonid.
  */
-public class StartTest {
-
+public class StartExam {
     @Property
     @PageActivationContext
-    private TestingPlan testingPlan;
+    private ExamSchedule exam;
 
     @Property
     @SessionState
@@ -37,20 +37,22 @@ public class StartTest {
     private SecurityUserHelper securityUserHelper;
 
     public Object onActivate() {
+        if ( exam == null ) {
+            return Index.class;  // exam should not be NULL
+        }
         if ( examResult != null && !examResult.isFinished() &&
-                examResult.getQuestionResults() != null ) {
+                examResult.getExam().equals( exam ) ) {
             return TestFinal.class;  // test has been already created and not finished
         }
-        examResult = new ExamBuilder( questionDao ).buildTestVariant( testingPlan );
+        examResult = new ExamBuilder( questionDao ).buildTestVariant( exam.getTestingPlan() );
         examResult.setStartTime( new Date() );  //set now
-
-        /* This is for self-checking mode - no testee, no saves
+        examResult.setExam( exam );
 
         Testee testee = securityUserHelper.getCurrentTestee();
-        if ( testee != null ) { // check exam
+        if ( testee != null ) { //testee should not be NULL
             examResult.setTestee( testee );
             examDao.save( examResult );
-        }*/
+        }
         return null;
     }
 

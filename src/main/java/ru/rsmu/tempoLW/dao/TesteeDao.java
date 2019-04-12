@@ -7,4 +7,6 @@ import ru.rsmu.tempoLW.entities.Testee;
  */
 public interface TesteeDao extends BaseDao {
     Testee findByName( String testeeName );
+
+    Testee findByCaseNumber( String caseNumber );
 }

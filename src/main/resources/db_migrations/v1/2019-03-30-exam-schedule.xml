@@ -17,7 +17,9 @@
             <column name="testing_plan_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
-            <column name="name" type="VARCHAR(255)"/>
+            <column name="name" type="${string.type}"/>
+            <column name="duration_hours" type="INT" />
+            <column name="duration_minutes" type="INT" />
         </createTable>
     </changeSet>
     <changeSet id="2019-03-30--02-exam-schedule" author="leonid">

@@ -7,14 +7,8 @@
                    http://www.liquibase.org/xml/ns/dbchangelog
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
 
-    <property name="string.type" value="VARCHAR(255)" dbms="mysql"/>
-    <property name="string.type" value="NVARCHAR(255)" dbms="mssql"/>
-    <property name="text.type" value="LONGTEXT" dbms="mysql"/>
-    <property name="text.type" value="NVARCHAR(max)" dbms="mssql"/>
-
-
-    <include file="init/initial_db.xml" relativeToChangelogFile="true"/>
-
-    <include file="v1/V1-master-changelog.xml" relativeToChangelogFile="true"/>
+    <include file="2019-03-30-exam-schedule.xml" relativeToChangelogFile="true"/>
+    <include file="2019-04-12-add-exam-to-result.xml" relativeToChangelogFile="true"/>
+    <include file="2019-04-13-add-subject-locale.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

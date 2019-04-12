@@ -213,6 +213,11 @@ of testing facilities designed for use with TestNG (http://testng.org/), so it's
             <version>1.4.01</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.tutego</groupId>
+            <artifactId>jrtf</artifactId>
+            <version>0.7</version>
+        </dependency>
 <!-- keep this comment here just to store a link to origin project.
 Source code has been imported into our source code with small fixes
 Original project defines some incompatible dependency
@@ -301,6 +306,23 @@ Original project defines some incompatible dependency
 -->
                 <hibernate.connection.driver_class>com.microsoft.sqlserver.jdbc.SQLServerDriver</hibernate.connection.driver_class>
                 <hibernate.connection.url>jdbc:sqlserver://172.18.1.27;databaseName=tempo_db</hibernate.connection.url>
+                <hibernate.dialect>ru.rsmu.tempoLW.hibernate.dialect.UnicodeSQLServerDialect</hibernate.dialect>
+                <hibernate.default_schema>dbo</hibernate.default_schema>
+                <hibernate.connection.username>tandem</hibernate.connection.username>
+                <hibernate.connection.password>123Tandem456</hibernate.connection.password>
+            </properties>
+        </profile>
+
+        <profile>
+            <id>liquiTest</id>
+
+            <properties>
+                <!--
+                                <hibernate.connection.driver_class>net.sourceforge.jtds.jdbc.Driver</hibernate.connection.driver_class>
+                                <hibernate.connection.url>jdbc:jtds:sqlserver://172.18.1.27:1433/tempo_db</hibernate.connection.url>
+                -->
+                <hibernate.connection.driver_class>com.microsoft.sqlserver.jdbc.SQLServerDriver</hibernate.connection.driver_class>
+                <hibernate.connection.url>jdbc:sqlserver://172.18.1.27;databaseName=tempo_2_test</hibernate.connection.url>
                 <hibernate.dialect>ru.rsmu.tempoLW.hibernate.dialect.UnicodeSQLServerDialect</hibernate.dialect>
                 <hibernate.default_schema>dbo</hibernate.default_schema>
                 <hibernate.connection.username>tandem</hibernate.connection.username>

@@ -5,12 +5,13 @@ import org.apache.poi.ss.usermodel.Sheet;
 import ru.rsmu.tempoLW.entities.Question;
 import ru.rsmu.tempoLW.entities.UploadedImage;
 import ru.rsmu.tempoLW.utils.ExcelLayout;
+import ru.rsmu.tempoLW.utils.ExcelReader;
 import ru.rsmu.tempoLW.utils.ImagesExtractor;
 
 /**
  * @author leonid.
  */
-public abstract class QuestionBuilder extends ExcelLayout {
+public abstract class QuestionBuilder extends ExcelReader implements ExcelLayout {
 
     protected Question result;
 
