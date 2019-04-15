@@ -1,9 +1,11 @@
 package ru.rsmu.tempoLW.dao.internal;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import ru.rsmu.tempoLW.dao.ExamDao;
+import ru.rsmu.tempoLW.entities.ExamResult;
 import ru.rsmu.tempoLW.entities.ExamSchedule;
 import ru.rsmu.tempoLW.entities.ExamSubject;
 import ru.rsmu.tempoLW.entities.Testee;
@@ -50,4 +52,19 @@ public class ExamDaoImpl extends BaseDaoImpl implements ExamDao {
         return (ExamSchedule) criteria.uniqueResult();
     }
 
+    @Override
+    public List<ExamResult> findExamResults( ExamSchedule exam ) {
+        Criteria criteria = session.createCriteria( ExamResult.class )
+                .add( Restrictions.eq( "exam", exam ) );
+        return criteria.list();
+    }
+
+    @Override
+    public ExamResult findExamResultForTestee( ExamSchedule exam, Testee testee ) {
+        Criteria criteria = session.createCriteria( ExamResult.class )
+                .add( Restrictions.eq( "exam", exam ) )
+                .add( Restrictions.eq( "testee", testee ) )
+                .setMaxResults( 1 );
+        return (ExamResult) criteria.uniqueResult();
+    }
 }

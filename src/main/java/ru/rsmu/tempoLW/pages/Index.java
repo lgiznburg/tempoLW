@@ -4,6 +4,7 @@ import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import ru.rsmu.tempoLW.dao.ExamDao;
 import ru.rsmu.tempoLW.dao.QuestionDao;
+import ru.rsmu.tempoLW.entities.ExamResult;
 import ru.rsmu.tempoLW.entities.ExamSchedule;
 import ru.rsmu.tempoLW.entities.Testee;
 import ru.rsmu.tempoLW.entities.TestingPlan;
@@ -23,6 +24,18 @@ public class Index {
     @Property
     private TestingPlan plan;
 
+    @Property
+    private boolean examDay;
+
+    @Property
+    private Testee testee;
+
+    @Property
+    private ExamSchedule assignedExam;
+
+    @Property
+    private ExamResult examResult;
+
     @Inject
     private QuestionDao questionDao;
 
@@ -38,18 +51,15 @@ public class Index {
 
     public void onActivate() {
         testingPlans = questionDao.findTestingPlans( currentLocale.getLanguage() );
-    }
 
-    public boolean isExamDay() {
-        ExamSchedule exam = examDao.findExamToday();
-        return exam != null;
-    }
-
-    public ExamSchedule getAssignedExam() {
-        Testee testee = securityUserHelper.getCurrentTestee();
-        if ( testee != null ) {
-            return examDao.findExamForTestee( testee );
+        examDay = examDao.findExamToday() != null;
+        if ( examDay ) {
+            testee = securityUserHelper.getCurrentTestee();
+            if ( testee != null ) {
+                assignedExam = examDao.findExamForTestee( testee );
+                examResult = examDao.findExamResultForTestee( assignedExam, testee );
+            }
         }
-        return null;
     }
+
 }

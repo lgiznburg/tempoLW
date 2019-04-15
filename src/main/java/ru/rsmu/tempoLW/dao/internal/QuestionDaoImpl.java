@@ -90,7 +90,7 @@ public class QuestionDaoImpl extends BaseDaoImpl implements QuestionDao {
         Criteria criteria = session.createCriteria( TestingPlan.class )
                 .createAlias( "subject", "subject" )
                 .add( Restrictions.eq( "enabled", true ) )
-                .add( Restrictions.eq( "locale", language ) )
+                .add( Restrictions.eq( "subject.locale", language ) )
                 .addOrder( Order.asc( "subject.title" ) );
         return criteria.list();
     }

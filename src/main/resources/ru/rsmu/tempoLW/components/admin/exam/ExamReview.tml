@@ -20,7 +20,17 @@
     </div>
     <div class="row">
         <div class="col-sm-3 text-right">${message:testeeCount}:</div>
-        <div class="col-sm-8"><t:if test="exam.testees">${exam.testees.size()}<p:else>${message:exam-no-testees}</p:else></t:if></div>
+        <div class="col-sm-3">
+            <t:if test="exam.testees">
+                ${exam.testees.size()}
+                <p:else>${message:exam-no-testees}</p:else>
+            </t:if>
+        </div>
+        <div class="col-sm-5 text-right">
+            <t:if test="exam.testees">
+                <t:eventlink event="toTesteesList" context="examId">${message:exam-testees-list}</t:eventlink>
+            </t:if>
+        </div>
     </div>
 
     <div class="row">

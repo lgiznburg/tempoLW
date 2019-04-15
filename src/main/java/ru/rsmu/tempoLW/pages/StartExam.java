@@ -27,6 +27,9 @@ public class StartExam {
     @SessionState
     private ExamResult examResult;
 
+    @Property
+    private Testee testee;
+
     @Inject
     private QuestionDao questionDao;
 
@@ -37,22 +40,29 @@ public class StartExam {
     private SecurityUserHelper securityUserHelper;
 
     public Object onActivate() {
-        if ( exam == null ) {
-            return Index.class;  // exam should not be NULL
+        testee = securityUserHelper.getCurrentTestee();
+        if ( exam == null || testee == null ) {
+            return Index.class;  // exam nor testee should not be NULL
         }
-        if ( examResult != null && !examResult.isFinished() &&
-                examResult.getExam().equals( exam ) ) {
-            return TestFinal.class;  // test has been already created and not finished
+        if ( examResult == null ) {
+            // check stored result in case of exam interruption (this is second enter)
+            examResult = examDao.findExamResultForTestee( exam, testee );
+        }
+        if ( examResult != null && examResult.getExam() != null && examResult.getExam().equals( exam ) ) {
+            //if ( !examResult.isFinished() ) {
+                return TestFinal.class;  // test has been already created and not finished
+            //}
+            //else {
+            //    return null;  // test has been finished !
+            //}
         }
         examResult = new ExamBuilder( questionDao ).buildTestVariant( exam.getTestingPlan() );
         examResult.setStartTime( new Date() );  //set now
         examResult.setExam( exam );
 
-        Testee testee = securityUserHelper.getCurrentTestee();
-        if ( testee != null ) { //testee should not be NULL
-            examResult.setTestee( testee );
-            examDao.save( examResult );
-        }
+        examResult.setTestee( testee );
+        examDao.save( examResult );
+
         return null;
     }
 

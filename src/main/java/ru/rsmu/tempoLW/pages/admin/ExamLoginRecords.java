@@ -17,9 +17,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 /**
  * @author leonid.
@@ -56,10 +54,21 @@ public class ExamLoginRecords {
                 .rightCellBorder()
                 .cellSpace( 0.4, RtfUnit.CM )
         );
-        // check for already assigned passwords
+        // check for already assigned passwords ??
+
+        exam.getTestees().sort( new Comparator<Testee>() {
+            @Override
+            public int compare( Testee o1, Testee o2 ) {
+                return o1.getLastName().compareTo( o2.getLastName() );
+            }
+        } );
         for ( Testee testee : exam.getTestees() ) {
             String password = RandomStringUtils.randomAlphanumeric( 8 );
             testee.setPassword( userDao.encrypt( password ) );
+            Calendar expDate = Calendar.getInstance();
+            expDate.setTime( exam.getExamDate() );
+            expDate.add( Calendar.DAY_OF_YEAR, 1 );
+            testee.setExpirationDate( expDate.getTime() );
             docContent.add( RtfPara.row( testee.getCaseNumber(), testee.getLastName(), testee.getLogin(), password )
                     .bottomCellBorder()
                     .leftCellBorder()

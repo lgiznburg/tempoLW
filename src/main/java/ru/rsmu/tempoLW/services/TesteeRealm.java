@@ -10,11 +10,14 @@ import org.apache.shiro.crypto.hash.Md5Hash;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.tapestry5.hibernate.HibernateSessionManager;
+import org.apache.tapestry5.ioc.Messages;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
+import ru.rsmu.tempoLW.entities.ExamSchedule;
 import ru.rsmu.tempoLW.entities.Testee;
 import ru.rsmu.tempoLW.entities.auth.UserRoleName;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,10 +27,12 @@ import java.util.Set;
 public class TesteeRealm extends AuthorizingRealm {
 
     private final HibernateSessionManager sessionManager;
+    private final Messages messages;
 
-    public TesteeRealm( HibernateSessionManager sessionManager ) {
+    public TesteeRealm( HibernateSessionManager sessionManager, Messages messages ) {
         super(new MemoryConstrainedCacheManager());
         this.sessionManager = sessionManager;
+        this.messages = messages;
         setName("testeeAccounts");
         setAuthenticationTokenClass( UsernamePasswordToken.class);
         setCredentialsMatcher(new HashedCredentialsMatcher( Md5Hash.ALGORITHM_NAME));
@@ -63,11 +68,17 @@ public class TesteeRealm extends AuthorizingRealm {
             return null;
         }
 
-        //if ( !testee.isEnabled() ) { throw new LockedAccountException("Account [" + login + "] is locked."); }
-        /*iif (testee.isCredentialsExpired()) {
-            String msg = "The credentials for account [" + login + "] are expired";
+        if ( !checkCurrentExam( testee ) ) {
+            throw new LockedAccountException( messages.get( "realm.account-locked" ) ); //"Account [" + login + "] is locked."
+        }
+        if (testee.isCredentialsExpired()) {
+            String msg = messages.get( "realm.account-expired" ); //"The credentials for account [" + login + "] are expired";
             throw new ExpiredCredentialsException(msg);
-        }*/
+        }
+        if ( ((UsernamePasswordToken) token).isRememberMe() ) {
+            //remember me is not allowed for testees
+            ((UsernamePasswordToken) token).setRememberMe( false );
+        }
         return new SimpleAuthenticationInfo(login, testee.getPassword(), /*new SimpleByteSource(testee.getPasswordSalt()),*/ getName());
     }
 
@@ -75,6 +86,15 @@ public class TesteeRealm extends AuthorizingRealm {
         Criteria criteria = sessionManager.getSession().createCriteria( Testee.class )
                 .add( Restrictions.eq( "login", login ) );
         return (Testee) criteria.uniqueResult();
+    }
+
+    private boolean checkCurrentExam( Testee testee ) {
+        Criteria criteria = sessionManager.getSession().createCriteria( ExamSchedule.class )
+                .add( Restrictions.eq( "examDate", new Date() ) )
+                .createAlias( "testees", "testee" )
+                .add( Restrictions.eq( "testee.id", testee.getId() ) )
+                .setMaxResults( 1 );
+        return criteria.uniqueResult() != null;
     }
 
 }

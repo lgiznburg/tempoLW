@@ -3,10 +3,13 @@ package ru.rsmu.tempoLW.pages;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.annotations.SessionState;
 import org.apache.tapestry5.ioc.annotations.Inject;
+import org.tynamo.security.services.SecurityService;
 import ru.rsmu.tempoLW.dao.ExamDao;
 import ru.rsmu.tempoLW.dao.QuestionDao;
 import ru.rsmu.tempoLW.entities.QuestionResult;
 import ru.rsmu.tempoLW.entities.ExamResult;
+import ru.rsmu.tempoLW.entities.auth.UserRoleName;
+import ru.rsmu.tempoLW.services.SecurityUserHelper;
 
 import java.util.Date;
 
@@ -30,6 +33,10 @@ public class TestFinal {
     @Property
     private QuestionResult current;
 
+    @Inject
+    private SecurityService securityService;
+
+
     public Object onActivate() {
         if ( examResult == null || examResult.getQuestionResults() == null ) {
             return Index.class;
@@ -42,11 +49,20 @@ public class TestFinal {
         return null;
     }
 
-    public void onActionFromFinish() {
+    public void onFinishTest() {
         examResult.setEndTime( new Date() );
         //save only existed result
         if ( examResult.getId() > 0 ) {
             examDao.save( examResult );
         }
     }
+
+    public Object onGoBack()
+    {
+        if ( securityService.isUser() && securityService.hasRole( UserRoleName.testee.name() ) ) {
+            securityService.getSubject().logout();
+        }
+        return Index.class;
+    }
+
 }

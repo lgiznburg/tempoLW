@@ -121,4 +121,9 @@ public class ExamResult implements Serializable {
     public boolean isFinished() {
         return endTime != null;
     }
+
+    @Transient
+    public boolean isExamMode() {
+        return testee != null && exam != null;
+    }
 }

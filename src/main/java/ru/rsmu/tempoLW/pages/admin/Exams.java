@@ -87,6 +87,10 @@ public class Exams {
         examId = uploadExamId;
     }
 
-
+    // Testees list
+    public void onToTesteesList( Long listExamId ) {
+        mode = CrudMode.VIEW_ELEMENTS;
+        examId = listExamId;
+    }
 
 }
