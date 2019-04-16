@@ -9,7 +9,7 @@
 
     <changeSet id="2019-04-12--01-add-exam-column" author="leonid">
         <addColumn tableName="test_result">
-            <column name="exam_id" type="BIGINT"/>
+            <column name="exam_id" type="${id.type}"/>
         </addColumn>
     </changeSet>
     <changeSet id="2019-04-12--02-create-index" author="leonid">
