@@ -8,43 +8,43 @@
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
     <changeSet author="leonid (generated)" id="1553644568160-1">
         <createTable tableName="answer_variant">
-            <column autoIncrement="true" name="id" type="BIGINT">
+            <column autoIncrement="true" name="id" type="${id.type}">
                 <constraints primaryKey="true"/>
             </column>
             <column name="correct" type="BIT"/>
-            <column name="text" type="LONGTEXT"/>
-            <column name="question_id" type="BIGINT"/>
+            <column name="text" type="${text.type}"/>
+            <column name="question_id" type="${id.type}"/>
             <column name="sequence_order" type="INT"/>
-            <column name="uploaded_image_id" type="BIGINT"/>
+            <column name="uploaded_image_id" type="${id.type}"/>
         </createTable>
     </changeSet>
     <changeSet author="leonid (generated)" id="1553644568160-2">
         <createTable tableName="correspondence_answers">
-            <column name="correspondence_id" type="BIGINT">
+            <column name="correspondence_id" type="${id.type}">
                 <constraints nullable="false"/>
             </column>
-            <column name="answer_id" type="BIGINT">
+            <column name="answer_id" type="${id.type}">
                 <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
     <changeSet author="leonid (generated)" id="1553644568160-3">
         <createTable tableName="correspondence_variant">
-            <column autoIncrement="true" name="id" type="BIGINT">
+            <column autoIncrement="true" name="id" type="${id.type}">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="text" type="LONGTEXT"/>
-            <column name="question_id" type="BIGINT"/>
-            <column name="uploaded_image_id" type="BIGINT"/>
+            <column name="text" type="${text.type}"/>
+            <column name="question_id" type="${id.type}"/>
+            <column name="uploaded_image_id" type="${id.type}"/>
         </createTable>
     </changeSet>
     <changeSet author="leonid (generated)" id="1553644568160-4">
         <createTable tableName="manager_subjects">
-            <column name="subject_id" type="BIGINT">
+            <column name="subject_id" type="${id.type}">
                 <constraints nullable="false"/>
             </column>
-            <column name="manager_id" type="BIGINT">
-                <constraints nullable="false" unique="true"/>
+            <column name="manager_id" type="${id.type}">
+                <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
@@ -53,38 +53,38 @@
             <column name="type" type="VARCHAR(31)">
                 <constraints nullable="false"/>
             </column>
-            <column autoIncrement="true" name="id" type="BIGINT">
+            <column autoIncrement="true" name="id" type="${id.type}">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="text" type="LONGTEXT"/>
+            <column name="text" type="${text.type}"/>
             <column name="version" type="INT"/>
-            <column name="question_info_id" type="BIGINT"/>
-            <column name="uploaded_image_id" type="BIGINT"/>
+            <column name="question_info_id" type="${id.type}"/>
+            <column name="uploaded_image_id" type="${id.type}"/>
         </createTable>
     </changeSet>
     <changeSet author="leonid (generated)" id="1553644568160-6">
         <createTable tableName="question_info">
-            <column autoIncrement="true" name="id" type="BIGINT">
+            <column autoIncrement="true" name="id" type="${id.type}">
                 <constraints primaryKey="true"/>
             </column>
             <column name="code" type="INT"/>
             <column name="complexity" type="INT"/>
             <column name="max_score" type="INT"/>
-            <column name="name" type="VARCHAR(255)"/>
-            <column name="subject_id" type="BIGINT"/>
-            <column name="topic_id" type="BIGINT"/>
+            <column name="name" type="${string.type}"/>
+            <column name="subject_id" type="${id.type}"/>
+            <column name="topic_id" type="${id.type}"/>
         </createTable>
     </changeSet>
     <changeSet author="leonid (generated)" id="1553644568160-7">
         <createTable tableName="question_result">
-            <column autoIncrement="true" name="id" type="BIGINT">
+            <column autoIncrement="true" name="id" type="${id.type}">
                 <constraints primaryKey="true"/>
             </column>
             <column name="mark" type="INT"/>
             <column name="score" type="INT"/>
             <column name="score_cost" type="INT"/>
-            <column name="question_id" type="BIGINT"/>
-            <column name="test_result_id" type="BIGINT"/>
+            <column name="question_id" type="${id.type}"/>
+            <column name="test_result_id" type="${id.type}"/>
             <column name="order_number" type="INT"/>
             <column name="updated" type="datetime"/>
         </createTable>
@@ -94,154 +94,154 @@
             <column name="type" type="VARCHAR(31)">
                 <constraints nullable="false"/>
             </column>
-            <column autoIncrement="true" name="id" type="BIGINT">
+            <column autoIncrement="true" name="id" type="${id.type}">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="value" type="VARCHAR(255)"/>
-            <column name="question_result_id" type="BIGINT"/>
-            <column name="answer_variant_id" type="BIGINT"/>
-            <column name="correspondence_variant_id" type="BIGINT"/>
+            <column name="value" type="${string.type}"/>
+            <column name="question_result_id" type="${id.type}"/>
+            <column name="answer_variant_id" type="${id.type}"/>
+            <column name="correspondence_variant_id" type="${id.type}"/>
             <column name="correct" type="BIT"/>
         </createTable>
     </changeSet>
     <changeSet author="leonid (generated)" id="1553644568160-9">
         <createTable tableName="roles">
-            <column autoIncrement="true" name="id" type="BIGINT">
+            <column autoIncrement="true" name="id" type="${id.type}">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="role" type="VARCHAR(255)">
+            <column name="role" type="${string.type}">
                 <constraints unique="true"/>
             </column>
         </createTable>
     </changeSet>
     <changeSet author="leonid (generated)" id="1553644568160-10">
         <createTable tableName="rule_topics">
-            <column name="testing_plan_id" type="BIGINT">
+            <column name="testing_plan_id" type="${id.type}">
                 <constraints nullable="false"/>
             </column>
-            <column name="topic_id" type="BIGINT">
+            <column name="topic_id" type="${id.type}">
                 <constraints nullable="false"/>
             </column>
         </createTable>
     </changeSet>
     <changeSet author="leonid (generated)" id="1553644568160-11">
         <createTable tableName="sub_topic">
-            <column autoIncrement="true" name="id" type="BIGINT">
+            <column autoIncrement="true" name="id" type="${id.type}">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="title" type="VARCHAR(255)"/>
-            <column name="subject_id" type="BIGINT"/>
+            <column name="title" type="${string.type}"/>
+            <column name="subject_id" type="${id.type}"/>
         </createTable>
     </changeSet>
     <changeSet author="leonid (generated)" id="1553644568160-12">
         <createTable tableName="subject_admins">
-            <column autoIncrement="true" name="id" type="BIGINT">
+            <column autoIncrement="true" name="id" type="${id.type}">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="user_id" type="BIGINT"/>
+            <column name="user_id" type="${id.type}"/>
         </createTable>
     </changeSet>
     <changeSet author="leonid (generated)" id="1553644568160-13">
         <createTable tableName="subject_topic">
-            <column autoIncrement="true" name="id" type="BIGINT">
+            <column autoIncrement="true" name="id" type="${id.type}">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="title" type="VARCHAR(255)"/>
-            <column name="subject_id" type="BIGINT"/>
+            <column name="title" type="${string.type}"/>
+            <column name="subject_id" type="${id.type}"/>
         </createTable>
     </changeSet>
     <changeSet author="leonid (generated)" id="1553644568160-14">
         <createTable tableName="t_user">
-            <column autoIncrement="true" name="id" type="BIGINT">
+            <column autoIncrement="true" name="id" type="${id.type}">
                 <constraints primaryKey="true"/>
             </column>
             <column name="enabled" type="BIT(1)"/>
-            <column name="firstName" type="VARCHAR(255)"/>
-            <column name="lastName" type="VARCHAR(255)"/>
-            <column name="middleName" type="VARCHAR(255)"/>
-            <column name="password" type="VARCHAR(255)"/>
-            <column name="username" type="VARCHAR(255)">
+            <column name="firstName" type="${string.type}"/>
+            <column name="lastName" type="${string.type}"/>
+            <column name="middleName" type="${string.type}"/>
+            <column name="password" type="${string.type}"/>
+            <column name="username" type="${string.type}">
                 <constraints unique="true"/>
             </column>
         </createTable>
     </changeSet>
     <changeSet author="leonid (generated)" id="1553644568160-15">
         <createTable tableName="test_result">
-            <column autoIncrement="true" name="id" type="BIGINT">
+            <column autoIncrement="true" name="id" type="${id.type}">
                 <constraints primaryKey="true"/>
             </column>
             <column name="end_time" type="datetime"/>
             <column name="mark_total" type="INT"/>
             <column name="start_time" type="datetime"/>
-            <column name="testing_plan_id" type="BIGINT"/>
-            <column name="title" type="VARCHAR(255)"/>
-            <column name="testee_id" type="BIGINT"/>
+            <column name="testing_plan_id" type="${id.type}"/>
+            <column name="title" type="${string.type}"/>
+            <column name="testee_id" type="${id.type}"/>
         </createTable>
     </changeSet>
     <changeSet author="leonid (generated)" id="1553644568160-16">
         <createTable tableName="test_subject">
-            <column autoIncrement="true" name="id" type="BIGINT">
+            <column autoIncrement="true" name="id" type="${id.type}">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="title" type="VARCHAR(255)"/>
+            <column name="title" type="${string.type}"/>
         </createTable>
     </changeSet>
     <changeSet author="leonid (generated)" id="1553644568160-17">
         <createTable tableName="testee">
-            <column autoIncrement="true" name="id" type="BIGINT">
+            <column autoIncrement="true" name="id" type="${id.type}">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="caseNumber" type="VARCHAR(255)">
+            <column name="caseNumber" type="${string.type}">
                 <constraints nullable="false" unique="true"/>
             </column>
-            <column name="firstName" type="VARCHAR(255)"/>
-            <column name="lastName" type="VARCHAR(255)"/>
-            <column name="login" type="VARCHAR(255)">
+            <column name="firstName" type="${string.type}"/>
+            <column name="lastName" type="${string.type}"/>
+            <column name="login" type="${string.type}">
                 <constraints nullable="false" unique="true"/>
             </column>
-            <column name="middleName" type="VARCHAR(255)"/>
-            <column name="password" type="VARCHAR(255)"/>
+            <column name="middleName" type="${string.type}"/>
+            <column name="password" type="${string.type}"/>
         </createTable>
     </changeSet>
     <changeSet author="leonid (generated)" id="1553644568160-18">
         <createTable tableName="testing_plan">
-            <column autoIncrement="true" name="id" type="BIGINT">
+            <column autoIncrement="true" name="id" type="${id.type}">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="name" type="VARCHAR(255)"/>
-            <column name="subject_id" type="BIGINT"/>
+            <column name="name" type="${string.type}"/>
+            <column name="subject_id" type="${id.type}"/>
             <column name="enabled" type="BIT"/>
         </createTable>
     </changeSet>
     <changeSet author="leonid (generated)" id="1553644568160-19">
         <createTable tableName="testing_plan_rule">
-            <column autoIncrement="true" name="id" type="BIGINT">
+            <column autoIncrement="true" name="id" type="${id.type}">
                 <constraints primaryKey="true"/>
             </column>
             <column name="complexity" type="INT"/>
             <column name="question_count" type="INT"/>
-            <column name="testing_plan_id" type="BIGINT"/>
-            <column name="topic_id" type="BIGINT"/>
+            <column name="testing_plan_id" type="${id.type}"/>
+            <column name="topic_id" type="${id.type}"/>
             <column name="score_cost" type="INT"/>
             <column name="max_score" type="INT"/>
         </createTable>
     </changeSet>
     <changeSet author="leonid (generated)" id="1553644568160-20">
         <createTable tableName="uploaded_images">
-            <column autoIncrement="true" name="id" type="BIGINT">
+            <column autoIncrement="true" name="id" type="${id.type}">
                 <constraints primaryKey="true"/>
             </column>
-            <column name="content_type" type="VARCHAR(255)"/>
+            <column name="content_type" type="${string.type}"/>
             <column name="picture" type="LONGBLOB"/>
-            <column name="source_name" type="VARCHAR(255)"/>
+            <column name="source_name" type="${string.type}"/>
         </createTable>
     </changeSet>
     <changeSet author="leonid (generated)" id="1553644568160-21">
         <createTable tableName="user_roles">
-            <column name="user_id" type="BIGINT">
+            <column name="user_id" type="${id.type}">
                 <constraints nullable="false"/>
             </column>
-            <column name="role_id" type="BIGINT">
+            <column name="role_id" type="${id.type}">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -343,7 +343,10 @@
         <addForeignKeyConstraint baseColumnNames="question_result_id" baseTableName="result_element" constraintName="FK_32jv5jl9k150ldlqdv7e0d7jd" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="question_result" validate="true"/>
     </changeSet>
     <changeSet author="leonid (generated)" id="1553644568160-42">
-        <addForeignKeyConstraint baseColumnNames="correspondence_variant_id" baseTableName="result_element" constraintName="FK_423284hjtd9ts8ye0rc284tpk" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="correspondence_variant" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="correspondence_variant_id" baseTableName="result_element"
+                                 constraintName="FK_423284hjtd9ts8ye0rc284tpk"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="correspondence_variant" validate="true"/>
     </changeSet>
     <changeSet author="leonid (generated)" id="1553644568160-43">
         <addForeignKeyConstraint baseColumnNames="correspondence_id" baseTableName="correspondence_answers" constraintName="FK_69mv92i7dft9b7p4kv3ux5amu" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="correspondence_variant" validate="true"/>
@@ -389,5 +392,20 @@
     </changeSet>
     <changeSet author="leonid (generated)" id="1553644568160-57">
         <addForeignKeyConstraint baseColumnNames="answer_id" baseTableName="correspondence_answers" constraintName="FK_sg29udu9v0lwwifkduif8j635" deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" referencedTableName="answer_variant" validate="true"/>
+    </changeSet>
+
+    <changeSet author="leonid" id="1553644568160-58">
+        <addForeignKeyConstraint baseColumnNames="subject_id" baseTableName="manager_subjects"
+                                 constraintName="FK_manager_subjects_to_subjects" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="test_subject"
+                                 validate="true"/>
+    </changeSet>
+    <changeSet author="leonid" id="1553644568160-59">
+        <addForeignKeyConstraint baseColumnNames="manager_id" baseTableName="manager_subjects"
+                                 constraintName="FK_manager_subjects_to_admins" deferrable="false"
+                                 initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="subject_admins"
+                                 validate="true"/>
     </changeSet>
 </databaseChangeLog>

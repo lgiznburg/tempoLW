@@ -4,11 +4,13 @@ package ru.rsmu.tempoLW.consumabales;
  * @author leonid.
  */
 public enum CrudMode {
+    // classic modes
     CREATE,
     REVIEW,
     UPDATE,
     DELETE,
-
-    UPLOAD
+    // additional modes
+    UPLOAD,
+    VIEW_ELEMENTS
 
 }

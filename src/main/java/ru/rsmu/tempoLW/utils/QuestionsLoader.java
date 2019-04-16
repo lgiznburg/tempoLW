@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * @author leonid.
  */
-public class QuestionsLoader extends ExcelLayout {
+public class QuestionsLoader extends ExcelReader implements ExcelLayout {
     private QuestionDao questionDao;
     private ExamSubject subject;
 
@@ -43,7 +43,7 @@ public class QuestionsLoader extends ExcelLayout {
         return this;
     }
 
-    public List<String> loadFromFile( InputStream input ) throws IOException {
+    public List<String> loadFromFile() {
 
         Sheet sheet = wb.getSheetAt( 0 );  // main page
 

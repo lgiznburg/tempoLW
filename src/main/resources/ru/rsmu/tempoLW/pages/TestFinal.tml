@@ -3,7 +3,14 @@
       xmlns:p="tapestry:parameter">
 
 <div class="row">
-    <h2 class="align-center">${message:testing-header} ${examResult.title}</h2>
+    <h2 class="align-center">
+        <t:if test="examResult.examMode">
+            ${message:exam-header} <p:else>${message:testing-header}</p:else>
+        </t:if>
+        ${examResult.title}</h2>
+    <t:if test="examResult.examMode">
+        <h4>${examResult.testee.lastName}</h4>
+    </t:if>
 </div>
 
 
@@ -23,7 +30,7 @@
             <tr>
                 <t:if test="examResult.finished" >
                     <td>${message:question-num} ${questionResult.viewNumber}. ${questionResult.question.questionInfo.name}</td>
-                    <td>${questionResult.score}</td>
+                    <td>${questionResult.score} (${questionResult.question.questionInfo.maxScore})</td>
                     <td>${questionResult.mark}</td>
 
                     <p:else>
@@ -57,9 +64,9 @@
     <div class="row subquestion-nav">
         <div class="col-sm-4 col-sm-offset-2">
             <t:if test="examResult.finished">
-                <t:pagelink page="index" class="btn btn-default">${message:go-home}</t:pagelink>
+                <t:eventlink event="goBack" class="btn btn-default">${message:go-home}</t:eventlink>
                 <p:else>
-                    <t:actionlink t:id="finish" class="btn btn-primary">${message:test-finish}</t:actionlink>
+                    <t:eventlink event="finishTest" t:id="finish" class="btn btn-primary">${message:test-finish}</t:eventlink>
                 </p:else>
             </t:if>
         </div>

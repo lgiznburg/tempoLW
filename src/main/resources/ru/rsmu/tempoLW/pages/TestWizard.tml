@@ -3,7 +3,14 @@
       xmlns:p="tapestry:parameter">
 
 <div class="row">
-<h2>${message:testing-header} ${examResult.title}</h2>
+    <h2 class="align-center">
+        <t:if test="examResult.examMode">
+            ${message:exam-header} <p:else>${message:testing-header}</p:else>
+        </t:if>
+        ${examResult.title}</h2>
+    <t:if test="examResult.examMode">
+        <h4>${examResult.testee.lastName}</h4>
+    </t:if>
 </div>
 
 <t:questionform current="current"/>

@@ -4,8 +4,10 @@ import org.apache.tapestry5.Asset;
 import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.javascript.JavaScriptSupport;
+import ru.rsmu.tempoLW.dao.ExamDao;
 import ru.rsmu.tempoLW.dao.QuestionDao;
 import ru.rsmu.tempoLW.entities.*;
+import ru.rsmu.tempoLW.services.SecurityUserHelper;
 
 import java.util.LinkedList;
 
@@ -26,6 +28,12 @@ public class TestWizard {
     @Inject
     private QuestionDao questionDao;
 
+    @Inject
+    private ExamDao examDao;
+
+    @Inject
+    private SecurityUserHelper securityUserHelper;
+
     @Property
     private QuestionResult current;
 
@@ -42,6 +50,11 @@ public class TestWizard {
         if ( examResult == null || examResult.getQuestionResults() == null ) {
             return Index.class;
         }
+        Testee testee = securityUserHelper.getCurrentTestee();
+        if ( testee != null && examResult.getTestee().getId() != testee.getId() ) {
+            return Index.class;
+        }
+
         if ( questionNumber < 0 ||
                 questionNumber >= examResult.getQuestionResults().size() ) {
             // check out of bounds
@@ -57,7 +70,10 @@ public class TestWizard {
     public Object onSuccess() {
         current.checkCorrectness();
 
-        //todo save
+        //save only existed result
+        if ( examResult.getId() > 0 ) {
+            examDao.save( examResult );
+        }
 
         if ( examResult.getQuestionResults().size() -1 == questionNumber ) {
             return TestFinal.class;

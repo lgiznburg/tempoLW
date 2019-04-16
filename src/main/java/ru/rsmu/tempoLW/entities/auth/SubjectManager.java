@@ -22,10 +22,10 @@ public class SubjectManager implements Serializable {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToMany
+    @ManyToMany
     @JoinTable(name = "manager_subjects",
-            joinColumns = @JoinColumn(name = "subject_id"),
-            inverseJoinColumns = @JoinColumn(name = "manager_id")
+            joinColumns = @JoinColumn(name = "manager_id"),
+            inverseJoinColumns = @JoinColumn(name = "subject_id")
     )
     private List<ExamSubject> subjects;
 

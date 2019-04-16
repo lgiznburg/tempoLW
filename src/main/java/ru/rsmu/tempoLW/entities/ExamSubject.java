@@ -22,6 +22,10 @@ public class ExamSubject implements Serializable {
     @Validate( "required" )
     private String title = "";
 
+    @Column
+    @Validate( "required" )
+    private String locale;
+
     public long getId() {
         return id;
     }
@@ -38,17 +42,26 @@ public class ExamSubject implements Serializable {
         this.title = title;
     }
 
+    public String getLocale() {
+        return locale;
+    }
+
+    public void setLocale( String locale ) {
+        this.locale = locale;
+    }
+
     @Override
     public boolean equals( Object o ) {
         if ( this == o ) return true;
         if ( o == null || getClass() != o.getClass() ) return false;
         ExamSubject that = (ExamSubject) o;
         return id == that.id &&
-                Objects.equals( title, that.title );
+                Objects.equals( title, that.title ) &&
+                Objects.equals( locale, that.locale );
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash( id, title );
+        return Objects.hash( id, title, locale );
     }
 }

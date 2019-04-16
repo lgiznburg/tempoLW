@@ -32,13 +32,13 @@ public class QuestionTreeEdit {
     @Property
     private SelectModel answersModel;
 
-    @Property
-    private List<AnswerVariant> allAnswers;
+    //@Property
+    //private List<AnswerVariant> allAnswers;
 
     @SetupRender
     public void onActivate() {
-        allAnswers = new LinkedList<>();
-        getQuestionTree().getCorrespondenceVariants().forEach( correspondenceVariant -> allAnswers.addAll( correspondenceVariant.getCorrectAnswers() ) );
+        //allAnswers = new LinkedList<>();
+        //getQuestionTree().getCorrespondenceVariants().forEach( correspondenceVariant -> allAnswers.addAll( correspondenceVariant.getCorrectAnswers() ) );
         //answersModel = modelFactory.create( allAnswers, "text" );
     }
 
@@ -52,9 +52,11 @@ public class QuestionTreeEdit {
             @Override
             public AnswerVariant toValue( String clientValue ) {
                 long id = Long.parseLong( clientValue );
-                for ( AnswerVariant answerVariant : allAnswers ) {
-                    if ( answerVariant.getId() == id ) {
-                        return answerVariant;
+                for ( CorrespondenceVariant variant : ((QuestionTree)question).getCorrespondenceVariants() ) {
+                    for ( AnswerVariant answerVariant : variant.getCorrectAnswers() ) {
+                        if ( answerVariant.getId() == id ) {
+                            return answerVariant;
+                        }
                     }
                 }
                 return null;

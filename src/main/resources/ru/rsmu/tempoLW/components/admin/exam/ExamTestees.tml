@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<t:container xmlns="http://www.w3.org/1999/xhtml" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd" xmlns:p="tapestry:parameter">
+
+<div id="testeesList">
+    <div class="row">
+        <div class="row">
+            <h4>${message:exam} ${exam.name}</h4>
+        </div>
+
+        <t:grid t:id="testeesGrid" source="exam.testees" row="testee"
+                exclude="id,firstName,middleName,login,password"
+                add="testResult" class="table table-bordered table-hover"
+                rowsPerPage="50" pagerPosition="bottom"
+                empty="block:emptyTestees">
+            <p:testResultCell>
+                <t:if test="currentExamResult">
+                    ${currentExamResult.markTotal} <t:pagelink page="admin/examtesteeresultrtf" context="[exam,testee]">print</t:pagelink>
+                    <p:else>--</p:else>
+                </t:if>
+            </p:testResultCell>
+        </t:grid>
+
+        <t:block t:id="emptyTestees">
+            <div id="noExams">${message:exam-no-testees}</div>
+        </t:block>
+
+    </div>
+</div>
+</t:container>
