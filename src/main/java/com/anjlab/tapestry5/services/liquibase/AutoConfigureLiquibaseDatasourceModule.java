@@ -3,6 +3,7 @@ package com.anjlab.tapestry5.services.liquibase;
 import com.microsoft.sqlserver.jdbc.SQLServerConnectionPoolDataSource;
 import com.microsoft.sqlserver.jdbc.SQLServerDataSource;
 import org.apache.commons.dbcp2.BasicDataSource;
+import org.apache.commons.dbcp2.datasources.SharedPoolDataSource;
 import org.apache.tapestry5.ioc.MappedConfiguration;
 import org.apache.tapestry5.ioc.MethodAdviceReceiver;
 import org.apache.tapestry5.ioc.annotations.Advise;
@@ -18,6 +19,7 @@ import org.xml.sax.SAXException;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.sql.ConnectionPoolDataSource;
 import javax.sql.DataSource;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -42,7 +44,7 @@ public class AutoConfigureLiquibaseDatasourceModule {
     // That's why we're binding directly to the scope of InitialContext.
     private static final String LIQUIBASE_DATASOURCE_JNDI_NAME = "liquibase-datasource";
 
-    public static final String LIQUIBASE_CONFIG_FILE_NAME = "liquibase.hibernate.config-file-name";
+    private static final String LIQUIBASE_CONFIG_FILE_NAME = "liquibase.hibernate.config-file-name";
 
     public static void contributeFactoryDefaults(
             MappedConfiguration<String, Object> configuration)
@@ -164,7 +166,10 @@ public class AutoConfigureLiquibaseDatasourceModule {
             msDs.setUser( username );
             msDs.setPassword( password );
 
-            ds = msDs;
+            // incredible! rule of thumb in action
+            SharedPoolDataSource sharedDS = new SharedPoolDataSource();
+            sharedDS.setConnectionPoolDataSource( (ConnectionPoolDataSource) msDs );
+            ds = sharedDS;
         }
         else {
             BasicDataSource bds = new BasicDataSource();
