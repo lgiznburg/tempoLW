@@ -6,6 +6,7 @@ import org.apache.tapestry5.ioc.annotations.Inject;
 import ru.rsmu.tempoLW.dao.ExamDao;
 import ru.rsmu.tempoLW.entities.ExamSchedule;
 
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -27,7 +28,17 @@ public class ExamReview {
         exam = examId != null ? examDao.find( ExamSchedule.class, examId ) : null;
     }
 
-    public boolean beforeExam() {
-        return exam.getExamDate().before( new Date() );
+    public boolean isBeforeExamDate() {
+        return exam != null && exam.getExamDate().after( new Date() );
+    }
+
+    public boolean isAtExamDate() {
+        if ( exam != null ) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime( exam.getExamDate() );
+            calendar.add( Calendar.DAY_OF_YEAR, 1 );
+            return calendar.getTime().after( new Date() );
+        }
+        return false;
     }
 }

@@ -66,7 +66,7 @@ public class Exams {
     }
 
     // Update
-    public void onExamEdited( Long editedExamId ) {
+    public void onExamUpdated( Long editedExamId ) {
         mode = CrudMode.REVIEW;
         examId = editedExamId;
     }

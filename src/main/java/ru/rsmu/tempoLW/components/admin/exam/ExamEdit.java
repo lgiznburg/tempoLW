@@ -19,8 +19,9 @@ import ru.rsmu.tempoLW.entities.auth.User;
 import ru.rsmu.tempoLW.entities.auth.UserRoleName;
 import ru.rsmu.tempoLW.services.SecurityUserHelper;
 
-import java.util.LinkedList;
-import java.util.List;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Edit component for ExamSchedule
@@ -36,6 +37,9 @@ public class ExamEdit {
 
     @Property
     private SelectModel testingPlanModel;
+
+    @Property
+    private Date proxyDate;
 
     @Inject
     private ExamDao examDao;
@@ -72,6 +76,13 @@ public class ExamEdit {
         if ( exam == null ) {
             exam = new ExamSchedule();
         }
+
+        Calendar proxyCalendar = Calendar.getInstance();
+        if ( exam.getExamDate() != null ) {
+            proxyCalendar.setTimeInMillis( exam.getExamDate().getTime() + proxyCalendar.get( Calendar.ZONE_OFFSET ) );
+        }
+        proxyDate = proxyCalendar.getTime();
+
         testingPlanModel = new AbstractSelectModel() {
             @Override
             public List<OptionGroupModel> getOptionGroups() {
@@ -101,6 +112,7 @@ public class ExamEdit {
 
     public boolean onSuccess() {
         String event = exam.getId() == 0 ? "examCreated" : "examUpdated";
+        exam.setExamDate( proxyDate );
         examDao.save( exam );
         componentResources.triggerEvent( event, new Object[]{ exam.getId() }, null );
         return true;
@@ -123,5 +135,11 @@ public class ExamEdit {
                 return examDao.find( TestingPlan.class, id );
             }
         };
+    }
+
+    public DateFormat getCorrectDateFormat() {
+        SimpleDateFormat format = new SimpleDateFormat( "dd/MM/yyyy" );
+        format.setTimeZone( TimeZone.getTimeZone("GMT") );
+        return format;
     }
 }

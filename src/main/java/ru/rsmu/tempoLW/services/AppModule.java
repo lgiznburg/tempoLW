@@ -35,7 +35,7 @@ public class AppModule {
 
     @ApplicationDefaults
     @Contribute(SymbolProvider.class)
-    public static void configureTapestryHotelBooking(
+    public static void configureTempoLW(
             MappedConfiguration<String, String> configuration)
     {
 

@@ -28,16 +28,25 @@
         </div>
         <div class="col-sm-5 text-right">
             <t:if test="exam.testees">
-                <t:eventlink event="toTesteesList" context="examId">${message:exam-testees-list}</t:eventlink>
+                <t:eventlink event="toTesteesList" context="examId" class="btn btn-info btn-sm">${message:exam-testees-list}</t:eventlink>
             </t:if>
         </div>
     </div>
+    <br/>
 
     <div class="row">
         <div class="col-sm-12">
             <t:eventlink class="btn btn-primary" event="toUpdate" context="examId">${message:update}</t:eventlink>
-            <t:eventlink class="btn btn-primary" event="toUpload" context="examId">${message:exam-upload-testees}</t:eventlink>
-            <t:pagelink page="admin/examloginrecords" class="btn btn-primary" context="exam" >${message:exam-print-logins}</t:pagelink>
+            <t:security.hasrole role="admin">
+                <t:if test="beforeExamDate">
+                    <t:eventlink class="btn btn-primary" event="toUpload"
+                                 context="examId">${message:exam-upload-testees}</t:eventlink>
+                </t:if>
+                <t:if test="atExamDate">
+                    <t:pagelink page="admin/examloginrecords" class="btn btn-primary"
+                                context="exam">${message:exam-print-logins}</t:pagelink>
+                </t:if>
+            </t:security.hasrole>
             <!-- delete -->
         </div>
     </div>

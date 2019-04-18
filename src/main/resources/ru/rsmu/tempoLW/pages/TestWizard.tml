@@ -10,6 +10,15 @@
         ${examResult.title}</h2>
     <t:if test="examResult.examMode">
         <h4>${examResult.testee.lastName}</h4>
+        <p class="text-lg">
+            ${message:exam-start} : <strong><t:output format="literal:HH:mm" value="examResult.startTime"/></strong> -
+            ${message:exam-end} :
+            <t:if test="examResult.finished">
+                <strong><t:output format="literal:HH:mm" value="examResult.endTime"/></strong>
+                <p:else><strong><t:output format="literal:HH:mm" value="estimatedEndTime"/></strong></p:else>
+            </t:if>
+
+        </p>
     </t:if>
 </div>
 

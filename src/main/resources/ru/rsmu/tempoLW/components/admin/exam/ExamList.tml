@@ -9,7 +9,7 @@
                 empty="block:emptyExams">
             <p:titleCell>
                 <t:eventLink event="examSelected" context="exam.id" class="prop:linkCssClass">
-                    ${exam.name} / ${exam.testingPlan.subject.title} / <t:output format="literal:dd/MM/yy" value="exam.examDate"/>
+                    ${exam.name} &bull; ${exam.testingPlan.subject.title} &bull; <t:output format="literal:dd/MM/yy" value="exam.examDate"/>
                 </t:eventLink>
             </p:titleCell>
         </t:grid>

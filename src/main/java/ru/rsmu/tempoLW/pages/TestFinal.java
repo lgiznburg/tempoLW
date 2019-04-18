@@ -11,6 +11,7 @@ import ru.rsmu.tempoLW.entities.ExamResult;
 import ru.rsmu.tempoLW.entities.auth.UserRoleName;
 import ru.rsmu.tempoLW.services.SecurityUserHelper;
 
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -46,6 +47,12 @@ public class TestFinal {
             finalMark += questionResult.getMark();
         }
         examResult.setMarkTotal( finalMark );
+
+        if ( examResult.isExamMode() && getEstimatedEndTime().before( new Date() ) ) {
+            // check time - if testee used "Next/Prev question" button
+            examResult.setEndTime( new Date() );
+            examDao.save( examResult );
+        }
         return null;
     }
 
@@ -65,4 +72,18 @@ public class TestFinal {
         return Index.class;
     }
 
+
+    public Date getEstimatedEndTime() {
+        Calendar calendar = Calendar.getInstance();
+        if ( examResult.isExamMode() ) {
+            calendar.setTime( examResult.getStartTime() );
+            if ( examResult.getExam().getDurationHours() > 0 ) {
+                calendar.add( Calendar.HOUR, examResult.getExam().getDurationHours() );
+            }
+            if ( examResult.getExam().getDurationMinutes() > 0 ) {
+                calendar.add( Calendar.MINUTE, examResult.getExam().getDurationMinutes() );
+            }
+        }
+        return calendar.getTime();
+    }
 }

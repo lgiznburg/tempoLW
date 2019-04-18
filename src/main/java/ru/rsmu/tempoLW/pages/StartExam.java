@@ -57,7 +57,7 @@ public class StartExam {
             //}
         }
         examResult = new ExamBuilder( questionDao ).buildTestVariant( exam.getTestingPlan() );
-        examResult.setStartTime( new Date() );  //set now
+        //examResult.setStartTime( new Date() );  //set now
         examResult.setExam( exam );
 
         examResult.setTestee( testee );

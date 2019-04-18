@@ -24,7 +24,7 @@
             <div class="form-group">
                 <t:label for="examDate" class="col-sm-3"/>
                 <div class="col-sm-6">
-                    <t:datefield t:id="examDate" value="exam.examDate" format="dd/MM/yyyy"/>
+                    <t:datefield t:id="examDate" value="proxyDate" format="prop:correctDateFormat"/>
                 </div>
             </div>
             <div class="form-group">

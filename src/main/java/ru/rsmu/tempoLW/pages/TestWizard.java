@@ -9,6 +9,8 @@ import ru.rsmu.tempoLW.dao.QuestionDao;
 import ru.rsmu.tempoLW.entities.*;
 import ru.rsmu.tempoLW.services.SecurityUserHelper;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.LinkedList;
 
 /**
@@ -54,6 +56,19 @@ public class TestWizard {
         if ( testee != null && examResult.getTestee().getId() != testee.getId() ) {
             return Index.class;
         }
+        if ( examResult.getStartTime() == null ) {
+            //just started
+            examResult.setStartTime( new Date() );
+            if ( examResult.getId() > 0 ) {
+                examDao.save( examResult );
+            }
+        }
+        else if ( examResult.isExamMode() && getEstimatedEndTime().before( new Date() ) ) {
+            // check time - if testee used "Next/Prev question" button
+            examResult.setEndTime( new Date() );
+            examDao.save( examResult );
+            return TestFinal.class;
+        }
 
         if ( questionNumber < 0 ||
                 questionNumber >= examResult.getQuestionResults().size() ) {
@@ -72,10 +87,13 @@ public class TestWizard {
 
         //save only existed result
         if ( examResult.getId() > 0 ) {
+            if ( getEstimatedEndTime().before( new Date() ) ) {
+                examResult.setEndTime( new Date() );
+            }
             examDao.save( examResult );
         }
 
-        if ( examResult.getQuestionResults().size() -1 == questionNumber ) {
+        if ( examResult.getQuestionResults().size() -1 == questionNumber || examResult.isFinished()) {
             return TestFinal.class;
         }
         return onNextQuestion();
@@ -106,4 +124,18 @@ public class TestWizard {
     /*public void setQuestionNumber( int questionNumber ) {
         this.questionNumber = questionNumber;
     }*/
+
+    public Date getEstimatedEndTime() {
+        Calendar calendar = Calendar.getInstance();
+        if ( examResult.isExamMode() ) {
+            calendar.setTime( examResult.getStartTime() );
+            if ( examResult.getExam().getDurationHours() > 0 ) {
+                calendar.add( Calendar.HOUR, examResult.getExam().getDurationHours() );
+            }
+            if ( examResult.getExam().getDurationMinutes() > 0 ) {
+                calendar.add( Calendar.MINUTE, examResult.getExam().getDurationMinutes() );
+            }
+        }
+        return calendar.getTime();
+    }
 }
