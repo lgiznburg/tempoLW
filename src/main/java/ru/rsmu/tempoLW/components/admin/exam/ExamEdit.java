@@ -38,6 +38,7 @@ public class ExamEdit {
     @Property
     private SelectModel testingPlanModel;
 
+    // proxy date - to fix tapestry issue with datefield and timezone
     @Property
     private Date proxyDate;
 
@@ -77,6 +78,11 @@ public class ExamEdit {
             exam = new ExamSchedule();
         }
 
+        /* Tapestry datefield component uses milliseconds for communicate with JS
+         *  so we need to use DateFormat for GMT timezone.
+         *  To match SQL date (exam.examDate) with no time and timezone
+         *  it needs to be moved to MSK timezone. Craziness
+         */
         Calendar proxyCalendar = Calendar.getInstance();
         if ( exam.getExamDate() != null ) {
             proxyCalendar.setTimeInMillis( exam.getExamDate().getTime() + proxyCalendar.get( Calendar.ZONE_OFFSET ) );
@@ -138,6 +144,7 @@ public class ExamEdit {
     }
 
     public DateFormat getCorrectDateFormat() {
+        // to correct work of datefield we need to use Date Format of GMT
         SimpleDateFormat format = new SimpleDateFormat( "dd/MM/yyyy" );
         format.setTimeZone( TimeZone.getTimeZone("GMT") );
         return format;
