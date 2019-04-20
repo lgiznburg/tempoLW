@@ -7,13 +7,13 @@ import org.apache.tapestry5.ComponentResources;
 import org.apache.tapestry5.PersistenceConstants;
 import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.corelib.components.Form;
+import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.upload.services.UploadedFile;
 import ru.rsmu.tempoLW.dao.QuestionDao;
 import ru.rsmu.tempoLW.entities.ExamSubject;
 import ru.rsmu.tempoLW.utils.ImagesExtractor;
 import ru.rsmu.tempoLW.utils.QuestionsLoader;
 
-import javax.inject.Inject;
 import java.io.IOException;
 
 /**
@@ -45,18 +45,18 @@ public class UploadQuestions {
     @InjectComponent
     private Form uploadForm;
 
-    @org.apache.tapestry5.ioc.annotations.Inject
+    @Inject
     private ComponentResources componentResources;
 
 
-    void onPrepareForRenderFromUploadForm() throws Exception {
+    void onPrepareForRenderFromUploadForm() {
         // If fresh start, make sure there's a User object available.
         if (uploadForm.isValid()) {
             subject = questionDao.find( ExamSubject.class, subjectId );
         }
     }
 
-    void onPrepareForSubmitFromUploadForm() throws Exception {
+    void onPrepareForSubmitFromUploadForm() {
         subject = questionDao.find( ExamSubject.class, subjectId );
     }
 
@@ -81,7 +81,7 @@ public class UploadQuestions {
                     loader.setImagesExtractor( imagesExtractor );
                 }
                 loader.createWorkbook( file.getStream(), file.getFileName().matches( ".*\\.xls" ) )
-                .loadFromFile( file.getStream() );
+                .loadFromFile();
             }
             // We want to tell our containing page explicitly what upload has done, so we trigger a new event with a
             // parameter. It will bubble up because we don't have a handler method for it.

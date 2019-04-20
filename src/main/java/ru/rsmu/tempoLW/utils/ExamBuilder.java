@@ -33,6 +33,7 @@ public class ExamBuilder {
             }
         }
         examResult.setTitle( String.format( "%s (%s)", plan.getSubject().getTitle(), plan.getName() ) );
+        examResult.setTestingPlan( plan );
         return examResult;
     }
 }

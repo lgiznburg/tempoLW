@@ -14,6 +14,7 @@ import java.util.List;
 /**
  * @author leonid.
  */
+@SuppressWarnings( "unchecked" )
 public class QuestionDaoImpl extends BaseDaoImpl implements QuestionDao {
     @Override
     public SubTopic findTopicByName( String topicTitle, ExamSubject subject ) {
@@ -76,11 +77,30 @@ public class QuestionDaoImpl extends BaseDaoImpl implements QuestionDao {
     }
 
     @Override
-    @SuppressWarnings( "unchecked" )
     public List<TestingPlan> findTestingPlans() {
         Criteria criteria = session.createCriteria( TestingPlan.class )
                 .createAlias( "subject", "subject" )
                 .add( Restrictions.eq( "enabled", true ) )
+                .addOrder( Order.asc( "subject.title" ) );
+        return criteria.list();
+    }
+
+    @Override
+    public List<TestingPlan> findTestingPlans( String language ) {
+        Criteria criteria = session.createCriteria( TestingPlan.class )
+                .createAlias( "subject", "subject" )
+                .add( Restrictions.eq( "enabled", true ) )
+                .add( Restrictions.eq( "subject.locale", language ) )
+                .addOrder( Order.asc( "subject.title" ) );
+        return criteria.list();
+    }
+
+    @Override
+    public List<TestingPlan> findTestingPlans( List<ExamSubject> subjects ) {
+        Criteria criteria = session.createCriteria( TestingPlan.class )
+                .createAlias( "subject", "subject" )
+                .add( Restrictions.eq( "enabled", true ) )
+                .add( Restrictions.in( "subject", subjects ) )
                 .addOrder( Order.asc( "subject.title" ) );
         return criteria.list();
     }

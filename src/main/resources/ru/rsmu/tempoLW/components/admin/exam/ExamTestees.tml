@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<t:container xmlns="http://www.w3.org/1999/xhtml" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd" xmlns:p="tapestry:parameter">
+
+<div id="testeesList">
+    <div class="row">
+        <div class="row">
+            <h4>${message:exam} ${exam.name}</h4>
+        </div>
+
+        <t:grid t:id="testeesGrid" source="exam.testees" row="testee"
+                exclude="id,firstName,middleName,login,password,expirationDate,credentialsExpired"
+                add="testResult" class="table table-bordered table-hover"
+                rowsPerPage="50" pagerPosition="bottom"
+                empty="block:emptyTestees">
+            <p:testResultCell>
+                <t:if test="currentExamResult">
+                    <t:if test="currentExamResult.finished">
+                        <div class="row">
+                            <span class="col-xs-5 text-right"> <strong>${currentExamResult.markTotal}</strong></span>
+                            <span class="col-xs-7 text-right">
+                                <t:pagelink page="admin/examtesteeresultrtf" context="[exam,testee]" class="btn btn-info btn-sm" aria-label="Print">
+                                <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
+                                </t:pagelink>
+                            </span>
+                        </div>
+                        <p:else>${message:exam-not-finished}</p:else>
+                    </t:if>
+                </t:if>
+            </p:testResultCell>
+        </t:grid>
+
+        <br/>
+        <div class="form-group">
+            <div class="col-sm-4 col-sm-offset-4">
+                <t:eventlink event="cancelEdit" context="examId" class="btn btn-default">Cancel</t:eventlink>
+            </div>
+        </div>
+
+        <t:block t:id="emptyTestees">
+            <div id="noExams">${message:exam-no-testees}</div>
+        </t:block>
+
+    </div>
+</div>
+</t:container>

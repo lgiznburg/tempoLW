@@ -24,24 +24,28 @@
         <div class="collapse navbar-collapse" id="navbarsReque">
             <t:security.user>
                 <ul class="nav navbar-nav navbar-right">
-                    <li class="dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" id="userDropdown" aria-expanded="false">
-                        ${message:navbar.welcome} ${username}. <span class="caret"/></a>
-                        <ul class="dropdown-menu bg-light" aria-labelledby="userDropdown">
-                            <t:security.hasAnyRoles roles="admin,subject_admin,teacher">
-                                <li><t:pagelink page="admin/subjects">${message:navbar.admin.subjects}</t:pagelink></li>
-                                <!--<li><t:pagelink page="admin/testingplan/testingplanlist">${message:navbar.admin.testingplans}</t:pagelink></li>-->
-                                <li role="separator" class="divider"></li>
-                            </t:security.hasAnyRoles>
-                            <t:security.hasRole role="admin">
-                                <li><t:pagelink page="admin/users">${message:navbar.admin.users}</t:pagelink></li>
-                                <li role="separator" class="divider"></li>
-                            </t:security.hasRole>
-                            <li><t:eventlink event="logout">${message:navbar.logout}</t:eventlink></li>
+                    <t:security.lacksrole role="testee">
+                        <li class="dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" id="userDropdown" aria-expanded="false">
+                                ${message:navbar.welcome} ${username}. <span class="caret"/></a>
+                            <ul class="dropdown-menu bg-light" aria-labelledby="userDropdown">
+                                <t:security.hasAnyRoles roles="admin,subject_admin,teacher">
+                                    <li><t:pagelink page="admin/subjects">${message:navbar.admin.subjects}</t:pagelink></li>
+                                    <li><t:pagelink page="admin/exams">${message:navbar.admin.exams}</t:pagelink></li>
+                                    <li role="separator" class="divider"></li>
+                                </t:security.hasAnyRoles>
+                                <t:security.hasRole role="admin">
+                                    <li><t:pagelink page="admin/users">${message:navbar.admin.users}</t:pagelink></li>
+                                    <li role="separator" class="divider"></li>
+                                </t:security.hasRole>
+                                <li><t:eventlink event="logout">${message:navbar.logout}</t:eventlink></li>
 
-                        </ul>
-
-                    </li>
+                            </ul>
+                        </li>
+                        <p:else>
+                            <li></li>
+                        </p:else>
+                    </t:security.lacksrole>
                 </ul>
                 <p:else>
                     <ul class="nav navbar-nav navbar-right">

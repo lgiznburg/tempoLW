@@ -2,6 +2,37 @@
       xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
       xmlns:p="tapestry:parameter">
 
+<t:security.guest>
+    <t:if test="examDay">
+        <h2>${message:exam-day}</h2>
+        <div class="row">
+            <div class="col-sm-8 col-sm-offset-2">${message:exam-day-introducing}</div>
+        </div>
+        <div class="row">
+            <div class="col-sm-8 col-sm-offset-2">
+                <t:localloginform includeRememberMe="false" />
+            </div>
+        </div>
+    </t:if>
+</t:security.guest>
+
+<t:security.hasrole role="testee">
+    <t:if test="assignedExam">
+        <h2>${message:testee-greeting} ${testee.lastName}</h2>
+        <div class="row">
+            <p class="col-sm-10 col-sm-offset-2">
+                ${message:testee-exam-assigned} <strong>${assignedExam.testingPlan.subject.title}</strong>
+            </p>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-10 col-sm-offset-2">
+                <t:pagelink page="startexam" context="assignedExam" class="btn btn-primary">${message:start-exam}</t:pagelink>
+            </div>
+        </div>
+    </t:if>
+</t:security.hasrole>
+
 <h2>${message:available-tests}</h2>
 <t:loop source="testingPlans" value="plan">
     <div class="row">

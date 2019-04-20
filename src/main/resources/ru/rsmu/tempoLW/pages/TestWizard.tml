@@ -3,7 +3,23 @@
       xmlns:p="tapestry:parameter">
 
 <div class="row">
-<h2>${message:testing-header} ${examResult.title}</h2>
+    <h2 class="align-center">
+        <t:if test="examResult.examMode">
+            ${message:exam-header} <p:else>${message:testing-header}</p:else>
+        </t:if>
+        ${examResult.title}</h2>
+    <t:if test="examResult.examMode">
+        <h4>${examResult.testee.lastName}</h4>
+        <p class="text-lg">
+            ${message:exam-start} : <strong><t:output format="literal:HH:mm" value="examResult.startTime"/></strong> -
+            ${message:exam-end} :
+            <t:if test="examResult.finished">
+                <strong><t:output format="literal:HH:mm" value="examResult.endTime"/></strong>
+                <p:else><strong><t:output format="literal:HH:mm" value="estimatedEndTime"/></strong></p:else>
+            </t:if>
+
+        </p>
+    </t:if>
 </div>
 
 <t:questionform current="current"/>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<t:container xmlns="http://www.w3.org/1999/xhtml" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd" xmlns:p="tapestry:parameter">
+
+    <t:form t:id="uploadForm">
+        <div class="row">
+            <h4>${exam.testingPlan.subject.title} / ${exam.name}, <t:output format="literal:dd MMMM yyyy" value="exam.examDate"/>
+                : ${message:upload-testees-title}</h4>  <!--  class="text-center" -->
+        </div>
+        <t:errors/>
+        <div class="form-group row">
+            <t:label for="file">${message:upload-testees-label}</t:label>
+            <input t:type="upload" t:id="file" t:value="file" validate="required" style="height: auto;"/>
+        </div>
+        <div class="form-group row">
+            <input type="submit" value="${message:upload-upload}" class="btn btn-primary"/>
+            <t:eventlink event="cancelUpload" context="examId" class="btn btn-default">${message:cancel}</t:eventlink>
+        </div>
+    </t:form>
+</t:container>

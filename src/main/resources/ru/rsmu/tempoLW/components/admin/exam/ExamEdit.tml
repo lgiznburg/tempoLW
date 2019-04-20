@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<t:container xmlns="http://www.w3.org/1999/xhtml" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd" xmlns:p="tapestry:parameter">
+
+    <div id="examEdit">
+        <t:form t:id="examForm" class="form-horizontal" validate="exam">
+            <div class="row">
+                <h4><t:if test="edit">${message:edit-exam}<p:else>${message:create-new-exam}</p:else></t:if></h4>
+            </div>
+            <t:errors globalOnly="true"/>
+
+            <div class="form-group">
+                <t:label for="examName" class="col-sm-3"/>
+                <div class="col-sm-6">
+                    <t:textfield t:id="examName" value="exam.name"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <t:label for="testingPlan" class="col-sm-3"/>
+                <div class="col-sm-6">
+                    <t:select t:id="testingPlan" value="exam.testingPlan" encoder="testingPlanEncoder" model="testingPlanModel" validate="required"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <t:label for="examDate" class="col-sm-3"/>
+                <div class="col-sm-6">
+                    <t:datefield t:id="examDate" value="proxyDate" format="prop:correctDateFormat"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <t:label for="examDuration" class="col-sm-3"/>
+                <div class="col-sm-3">
+                    <t:select t:id="examDuration" value="exam.durationHours" model="literal:1,2,3,4" validate="required"/>
+                </div>
+                <div class="col-sm-3">
+                    <t:select value="exam.durationMinutes" model="literal:0,10,15,20,30,45" validate="required"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-4 col-sm-offset-4">
+                    <t:submit value="Save" class="btn btn-primary"/>
+                    <t:eventlink event="cancelEdit" context="examId" class="btn btn-default">Cancel</t:eventlink>
+                </div>
+            </div>
+
+        </t:form>
+    </div>
+</t:container>

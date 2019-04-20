@@ -73,7 +73,7 @@ public class Subjects {
     }
 
     // Update
-    public void onSubjectEdited( Long editedSubjectId ) {
+    public void onSubjectUpdated( Long editedSubjectId ) {
         mode = CrudMode.REVIEW;
         subjectId = editedSubjectId;
     }
