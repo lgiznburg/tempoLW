@@ -52,7 +52,7 @@
                 <p:else>
                     <ul class="nav navbar-nav navbar-right">
                         <!-- locale switch for unlogged users -->
-                        <li><t:eventlink event="togglelocale" class="nav-link">${message:navbar.locale}</t:eventlink></li>
+                        <li><t:eventlink event="togglelocale" class="nav-link">${localeNameToSwitch}</t:eventlink></li>
                         <li><t:pagelink page="login" class="nav-link">${message:navbar.login}</t:pagelink></li>
                     </ul>
                 </p:else>
