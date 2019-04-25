@@ -47,7 +47,7 @@ public class ExamLoginRecords {
                 ).alignCentered() );
         docContent.add( RtfPara.p( new SimpleDateFormat( "dd MMMM yyyy", currentLocale ).format( exam.getExamDate() ) ) );
 
-        docContent.add( RtfPara.row( "Номер дела", "ФИО", "Логин", "Пароль" )
+        docContent.add( RtfPara.row( "Номер дела", "ФИО", "ФИО", "Логин", "Пароль" )
                 .bottomCellBorder()
                 .leftCellBorder()
                 .topCellBorder()
@@ -69,7 +69,7 @@ public class ExamLoginRecords {
             expDate.setTime( exam.getExamDate() );
             expDate.add( Calendar.DAY_OF_YEAR, 1 );
             testee.setExpirationDate( expDate.getTime() );
-            docContent.add( RtfPara.row( testee.getCaseNumber(), testee.getLastName(), testee.getLogin(), password )
+            docContent.add( RtfPara.row( testee.getCaseNumber(), testee.getLastName(), testee.getLastName(), testee.getLogin(), password )
                     .bottomCellBorder()
                     .leftCellBorder()
                     .topCellBorder()

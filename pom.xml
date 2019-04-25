@@ -153,6 +153,11 @@ of testing facilities designed for use with TestNG (http://testng.org/), so it's
             <version>${servlet-api-release-version}</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+            <version>1.1</version>
+        </dependency>
 
         <!-- Provide dependency to the Tapestry javadoc taglet which replaces the Maven component report -->
         <dependency>

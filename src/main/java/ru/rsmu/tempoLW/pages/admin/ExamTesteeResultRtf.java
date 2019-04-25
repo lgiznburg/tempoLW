@@ -57,7 +57,7 @@ public class ExamTesteeResultRtf {
         );
 
         docContent.add( RtfPara.p("") ); //empty line
-        docContent.add( RtfPara.row( "Вопрос", "Базовая балл", "Итоговая оценка" )
+        docContent.add( RtfPara.row( "Вопрос", "Базовый балл", "Итоговая оценка" )
                 .bottomCellBorder()
                 .leftCellBorder()
                 .topCellBorder()
@@ -96,6 +96,18 @@ public class ExamTesteeResultRtf {
 
             }
         }
+        docContent.add( RtfPara.p("") ); //empty line
+        docContent.add( RtfPara.row( "", "___________________", testee.getLastName() )
+                .cellSpace( 0.4, RtfUnit.CM )
+        );
+        docContent.add( RtfPara.row( "Член экзаменационной комисси", "___________________", "/___________________________/" )
+                .cellSpace( 0.4, RtfUnit.CM )
+        );
+        docContent.add( RtfPara.row( "Член экзаменационной комисси", "___________________", "/___________________________/" )
+                .cellSpace( 0.4, RtfUnit.CM )
+        );
+
+
         ByteArrayOutputStream document = new ByteArrayOutputStream();
 
         // create RTF file
