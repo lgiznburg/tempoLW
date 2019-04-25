@@ -24,14 +24,15 @@
         <div class="collapse navbar-collapse" id="navbarsReque">
             <t:security.user>
                 <ul class="nav navbar-nav navbar-right">
+                    <li><t:eventlink event="togglelocale" class="nav-link">${localeNameToSwitch}</t:eventlink></li>
                     <t:security.lacksrole role="testee">
                         <li class="dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" id="userDropdown" aria-expanded="false">
                                 ${message:navbar.welcome} ${username}. <span class="caret"/></a>
                             <ul class="dropdown-menu bg-light" aria-labelledby="userDropdown">
                                 <t:security.hasAnyRoles roles="admin,subject_admin,teacher">
-                                    <li><t:eventlink event="togglelocale">${message:navbar.locale}</t:eventlink></li>
-                                    <li role="separator" class="divider"></li>
+                                    <!--<li><t:eventlink event="togglelocale">${message:navbar.locale}</t:eventlink></li>
+                                    <li role="separator" class="divider"></li>-->
                                     <li><t:pagelink page="admin/subjects">${message:navbar.admin.subjects}</t:pagelink></li>
                                     <li><t:pagelink page="admin/exams">${message:navbar.admin.exams}</t:pagelink></li>
                                     <li role="separator" class="divider"></li>
@@ -53,7 +54,7 @@
                 <p:else>
                     <ul class="nav navbar-nav navbar-right">
                         <!-- locale switch for unlogged users -->
-                        <li><t:eventlink event="togglelocale" class="nav-link">${message:navbar.locale}</t:eventlink></li>
+                        <li><t:eventlink event="togglelocale" class="nav-link">${localeNameToSwitch}</t:eventlink></li>
                         <li><t:pagelink page="login" class="nav-link">${message:navbar.login}</t:pagelink></li>
                     </ul>
                 </p:else>

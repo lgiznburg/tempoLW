@@ -3,7 +3,8 @@
       xmlns:p="tapestry:parameter">
 <div class="row">
     <div class="col-sm-6 col-sm-offset-3">
-        <t:security.loginform />
+        <!--<t:security.loginform />-->
+        <t:localloginform includeRememberMe="true" />
     </div>
 </div>
 </html>

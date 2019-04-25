@@ -1,5 +1,6 @@
 package ru.rsmu.tempoLW.components;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.tapestry5.BindingConstants;
 import org.apache.tapestry5.annotations.Import;
 import org.apache.tapestry5.annotations.Log;
@@ -54,6 +55,20 @@ public class Layout {
         } else {
             localizationSetter.setLocaleFromLocaleName("en");
         }
+    }
+
+    /**
+     * We uses only two locales, 'ru' and 'en'.
+     * Method returns name of locale which is not current locale.
+     * @return Name of locale user can switch to
+     */
+    public String getLocaleNameToSwitch() {
+        for ( Locale locale : localizationSetter.getSupportedLocales() ) {
+            if ( !locale.toString().equals( currentLocale.toString() ) ) {
+                return StringUtils.capitalize(locale.getDisplayName( locale ));
+            }
+        }
+        return "";
     }
 
     /**
