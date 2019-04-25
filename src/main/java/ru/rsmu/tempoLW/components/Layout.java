@@ -8,6 +8,7 @@ import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.LocalizationSetter;
+import org.apache.tapestry5.services.PersistentLocale;
 import org.tynamo.security.services.SecurityService;
 import ru.rsmu.tempoLW.entities.auth.User;
 import ru.rsmu.tempoLW.pages.Index;
@@ -36,8 +37,10 @@ public class Layout {
     private SecurityUserHelper securityUserHelper;
 
     @Inject
-    @Property
     private Locale currentLocale;
+
+    @Inject
+    private PersistentLocale persistentLocale;
 
     @Inject
     private LocalizationSetter localizationSetter;
@@ -50,11 +53,18 @@ public class Layout {
 
     /** switch app localization */
     public void onTogglelocale() {
-        if(currentLocale.toString().equals("en")) {
+        if ("en".equalsIgnoreCase(currentLocale.toString())) {
+            persistentLocale.set(new Locale("ru"));
+        } else {
+            persistentLocale.set(new Locale("en"));
+        }
+
+        //without PersistentLocale:
+        /*if(currentLocale.toString().equals("en")) {
             localizationSetter.setLocaleFromLocaleName("ru");
         } else {
             localizationSetter.setLocaleFromLocaleName("en");
-        }
+        }*/
     }
 
     /**
