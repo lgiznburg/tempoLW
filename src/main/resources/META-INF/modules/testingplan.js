@@ -7,12 +7,22 @@ define( ["jquery"], function ($) {
 
         var cost = $(this).val();
         var score = $("#maxScore" + suffix ).val();
+        var count = $("#questionCountField" + suffix ).val();
         $("#maxMark" + suffix).val( cost * score );
+        $("#totalRuleMark" + suffix).val( cost * score * count );
 
         countTotal();
     })
 
     $("input[id^=questionCountField]").on( "change", function ()  {
+        var idRe = /questionCountField(.*)/;
+        var res = idRe.exec( this.id );
+        var suffix = res[1];
+
+        var count = $(this).val();
+        var mark = $("#maxMark" + suffix ).val();
+        $("#totalRuleMark" + suffix).val( mark * count );
+
         countTotal()
     } )
 

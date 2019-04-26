@@ -33,6 +33,7 @@
                 <th>${message:score-cost}</th>
                 <th>${message:admin.plan.max-mark}</th>
                 <th>${message:question-count}</th>
+                <th>${message:section-total-result}</th>
             </tr>
             </thead>
             <tbody>
@@ -45,6 +46,7 @@
                     <td><t:textfield t:id="scoreCostField" value="rule.scoreCost"/></td>
                     <td><t:textfield t:id="maxMark" value="rule.maxMark" disabled="true"/></td>
                     <td><t:textfield t:id="questionCountField" value="rule.questionCount"/></td>
+                    <td><t:textfield t:id="totalRuleMark" value="rule.totalRuleMark" disabled="true"/></td>
                 </tr>
             </t:loop>
             <t:if test="additionalRules">
@@ -64,6 +66,7 @@
                     <td><t:textfield t:id="scoreCostFieldAdd" value="rule.scoreCost"/></td>
                     <td><t:textfield t:id="maxMarkAdd" value="rule.maxMark" disabled="true"/></td>
                     <td><t:textfield t:id="questionCountFieldAdd" value="rule.questionCount"/></td>
+                    <td><t:textfield t:id="totalRuleMarkAdd" value="rule.totalRuleMark" disabled="true"/></td>
                 </tr>
             </t:loop>
             </tbody>
