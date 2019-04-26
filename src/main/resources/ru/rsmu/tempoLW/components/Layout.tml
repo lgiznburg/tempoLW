@@ -16,7 +16,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <t:pagelink page="index" class="navbar-brand">
+            <t:pagelink style="padding-top: 1.15rem" page="index" class="navbar-brand">
                 <img title="${message:navbar.logotitle}" src="${context:static/img/logoRNIMUwhite.svg}" width="120px"/>
             </t:pagelink>
         </div>

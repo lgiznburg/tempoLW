@@ -68,7 +68,7 @@ public class Layout {
     }
 
     /**
-     * We uses only two locales, 'ru' and 'en'.
+     * We use only two locales, 'ru' and 'en'.
      * Method returns name of locale which is not current locale.
      * @return Name of locale user can switch to
      */
