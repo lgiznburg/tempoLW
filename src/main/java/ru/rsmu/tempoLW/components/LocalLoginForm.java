@@ -2,12 +2,19 @@ package ru.rsmu.tempoLW.components;
 
 import org.apache.shiro.authc.*;
 import org.apache.shiro.subject.Subject;
+import org.apache.shiro.web.util.WebUtils;
 import org.apache.tapestry5.ValidationException;
 import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
+import org.apache.tapestry5.ioc.annotations.Symbol;
+import org.apache.tapestry5.services.Request;
+import org.tynamo.security.SecuritySymbols;
+import org.tynamo.security.internal.services.LoginContextService;
 import org.tynamo.security.services.SecurityService;
+
+import java.io.IOException;
 
 /**
  * @author leonid.
@@ -35,6 +42,17 @@ public class LocalLoginForm {
 
     @Inject
     private SecurityService securityService;
+
+    @Inject
+    private LoginContextService loginContextService;
+
+    @Inject
+    @Symbol(SecuritySymbols.REDIRECT_TO_SAVED_URL)
+    private boolean redirectToSavedUrl;
+
+    @Inject
+    private Request request;
+
 
     public void onValidateFromTempoLoginForm() throws ValidationException {
         Subject currentUser = securityService.getSubject();
@@ -69,7 +87,24 @@ public class LocalLoginForm {
         }
     }
 
-    public void onSuccessFromTempoLoginForm() {
+    public Object onSuccessFromTempoLoginForm() throws IOException {
+        String localePath = loginContextService.getLocaleFromPath( request.getPath() );
+        String successUrl = loginContextService.getSuccessURL();
+        if ( localePath != null && !successUrl.startsWith( "http" ) ) {
+            if ( !successUrl.startsWith( "/" )  ) {
+                successUrl = "/" + successUrl;
+            }
+            successUrl = localePath + successUrl;
+        }
+        if (redirectToSavedUrl) {
+            String requestUri = successUrl;
+            if (!requestUri.startsWith("/") && !requestUri.startsWith("http")) {
+                requestUri = "/" + requestUri;
+            }
+            loginContextService.redirectToSavedRequest(requestUri);
+            return null;
+        }
+        return successUrl;
 
     }
 

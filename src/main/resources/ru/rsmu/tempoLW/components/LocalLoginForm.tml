@@ -18,9 +18,11 @@
         </div>
         <t:if test="includeRememberMe">
             <div class="form-group">
-                <t:label for="rememberMe" class="col-sm-8">
-                    <t:checkbox value="rememberMe" t:id="rememberMe"/>
-                    ${message:rememberMe-label} </t:label>
+                <div class="col-sm-8 col-sm-offset-2">
+                    <t:label for="rememberMe">
+                        <t:checkbox value="rememberMe" t:id="rememberMe"/>
+                        ${message:rememberMe-label} </t:label>
+                </div>
             </div>
         </t:if>
 
