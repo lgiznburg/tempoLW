@@ -12,6 +12,7 @@ import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.corelib.components.BeanEditForm;
 import org.apache.tapestry5.corelib.components.Form;
 import org.apache.tapestry5.internal.OptionModelImpl;
+import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.LocalizationSetter;
 import org.apache.tapestry5.util.AbstractSelectModel;
@@ -47,6 +48,8 @@ public class SubjectEdit {
     @Inject
     private LocalizationSetter localizationSetter;
 
+    @Inject
+    private Messages messages;
 
     public void onPrepareForRender() {
         if ( subjectForm.isValid() ) {
@@ -90,8 +93,9 @@ public class SubjectEdit {
             public List<OptionModel> getOptions() {
                 List<OptionModel> options = new ArrayList<>();
                 for ( Locale locale : localizationSetter.getSupportedLocales() ) {
-                    options.add( new OptionModelImpl( StringUtils.capitalize( locale.getDisplayLanguage() ), locale.getLanguage() ) );
+                    options.add( new OptionModelImpl( locale.getLanguage().equals("en") ? messages.get("language-english") : messages.get("language-russian"), locale.getLanguage())); //StringUtils.capitalize( locale.getDisplayLanguage() )
                 }
+
                 return options;
             }
         };

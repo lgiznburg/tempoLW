@@ -10,7 +10,7 @@ import ru.rsmu.tempoLW.consumabales.CrudMode;
  * CRUD controller for ExamSchedule management
  * @author leonid.
  */
-@RequiresRoles(value = {"admin","subject_admin"}, logical = Logical.OR )
+@RequiresRoles(value = {"admin","subject_admin", "teacher"}, logical = Logical.OR )
 public class Exams {
 
     @Property
@@ -65,6 +65,11 @@ public class Exams {
         examId = updateExamId;
     }
 
+    public void onToAddTestee( Long updateExamId ) {
+        mode = CrudMode.ADD_TESTEE;
+        examId = updateExamId;
+    }
+
     // Update
     public void onExamUpdated( Long editedExamId ) {
         mode = CrudMode.REVIEW;
@@ -91,6 +96,23 @@ public class Exams {
     public void onToTesteesList( Long listExamId ) {
         mode = CrudMode.VIEW_ELEMENTS;
         examId = listExamId;
+    }
+
+    public void onCancelTesteesFromExamTestees( Long selectedExamId ) {
+        examId = selectedExamId;
+        mode = CrudMode.REVIEW;
+    }
+
+    // single Testee addition
+
+    public void onCancelAddFromExamCreateTestee( Long selectedExamId ) {
+        examId = selectedExamId;
+        mode = CrudMode.REVIEW;
+    }
+
+    public void onTesteeAdded (Long selectedExamId) {
+        examId = selectedExamId;
+        mode = CrudMode.REVIEW;
     }
 
 }

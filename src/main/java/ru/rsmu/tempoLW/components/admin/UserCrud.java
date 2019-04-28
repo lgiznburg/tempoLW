@@ -9,6 +9,7 @@ import org.apache.tapestry5.annotations.InjectComponent;
 import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.corelib.components.Form;
+import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.SelectModelFactory;
 import ru.rsmu.tempoLW.consumabales.CrudMode;
@@ -91,6 +92,9 @@ public class UserCrud {
 
     private List<ExamSubject> subjects;
 
+    @Inject
+    private Messages messages;
+
 
     public void setupRender() {
         if ( mode == CrudMode.REVIEW ) {
@@ -116,10 +120,10 @@ public class UserCrud {
         if ( userPassword == null
                 || userPassword.length() < 7
                 || (!userPassword.matches( ".*\\W+.*" ) && !userPassword.matches( ".*\\w+.*" ) ) ) {
-            createForm.recordError( password, "Password should be longer than 6 symbols and contains digits");
+            createForm.recordError( password, messages.get("password-form-wrong"));
         }
         else if ( !userPassword.equals( userPasswordConfirm ) ) {
-            createForm.recordError( password, "Password and Password Confirmation should match");
+            createForm.recordError( password, messages.get("passwords-dont-match"));
         }
         else {
             user.setPassword( userDao.encrypt( userPassword ) );
@@ -162,10 +166,10 @@ public class UserCrud {
     boolean onValidateFromUpdateForm() {
         if ( userPassword != null && !userPassword.isEmpty() ) {
             if ( userPassword.length() < 7 || (!userPassword.matches( ".*\\W+.*" ) && !userPassword.matches( ".*\\w+.*" ) ) ) {
-                updateForm.recordError( password, "Password should be longer than 6 symbols and contains digits");
+                updateForm.recordError( password, messages.get("password-form-wrong"));
             }
             else if ( ! userPassword.equals( userPasswordConfirm ) ) {
-                updateForm.recordError( password, "Password and Password Confirmation should match");
+                updateForm.recordError( password, messages.get("passwords-dont-match"));
             }
             else {
                 user.setPassword( userDao.encrypt( userPassword ) );

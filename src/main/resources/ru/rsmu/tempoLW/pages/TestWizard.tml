@@ -1,6 +1,6 @@
-<html t:type="layout" t:pageTitle="Тестирование"
+<html t:type="layout" t:pageTitle="${message:testwizard-pagetitle}"
       xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
-      xmlns:p="tapestry:parameter">
+      xmlns:p="tapestry:parameter"><!-- Тестирование -->
 
 <div class="row">
     <h2 class="align-center">

@@ -9,30 +9,57 @@
 
         <t:grid t:id="testeesGrid" source="exam.testees" row="testee"
                 exclude="id,firstName,middleName,login,password,expirationDate,credentialsExpired"
-                add="testResult" class="table table-bordered table-hover"
+                add="testResult,printStatement" class="table table-bordered table-hover"
                 rowsPerPage="50" pagerPosition="bottom"
                 empty="block:emptyTestees">
             <p:testResultCell>
                 <t:if test="currentExamResult">
                     <t:if test="currentExamResult.finished">
                         <div class="row">
-                            <span class="col-xs-5 text-right"> <strong>${currentExamResult.markTotal}</strong></span>
-                            <span class="col-xs-7 text-right">
+                            <span class="col-xs-5 text-right"> <span style="font-weight: bold">${currentExamResult.markTotal}</span></span>
+                        </div>
+                        <p:else><span style="color: darkblue;">${message:exam-not-finished}</span></p:else>
+                    </t:if>
+                    <p:else><span style="color: darkred;">${message:exam-not-started}</span></p:else>
+                </t:if>
+            </p:testResultCell>
+            <p:printStatementCell>
+                <t:if test="currentExamResult">
+                    <t:if test="currentExamResult.finished">
+                        <div class="row text-center">
+                            <span title="${message:exam-statement}" class="col-xs-3"><!-- col-xs-7 -->
                                 <t:pagelink page="admin/examtesteeresultrtf" context="[exam,testee]" class="btn btn-info btn-sm" aria-label="Print">
-                                <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
+                                    <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
                                 </t:pagelink>
                             </span>
                         </div>
-                        <p:else>${message:exam-not-finished}</p:else>
+                        <p:else>
+                            <div class="row text-center">
+                            <span title="${message:exam-not-finished-statement}" class="text-center col-xs-3"><!-- col-xs-7 -->
+                                <t:pagelink page="admin/examtesteeresultrtf" context="[exam,testee]" class="btn btn-info btn-sm disabled" aria-label="Print">
+                                    <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
+                                </t:pagelink>
+                            </span>
+                            </div>
+                        </p:else>
                     </t:if>
+                    <p:else>
+                        <div class="row text-center">
+                            <span title="${message:exam-not-started-statement}" class="text-center col-xs-3"><!-- col-xs-7 -->
+                                <t:pagelink page="admin/examtesteeresultrtf" context="[exam,testee]" class="btn btn-info btn-sm disabled" aria-label="Print">
+                                    <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
+                                </t:pagelink>
+                            </span>
+                        </div>
+                    </p:else>
                 </t:if>
-            </p:testResultCell>
+            </p:printStatementCell>
         </t:grid>
 
         <br/>
         <div class="form-group">
             <div class="col-sm-4 col-sm-offset-4">
-                <t:eventlink event="cancelEdit" context="examId" class="btn btn-default">Cancel</t:eventlink>
+                <t:eventlink event="cancelTestees" context="examId" class="btn btn-default">${message:cancel}</t:eventlink>
             </div>
         </div>
 

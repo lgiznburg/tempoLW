@@ -73,7 +73,7 @@ public class TesteeLoader extends ExcelReader {
         return testees;
     }
 
-    private String createLogin( String caseNumber ) {
+    public String createLogin( String caseNumber ) {
         Long number = Long.parseLong( caseNumber );
         String numberCode = Long.toHexString( number );
         String random = RandomStringUtils.randomAlphanumeric( 4 ).toLowerCase();

@@ -1,6 +1,6 @@
-<html t:type="layout" t:pageTitle="Администрирование:Редактирование предмета"
+<html t:type="layout" t:pageTitle="${message:questionedit-pagetitle}"
       xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
-      xmlns:p="tapestry:parameter">
+      xmlns:p="tapestry:parameter"><!-- Администрирование:Редактирование предмета -->
 <div class="row">
     <h2>${question.questionInfo.subject.title} : ${message:edit} ${message:question} </h2>
 </div>
