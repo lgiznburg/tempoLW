@@ -1,5 +1,6 @@
 package ru.rsmu.tempoLW.dao;
 
+import ru.rsmu.tempoLW.entities.ExamSchedule;
 import ru.rsmu.tempoLW.entities.Testee;
 
 /**
@@ -9,4 +10,6 @@ public interface TesteeDao extends BaseDao {
     Testee findByName( String testeeName );
 
     Testee findByCaseNumber( String caseNumber );
+
+    public Boolean isTesteeInExam ( String caseNumber, ExamSchedule exam );
 }

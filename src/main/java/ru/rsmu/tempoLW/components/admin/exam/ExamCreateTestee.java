@@ -76,8 +76,8 @@ public class ExamCreateTestee {
 
     boolean onValidateFromAddTesteeForm() {
         if (this.caseNumber != null && !this.lastName.isEmpty() && !this.firstName.isEmpty() && !this.middleName.isEmpty()) {
-            Testee existingTestee = testeeDao.findByCaseNumber(caseNumber);
-            if(existingTestee == null) {
+            this.exam = examDao.find( ExamSchedule.class, examId );
+            if(!testeeDao.isTesteeInExam(caseNumber, this.exam)) {
                 this.testee = new Testee();
                 TesteeLoader tloader = new TesteeLoader(testeeDao);
                 testee.setCaseNumber(caseNumber);
