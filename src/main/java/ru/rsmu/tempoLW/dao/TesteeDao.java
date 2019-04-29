@@ -11,5 +11,4 @@ public interface TesteeDao extends BaseDao {
 
     Testee findByCaseNumber( String caseNumber );
 
-    public Boolean isTesteeInExam ( String caseNumber, ExamSchedule exam );
 }

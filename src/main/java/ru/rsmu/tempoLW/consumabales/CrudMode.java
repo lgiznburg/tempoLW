@@ -12,6 +12,6 @@ public enum CrudMode {
     // additional modes
     UPLOAD,
     VIEW_ELEMENTS,
-    ADD_TESTEE
+    ADD_ELEMENT
 
 }

@@ -66,7 +66,7 @@ public class Exams {
     }
 
     public void onToAddTestee( Long updateExamId ) {
-        mode = CrudMode.ADD_TESTEE;
+        mode = CrudMode.ADD_ELEMENT;
         examId = updateExamId;
     }
 

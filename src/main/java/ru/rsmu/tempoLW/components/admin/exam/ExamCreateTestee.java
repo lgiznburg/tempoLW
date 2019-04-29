@@ -77,7 +77,7 @@ public class ExamCreateTestee {
     boolean onValidateFromAddTesteeForm() {
         if (this.caseNumber != null && !this.lastName.isEmpty() && !this.firstName.isEmpty() && !this.middleName.isEmpty()) {
             this.exam = examDao.find( ExamSchedule.class, examId );
-            if(!testeeDao.isTesteeInExam(caseNumber, this.exam)) {
+            if(!isTesteeInExam()) {
                 this.testee = new Testee();
                 TesteeLoader tloader = new TesteeLoader(testeeDao);
                 testee.setCaseNumber(caseNumber);
@@ -103,6 +103,18 @@ public class ExamCreateTestee {
         componentResources.triggerEvent( event, new Object[]{ exam.getId() }, null );
 
         return true;
+    }
+
+    public Boolean isTesteeInExam () {
+        List<Testee> testees = exam.getTestees();
+        if(testees.size() != 0) {
+            for (Testee testee : testees) {
+                if (testee.getCaseNumber().equals(caseNumber)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
 

@@ -29,17 +29,4 @@ public class TesteeDaoImpl extends BaseDaoImpl implements TesteeDao {
         return (Testee) criteria.uniqueResult();
     }
 
-    @Override
-    public Boolean isTesteeInExam ( String caseNumber, ExamSchedule exam ) {
-        List<Testee> testees = exam.getTestees();
-        Boolean testeeInExam = false;
-        if(testeeInExam != null) {
-            for (Testee testee : testees) {
-                if (testee.getCaseNumber().equals(caseNumber)) {
-                    testeeInExam = true;
-                }
-            }
-        }
-        return testeeInExam;
-    }
 }

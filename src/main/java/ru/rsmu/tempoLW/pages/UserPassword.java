@@ -73,8 +73,7 @@ public class UserPassword {
     private List<ExamSubject> subjects;
 
     public void setupRender() {
-        User currentUser = securityUserHelper.getCurrentUser();
-        user = userDao.find( User.class, currentUser.getId() );
+        user = securityUserHelper.getCurrentUser();
         fullname = user.getLastName() + " " + user.getFirstName() + " " + user.getMiddleName();
 
     }
@@ -82,7 +81,10 @@ public class UserPassword {
     boolean onValidateFromUpdatePasswordForm() {
         if ( userPassword != null && !userPassword.isEmpty() ) {
             this.user = userDao.find( User.class, securityUserHelper.getCurrentUser().getId() );
-            if ( ! userDao.encrypt(currentPassword).equals( user.getPassword())) { //check if user knows old password
+            if(currentPassword == null) {
+                updatePasswordForm.recordError( currentpassword, messages.get("current-password-empty"));
+            }
+            else if ( ! userDao.encrypt(currentPassword).equals( user.getPassword())) { //check if user knows old password
                 updatePasswordForm.recordError( currentpassword, messages.get("current-password-wrong"));
             }
             else if ( userPassword.length() < 7 || (!userPassword.matches( ".*\\W+.*" ) && !userPassword.matches( ".*\\w+.*" ) ) ) {
@@ -94,6 +96,9 @@ public class UserPassword {
             else {
                 this.user.setPassword( userDao.encrypt( userPassword ) );
             }
+        }
+        else {
+            updatePasswordForm.recordError(messages.get("password-form-empty"));
         }
 
         return true;

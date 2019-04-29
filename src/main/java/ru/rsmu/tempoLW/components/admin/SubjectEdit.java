@@ -49,7 +49,7 @@ public class SubjectEdit {
     private LocalizationSetter localizationSetter;
 
     @Inject
-    private Messages messages;
+    private Locale currentLocale;
 
     public void onPrepareForRender() {
         if ( subjectForm.isValid() ) {
@@ -93,8 +93,7 @@ public class SubjectEdit {
             public List<OptionModel> getOptions() {
                 List<OptionModel> options = new ArrayList<>();
                 for ( Locale locale : localizationSetter.getSupportedLocales() ) {
-                    options.add( new OptionModelImpl( locale.getLanguage().equals("en") ? messages.get("language-english") : messages.get("language-russian"), locale.getLanguage())); //StringUtils.capitalize( locale.getDisplayLanguage() )
-                }
+                    options.add( new OptionModelImpl( StringUtils.capitalize( locale.getDisplayLanguage( currentLocale ) ), locale.getLanguage() ) ); }
 
                 return options;
             }

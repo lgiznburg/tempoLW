@@ -30,7 +30,7 @@
         <t:if test="isMode('VIEW_ELEMENTS')">
             <t:admin.exam.examtestees examId="examId" t:id="examTestees"/>
         </t:if>
-        <t:if test="isMode('ADD_TESTEE')">
+        <t:if test="isMode('ADD_ELEMENT')">
             <t:admin.exam.examcreatetestee examId="examId" t:id="examCreateTestee"/>
         </t:if>
 
