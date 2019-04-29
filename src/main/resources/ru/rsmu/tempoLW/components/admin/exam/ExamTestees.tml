@@ -61,6 +61,9 @@
             <div class="col-sm-4 col-sm-offset-4">
                 <t:eventlink event="cancelTestees" context="examId" class="btn btn-default">${message:cancel}</t:eventlink>
             </div>
+            <t:pagelink page="admin/examgeneralstatement" context="[exam]" class="btn btn-primary" aria-label="Print">
+                ${message:general-statement}
+            </t:pagelink>
         </div>
 
         <t:block t:id="emptyTestees">
