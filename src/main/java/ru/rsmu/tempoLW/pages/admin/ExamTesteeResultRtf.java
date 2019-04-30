@@ -3,9 +3,11 @@ package ru.rsmu.tempoLW.pages.admin;
 import com.tutego.jrtf.*;
 import org.apache.tapestry5.StreamResponse;
 import org.apache.tapestry5.annotations.PageActivationContext;
+import org.apache.tapestry5.func.F;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import ru.rsmu.tempoLW.consumabales.AttachmentRtf;
 import ru.rsmu.tempoLW.dao.ExamDao;
+import ru.rsmu.tempoLW.encoders.FileNameTransliterator;
 import ru.rsmu.tempoLW.entities.ExamResult;
 import ru.rsmu.tempoLW.entities.ExamSchedule;
 import ru.rsmu.tempoLW.entities.QuestionResult;
@@ -67,8 +69,13 @@ public class ExamTesteeResultRtf {
 
 
         if ( exam != null && testee != null ) {
-            fileName = exam.getTestingPlan().getSubject().getTitle().replace( " ", "_" )
-                    + "_" + testee.getCaseNumber() + ".rtf";
+            //forming file name with transliteration
+            FileNameTransliterator trans = new FileNameTransliterator();
+            SimpleDateFormat sdf = new SimpleDateFormat("dd_MM_yyyy");
+            String examName = trans.transliterateRuEn(exam.getTestingPlan().getSubject().getTitle());
+            String examDate = sdf.format(exam.getExamDate());
+            examName = examName.replaceAll("\\s", "_");
+            fileName = testee.getCaseNumber() + "_" + examName + "_" + examDate + ".rtf";
             ExamResult result = examDao.findExamResultForTestee( exam, testee );
             int num = 1;
             if ( result != null ) {

@@ -17,7 +17,7 @@ import ru.rsmu.tempoLW.entities.ExamSubject;
 /**
  * @author leonid.
  */
-@RequiresRoles(value = {"admin","subject_admin"}, logical = Logical.OR )
+@RequiresRoles(value = {"admin","subject_admin", "teacher"}, logical = Logical.OR )
 public class Subjects {
 
     @Property

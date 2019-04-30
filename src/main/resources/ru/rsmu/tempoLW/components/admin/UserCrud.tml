@@ -52,7 +52,7 @@
 
         </t:if>
         <t:if test="!user">
-            User does not exist.<br/><br/>
+            ${message:user-doesnt-exist}<br/><br/>
         </t:if>
 
     </t:if>

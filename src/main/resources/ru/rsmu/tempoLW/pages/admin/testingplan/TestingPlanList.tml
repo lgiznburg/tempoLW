@@ -1,6 +1,6 @@
-<html t:type="layout" t:pageTitle="Администрирование:Список предметов"
+<html t:type="layout" t:pageTitle="${message:testingplanlist-pagetitle}"
       xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
-      xmlns:p="tapestry:parameter">
+      xmlns:p="tapestry:parameter"><!-- Администрирование:Список предметов -->
 <h2>${message:testing-plan-list}</h2>
 <div>
     <t:grid t:id="plansTable" id="plansTable" t:source="planSource" t:inPlace="true"

@@ -10,6 +10,7 @@ import org.apache.tapestry5.ioc.annotations.Inject;
 import ru.rsmu.tempoLW.consumabales.AttachmentRtf;
 import ru.rsmu.tempoLW.dao.TesteeDao;
 import ru.rsmu.tempoLW.dao.UserDao;
+import ru.rsmu.tempoLW.encoders.FileNameTransliterator;
 import ru.rsmu.tempoLW.entities.ExamSchedule;
 import ru.rsmu.tempoLW.entities.Testee;
 
@@ -86,6 +87,14 @@ public class ExamLoginRecords {
                 .section( docContent )
         .out( new OutputStreamWriter( document ) );
 
-        return new AttachmentRtf(  document.toByteArray(), "exam_logins.rtf" );
+        //additional parts of login file name
+        FileNameTransliterator trans = new FileNameTransliterator();
+        String examName = exam.getName();
+        examName = examName.replaceAll("\\s", "_");
+        examName = trans.transliterateRuEn(examName);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd_MM_yyyy");
+        String examDate = sdf.format(exam.getExamDate());
+
+        return new AttachmentRtf(  document.toByteArray(), "exam_" + examName + "_" + examDate + "_" + "logins.rtf" );
     }
 }

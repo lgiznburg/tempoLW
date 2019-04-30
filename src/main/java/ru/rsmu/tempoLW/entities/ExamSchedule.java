@@ -80,6 +80,11 @@ public class ExamSchedule implements Serializable {
         this.testees = testees;
     }
 
+    /** add single testee to schedule */
+    public void addTestee (Testee testee) {
+        this.testees.add(testee);
+    }
+
     public String getName() {
         return name;
     }

@@ -26,21 +26,30 @@
                 <p:else>${message:exam-no-testees}</p:else>
             </t:if>
         </div>
-        <div class="col-sm-5 text-right">
-            <t:if test="exam.testees">
-                <t:eventlink event="toTesteesList" context="examId" class="btn btn-info btn-sm">${message:exam-testees-list}</t:eventlink>
-            </t:if>
-        </div>
     </div>
+    <t:if test="exam.testees">
+        <div class="row">
+            <div class="col-sm-3 text-right">${message:testeeList}:</div>
+            <div class="col-sm-3" style="padding-top: 8px">
+                    <t:eventlink event="toTesteesList" context="examId" class="btn btn-info btn-sm">${message:exam-testees-list}</t:eventlink>
+            </div>
+        </div>
+    </t:if>
     <br/>
 
     <div class="row">
         <div class="col-sm-12">
-            <t:eventlink class="btn btn-primary" event="toUpdate" context="examId">${message:update}</t:eventlink>
+            <t:security.hasanyroles roles="admin,subject_admin">
+                <t:eventlink class="btn btn-primary" event="toUpdate" context="examId">${message:update}</t:eventlink>
+            </t:security.hasanyroles>
             <t:security.hasrole role="admin">
                 <t:if test="beforeExamDate">
                     <t:eventlink class="btn btn-primary" event="toUpload"
                                  context="examId">${message:exam-upload-testees}</t:eventlink>
+                </t:if>
+                <t:if test="beforeExamDate">
+                    <t:eventlink class="btn btn-primary" event="toAddTestee"
+                                 context="examId">${message:exam-add-testee}</t:eventlink>
                 </t:if>
                 <t:if test="atExamDate">
                     <t:pagelink page="admin/examloginrecords" class="btn btn-primary"

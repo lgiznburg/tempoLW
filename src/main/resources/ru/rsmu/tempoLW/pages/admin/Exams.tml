@@ -1,6 +1,6 @@
-<html t:type="layout" t:pageTitle="Администрирование:Список предметов"
+<html t:type="layout" t:pageTitle="${message:exams-pagetitle}"
       xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
-      xmlns:p="tapestry:parameter">
+      xmlns:p="tapestry:parameter"><!-- Администрирование:Список предметов -->
 <body>
 
 <div class="row"><h3>${message:exams-list}</h3></div>
@@ -29,6 +29,9 @@
         </t:if>
         <t:if test="isMode('VIEW_ELEMENTS')">
             <t:admin.exam.examtestees examId="examId" t:id="examTestees"/>
+        </t:if>
+        <t:if test="isMode('ADD_ELEMENT')">
+            <t:admin.exam.examcreatetestee examId="examId" t:id="examCreateTestee"/>
         </t:if>
 
     </div>

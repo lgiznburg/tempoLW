@@ -11,6 +11,7 @@ public enum CrudMode {
     DELETE,
     // additional modes
     UPLOAD,
-    VIEW_ELEMENTS
+    VIEW_ELEMENTS,
+    ADD_ELEMENT
 
 }

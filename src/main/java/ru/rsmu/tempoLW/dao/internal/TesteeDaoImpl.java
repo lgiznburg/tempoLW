@@ -3,7 +3,10 @@ package ru.rsmu.tempoLW.dao.internal;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import ru.rsmu.tempoLW.dao.TesteeDao;
+import ru.rsmu.tempoLW.entities.ExamSchedule;
 import ru.rsmu.tempoLW.entities.Testee;
+
+import java.util.List;
 
 /**
  * @author leonid.
@@ -23,4 +26,5 @@ public class TesteeDaoImpl extends BaseDaoImpl implements TesteeDao {
                 .add( Restrictions.eq( "caseNumber", caseNumber ) );
         return (Testee) criteria.uniqueResult();
     }
+
 }

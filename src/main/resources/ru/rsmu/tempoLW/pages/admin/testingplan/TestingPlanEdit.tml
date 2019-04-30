@@ -1,6 +1,6 @@
-<html t:type="layout" t:pageTitle="Администрирование:План тестирования"
+<html t:type="layout" t:pageTitle="${message:testingplanedit-pagetitle}"
       xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
-      xmlns:p="tapestry:parameter">
+      xmlns:p="tapestry:parameter"><!-- Администрирование:План тестирования -->
 <h3>${message:edit-testing-plan}</h3>
 <div>
     <t:form t:id="testingPlanForm" validate="testingPlan">
