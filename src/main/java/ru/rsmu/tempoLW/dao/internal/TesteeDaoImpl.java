@@ -13,7 +13,6 @@ import java.util.List;
  * @author leonid.
  */
 public class TesteeDaoImpl extends BaseDaoImpl implements TesteeDao {
-    ExamDao examDao = new ExamDaoImpl();
     @Override
     public Testee findByName( String testeeName ) {
         Criteria criteria = session.createCriteria( Testee.class )
