@@ -2,7 +2,6 @@ package ru.rsmu.tempoLW.dao.internal;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
-import ru.rsmu.tempoLW.dao.ExamDao;
 import ru.rsmu.tempoLW.dao.TesteeDao;
 import ru.rsmu.tempoLW.entities.ExamSchedule;
 import ru.rsmu.tempoLW.entities.Testee;
