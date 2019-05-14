@@ -1,9 +1,6 @@
 package ru.rsmu.tempoLW.entities;
 
-import javax.persistence.CascadeType;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 import java.util.List;
 
 /**
@@ -35,10 +32,9 @@ public class QuestionOpen extends Question {
         result = result.replaceAll( "(\\d)[.](\\d)", "$1,$2" );
         int correctCount = 0;
         for ( AnswerVariant variant : answerVariants ) {
-            if ( variant.getText().matches( "^%.*%$" ) ) {
-                // if answer starts and ends with '%'
+            String pattern = variant.getRegex();
+            if ( pattern != null ) {
                 // use variant text as REGEX pattern
-                String pattern = variant.getText().substring( 1, variant.getText().length() -1 );
                 if ( result.matches( pattern ) ) {
                     correctCount++;
                 }
