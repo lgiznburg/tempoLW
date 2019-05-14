@@ -64,7 +64,10 @@ public class ExamLoginRecords {
             }
         } );
         for ( Testee testee : exam.getTestees() ) {
-            String password = RandomStringUtils.randomAlphanumeric( 8 );
+            String password = RandomStringUtils.randomAlphanumeric( 8 )
+                    .replace( 'l', 'k' )
+                    .replace( 'I', 'N' )
+                    .replace( '1', '7' ); //exclude symbols which can be miss read
             testee.setPassword( userDao.encrypt( password ) );
             Calendar expDate = Calendar.getInstance();
             expDate.setTime( exam.getExamDate() );

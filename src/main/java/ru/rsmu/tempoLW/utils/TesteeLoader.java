@@ -77,6 +77,7 @@ public class TesteeLoader extends ExcelReader {
         Long number = Long.parseLong( caseNumber );
         String numberCode = Long.toHexString( number );
         String random = RandomStringUtils.randomAlphanumeric( 4 ).toLowerCase();
+        random = random.replace( 'l', 'k' ).replace( 'I', 'U' );
         return "rsmu" + numberCode.substring( 0,4 ) + "_" +
                 random.substring( 0, 2 ) + numberCode.substring( 4 ) +
                 random.substring( 2 );
