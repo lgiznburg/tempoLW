@@ -2,7 +2,6 @@ package ru.rsmu.tempoLW.pages.admin;
 
 import com.tutego.jrtf.*;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.tapestry5.StreamResponse;
 import org.apache.tapestry5.annotations.PageActivationContext;
 import org.apache.tapestry5.annotations.Property;
@@ -10,12 +9,11 @@ import org.apache.tapestry5.ioc.annotations.Inject;
 import ru.rsmu.tempoLW.consumabales.AttachmentRtf;
 import ru.rsmu.tempoLW.dao.TesteeDao;
 import ru.rsmu.tempoLW.dao.UserDao;
-import ru.rsmu.tempoLW.encoders.FileNameTransliterator;
+import ru.rsmu.tempoLW.consumabales.FileNameTransliterator;
 import ru.rsmu.tempoLW.entities.ExamSchedule;
 import ru.rsmu.tempoLW.entities.Testee;
 
 import java.io.ByteArrayOutputStream;
-import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -91,10 +89,9 @@ public class ExamLoginRecords {
         .out( new OutputStreamWriter( document ) );
 
         //additional parts of login file name
-        FileNameTransliterator trans = new FileNameTransliterator();
         String examName = exam.getName();
         examName = examName.replaceAll("\\s", "_");
-        examName = trans.transliterateRuEn(examName);
+        examName = FileNameTransliterator.transliterateRuEn(examName);
         SimpleDateFormat sdf = new SimpleDateFormat("dd_MM_yyyy");
         String examDate = sdf.format(exam.getExamDate());
 

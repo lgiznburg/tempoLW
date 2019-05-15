@@ -10,14 +10,10 @@ import java.io.InputStream;
 /**
  * @author leonid.
  */
-public class AttachmentRtf  implements StreamResponse {
-
-    private byte[] document;
-    private String attachmentName;
+public class AttachmentRtf  extends AttachmentFile {
 
     public AttachmentRtf( byte[] document, String attachmentName ) {
-        this.document = document;
-        this.attachmentName = attachmentName;
+        super(document, attachmentName);
     }
 
     @Override
@@ -25,17 +21,4 @@ public class AttachmentRtf  implements StreamResponse {
         return "text/rtf";
     }
 
-    @Override
-    public InputStream getStream() throws IOException {
-        return new ByteArrayInputStream( document );
-    }
-
-    @Override
-    public void prepareResponse( Response response ) {
-        response.setHeader("Content-Disposition", "attachment; filename=" + attachmentName );
-        response.setHeader("Expires", "0");
-        response.setHeader("Cache-Control", "must-revalidate, post-check=0, pre-check=0");
-        response.setHeader("Pragma", "public");
-        response.setContentLength( document.length );
-    }
 }
