@@ -1,16 +1,16 @@
 package ru.rsmu.tempoLW.pages.admin;
 
-import org.apache.poi.hssf.usermodel.HSSFFont;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.apache.tapestry5.StreamResponse;
 import org.apache.tapestry5.annotations.PageActivationContext;
 import org.apache.tapestry5.ioc.annotations.Inject;
-import ru.rsmu.tempoLW.consumabales.AttachmentRtf;
+import org.slf4j.Logger;
+import ru.rsmu.tempoLW.consumabales.AttachmentExcel;
 import ru.rsmu.tempoLW.dao.ExamDao;
 import ru.rsmu.tempoLW.dao.TesteeDao;
-import ru.rsmu.tempoLW.encoders.FileNameTransliterator;
+import ru.rsmu.tempoLW.consumabales.FileNameTransliterator;
 import ru.rsmu.tempoLW.entities.ExamResult;
 import ru.rsmu.tempoLW.entities.ExamSchedule;
 import ru.rsmu.tempoLW.entities.Testee;
@@ -31,29 +31,18 @@ public class ExamGeneralStatement {
     @Inject
     private TesteeDao testeeDao;
 
+    @Inject
+    Logger logger;
+
     public StreamResponse onActivate() {
-        List<Testee> testees = exam.getTestees();
-        FileNameTransliterator trans = new FileNameTransliterator();
-        String filename = "exam-" + trans.transliterateRuEn(exam.getName()).replaceAll("\\s", "_") + "-" + new SimpleDateFormat("dd_MM_yyyy").format(exam.getExamDate()) + "-statement.xls";
+        String filename = "exam-" + FileNameTransliterator.transliterateRuEn(exam.getName()).replaceAll("\\s", "_") + "-" + new SimpleDateFormat("dd_MM_yyyy").format(exam.getExamDate()) + "-statement.xls";
 
         HSSFWorkbook workbook = new HSSFWorkbook();
-        HSSFSheet sheet = workbook.createSheet(trans.transliterateRuEn(exam.getName()).replaceAll("\\s", "_"));
+        Sheet sheet = workbook.createSheet(FileNameTransliterator.transliterateRuEn(exam.getName()).replaceAll("\\s", "_"));
 
-        //result table entry map
-        Map<String, Object[]> data = new TreeMap<>();
-        data.put("1", new Object[]{"№ личного дела", "ФИО", "результат"});
-        if (testees.size() != 0) {
-            int ord = 2;
-            for (Testee testee : testees) {
-                ExamResult result = examDao.findExamResultForTestee(exam, testee);
-                data.put(Integer.toString(ord), new Object[]{testee.getCaseNumber(), testee.getLastName(), result == null ? "н/я" : result.getMarkTotal() == 0 ? "не завершено" : Integer.toString(result.getMarkTotal())});
-                ord++;
-            }
-        }
-        Set<String> keyset = data.keySet();
 
         //standard font
-        HSSFFont defaultFont = workbook.createFont();
+        Font defaultFont = workbook.createFont();
         defaultFont.setFontHeightInPoints((short)10);
         defaultFont.setFontName("Times");
         defaultFont.setColor(IndexedColors.BLACK.getIndex());
@@ -61,7 +50,7 @@ public class ExamGeneralStatement {
         defaultFont.setItalic(false);
 
         //bold font
-        HSSFFont bold = workbook.createFont();
+        Font bold = workbook.createFont();
         bold.setFontHeightInPoints((short)10);
         bold.setBold(true);
         bold.setFontName("Times");
@@ -125,20 +114,52 @@ public class ExamGeneralStatement {
         cellEmpty.setCellType(CellType.BLANK);
 
         //fill result table
+
         int rownum = 4;
-        for (String key : keyset) {
-            Row row = sheet.createRow(rownum++);
-            Object[] objArr = data.get(key);
-            int cellnum = 0;
-            for (Object obj : objArr) {
-                Cell cell = row.createCell(cellnum++);
-                if(rownum == 5) {
-                    cell.setCellStyle(header);
-                } else { cell.setCellStyle(body); }
-                if (obj instanceof String)
-                    cell.setCellValue((String) obj);
-                else if (obj instanceof Integer)
-                    cell.setCellValue((Integer) obj);
+        //result table header
+        Row row = sheet.createRow(rownum++);
+        Cell cell = row.createCell(0);
+        cell.setCellStyle( header );
+        cell.setCellValue( "№ личного дела" );
+
+        cell = row.createCell(1);
+        cell.setCellStyle( header );
+        cell.setCellValue( "ФИО" );
+
+        cell = row.createCell(2);
+        cell.setCellStyle( header );
+        cell.setCellValue( "Результат" );
+
+        List<ExamResult> results = examDao.findExamResults( exam );
+
+        if (exam.getTestees().size() != 0) {
+            exam.getTestees().sort( new Comparator<Testee>() {
+                @Override
+                public int compare( Testee o1, Testee o2 ) {
+                    return o1.getLastName().compareTo( o2.getLastName() );
+                }
+            } );
+            // print results
+            for (Testee testee : exam.getTestees() ) {
+                row = sheet.createRow( rownum++ );
+                cell = row.createCell(0);
+                cell.setCellStyle( body );
+                cell.setCellValue( testee.getCaseNumber() );
+
+                cell = row.createCell(1);
+                cell.setCellStyle( body );
+                cell.setCellValue( testee.getLastName() );
+
+                ExamResult result = findResultForTestee( testee, results );
+                cell = row.createCell(2);
+                cell.setCellStyle( body );
+                if ( result == null ) {
+                    cell.setCellValue( "н/я" );
+                } else if ( result.isFinished() ){
+                    cell.setCellValue( result.getMarkTotal() );
+                } else {
+                    cell.setCellValue( "не завершено" );
+                }
             }
         }
 
@@ -153,9 +174,18 @@ public class ExamGeneralStatement {
         try {
             workbook.write(document);
         } catch (IOException ie) {
-            System.err.println(ie);
+            logger.error( "Can't create document", ie );
         }
 
-        return new AttachmentRtf(document.toByteArray(), filename);
+        return new AttachmentExcel(document.toByteArray(), filename);
+    }
+
+    private ExamResult findResultForTestee( Testee testee, List<ExamResult> results ) {
+        for ( ExamResult result : results ) {
+            if ( result.getTestee().getCaseNumber().equals( testee.getCaseNumber() ) ) {
+                return result;
+            }
+        }
+        return null;
     }
 }

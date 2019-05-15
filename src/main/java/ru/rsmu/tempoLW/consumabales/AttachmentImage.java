@@ -13,34 +13,22 @@ import java.util.regex.Pattern;
 /**
  * @author leonid.
  */
-public class AttachmentImage implements StreamResponse {
-    private UploadedImage uploadedImage;
+public class AttachmentImage extends AttachmentFile {
+    private String contentType;
 
     public AttachmentImage( UploadedImage uploadedImage ) {
-        this.uploadedImage = uploadedImage;
+        super( uploadedImage.getPicture(), "" );
+        String extension = getExtension( uploadedImage );
+        setAttachmentName( "questionimage" + uploadedImage.getId() + (!extension.isEmpty()? ("." + extension) : "") );
+        contentType = uploadedImage.getContentType();
     }
 
     @Override
     public String getContentType() {
-        return uploadedImage.getContentType();
+        return contentType;
     }
 
-    @Override
-    public InputStream getStream() throws IOException {
-        return new ByteArrayInputStream( uploadedImage.getPicture() );
-    }
-
-    @Override
-    public void prepareResponse( Response response ) {
-        String extension = getExtension();
-        response.setHeader("Content-Disposition", "attachment; filename=questionimage" + uploadedImage.getId() + (!extension.isEmpty()? ("." + extension) : "") );
-        response.setHeader("Expires", "0");
-        response.setHeader("Cache-Control", "must-revalidate, post-check=0, pre-check=0");
-        response.setHeader("Pragma", "public");
-        response.setContentLength( uploadedImage.getPicture().length );
-    }
-
-    private String getExtension() {
+    private String getExtension( UploadedImage uploadedImage ) {
         Pattern pattern = Pattern.compile( "\\.(\\d+)$" );
         Matcher matcher = pattern.matcher( uploadedImage.getSourceName() );
         if ( matcher.find() ) {

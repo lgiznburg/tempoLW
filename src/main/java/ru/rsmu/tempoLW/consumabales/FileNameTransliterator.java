@@ -1,7 +1,7 @@
-package ru.rsmu.tempoLW.encoders;
+package ru.rsmu.tempoLW.consumabales;
 
 public class FileNameTransliterator {
-    public String transliterateRuEn (String source) {
+    public static String transliterateRuEn (String source) {
         String output = source;
         output = output.replaceAll("а|А", "a");
         output = output.replaceAll("б|Б", "b");
