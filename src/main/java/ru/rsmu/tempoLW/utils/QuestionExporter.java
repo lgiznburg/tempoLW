@@ -36,10 +36,9 @@ public class QuestionExporter implements ExcelLayout {
 
     public void doExport( boolean excel2007 ) {
         if ( excel2007 ) {
-            wb = new HSSFWorkbook();
-        }
-        else {
-            wb = new XSSFWorkbook();
+            wb = new XSSFWorkbook(); // excel 2007 format
+        } else {
+            wb = new HSSFWorkbook(); // old excel
         }
         warning = new LinkedList<>();
 
