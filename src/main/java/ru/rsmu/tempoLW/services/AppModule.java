@@ -27,8 +27,8 @@ import java.security.SecureRandom;
  * @author leonid.
  */
 @ImportModule( {
-        LiquibaseModule.class,
-        AutoConfigureLiquibaseDatasourceModule.class,
+        //LiquibaseModule.class,
+        //AutoConfigureLiquibaseDatasourceModule.class,
         HibernateModule.class
 } )
 public class AppModule {
