@@ -2,7 +2,6 @@ package ru.rsmu.tempoLW.utils.builder;
 
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
-import ru.rsmu.tempoLW.dao.QuestionDao;
 import ru.rsmu.tempoLW.entities.*;
 
 import java.util.LinkedList;
@@ -48,5 +47,13 @@ public class OpenQuestionBuilder extends QuestionBuilder {
 
         this.result = question;
         return rowN;
+    }
+
+    @Override
+    public int write( Sheet sheet, int rowN, Question question ) {
+        Row row = sheet.createRow( rowN++ );
+        writeQuestionInfo( row, question, OPEN_TYPE );
+
+        return writeAnswers( sheet, rowN, ((QuestionOpen)question).getAnswerVariants() );
     }
 }

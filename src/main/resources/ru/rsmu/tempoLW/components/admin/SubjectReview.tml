@@ -50,8 +50,9 @@
 
         <div class="row">
             <t:security.hasanyroles roles="admin,subject_admin">
-            <t:eventlink class="btn btn-primary" event="toUpdate" context="subjectId">${message:review-update}</t:eventlink>
-            <t:eventlink class="btn btn-primary" event="toUpload" context="subjectId">${message:review-upload-questions}</t:eventlink>
+                <t:eventlink class="btn btn-primary" event="toUpdate" context="subjectId">${message:review-update}</t:eventlink>
+                <t:eventlink class="btn btn-primary" event="toUpload" context="subjectId">${message:review-upload-questions}</t:eventlink>
+                <t:pagelink class="btn btn-primary" page="admin/exportquestions" context="subject">${message:review-download-questions}</t:pagelink>
             </t:security.hasanyroles>
             <t:pagelink page="admin/previewquestion" class="btn btn-primary" context="[subject,0]">${message:review-preview-questions}</t:pagelink>
             <!-- delete -->
