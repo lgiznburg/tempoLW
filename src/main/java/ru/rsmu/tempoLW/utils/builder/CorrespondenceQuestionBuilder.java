@@ -1,8 +1,8 @@
 package ru.rsmu.tempoLW.utils.builder;
 
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
-import ru.rsmu.tempoLW.dao.QuestionDao;
 import ru.rsmu.tempoLW.entities.*;
 
 import java.util.HashMap;
@@ -87,4 +87,48 @@ public class CorrespondenceQuestionBuilder extends QuestionBuilder {
         this.result = question;
         return rowN;
     }
+
+    @Override
+    public int write( Sheet sheet, int rowN, Question question ) {
+        Row row = sheet.createRow( rowN++ );
+        writeQuestionInfo( row, question, CORRESPONDENCE_TYPE );
+
+        Cell cell;
+        Map<Long, String> codes = new HashMap<>();
+        char code = 'A';
+        for ( CorrespondenceVariant variant : ((QuestionCorrespondence)question).getCorrespondenceVariants() ) {
+            row = sheet.createRow( rowN++ );
+
+            cell = row.createCell( COLUMN_ROW_TYPE );
+            cell.setCellValue( CORRESPONDENCE_ROW );
+
+            cell = row.createCell( COLUMN_CODE );
+            cell.setCellValue( String.valueOf( code ) );
+
+            cell = row.createCell( COLUMN_TEXT );
+            cell.setCellValue( variant.getText() );
+
+            if ( variant.getImage() != null ) {
+                cell = row.createCell( COLUMN_IMAGE );
+                cell.setCellValue( variant.getImage().getSourceName() );
+            }
+
+            for ( AnswerVariant answer : variant.getCorrectAnswers() ) {
+                String answerCode = codes.get( answer.getId() );
+                if ( answerCode == null ) {
+                    answerCode = String.valueOf( code );
+                }
+                else {
+                    answerCode = answerCode + "," + code;
+                }
+                codes.put( answer.getId(), answerCode );
+            }
+            code++;
+        }
+
+        rowN = writeAnswers( sheet, rowN, ((QuestionCorrespondence)question).getAnswerVariants(), codes );
+
+        return rowN;
+    }
+
 }

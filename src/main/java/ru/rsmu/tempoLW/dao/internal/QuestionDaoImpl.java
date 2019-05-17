@@ -150,6 +150,14 @@ public class QuestionDaoImpl extends BaseDaoImpl implements QuestionDao {
     }
 
     @Override
+    public List<Question> findSubjectQuestions( ExamSubject subject ) {
+        Criteria criteria = session.createCriteria( Question.class )
+                .createAlias( "questionInfo", "info" )
+                .add( Restrictions.eq( "info.subject", subject ) );
+        return criteria.list();
+    }
+
+    @Override
     public long findQuestionsCount( ExamSubject subject ) {
         Criteria criteria = session.createCriteria( Question.class )
                 .createAlias( "questionInfo", "questionInfo" )

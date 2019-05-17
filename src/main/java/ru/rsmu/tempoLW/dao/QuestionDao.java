@@ -32,4 +32,5 @@ public interface QuestionDao extends BaseDao {
 
     Question findQuestionByFilter( SubTopic topic, Integer complexity, Integer maxScore, String text );
 
+    List<Question> findSubjectQuestions( ExamSubject subject );
 }
