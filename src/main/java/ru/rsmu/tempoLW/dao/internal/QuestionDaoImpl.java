@@ -151,6 +151,14 @@ public class QuestionDaoImpl extends BaseDaoImpl implements QuestionDao {
     }
 
     @Override
+    public List<Question> findSubjectQuestions( ExamSubject subject ) {
+        Criteria criteria = session.createCriteria( Question.class )
+                .createAlias( "questionInfo", "info" )
+                .add( Restrictions.eq( "info.subject", subject ) );
+        return criteria.list();
+    }
+
+    @Override
     public long findQuestionsCount( ExamSubject subject ) {
         Criteria criteria = session.createCriteria( Question.class )
                 .createAlias( "questionInfo", "questionInfo" )
@@ -160,7 +168,12 @@ public class QuestionDaoImpl extends BaseDaoImpl implements QuestionDao {
         return (long) criteria.uniqueResult();
     }
 
-
+    /**
+     * This method implements service logic.
+     * It finds random questions according to testing plan rule
+     * @param rule testing plan rule
+     * @return questions according to the rule
+     */
     @Override
     @SuppressWarnings( "unchecked" )
     public List<Question> findRandomQuestions( TestingPlanRule rule ) {
@@ -174,19 +187,48 @@ public class QuestionDaoImpl extends BaseDaoImpl implements QuestionDao {
         Collections.shuffle( questions );
         Collections.shuffle( rule.getTopics() );
         List<Question> resultQuestions = new ArrayList<>();
+        int code = 0;
         while ( questions.size() > 0 && resultQuestions.size() < rule.getQuestionCount() ) {
             for ( SubTopic topic : rule.getTopics() ) {
-                for ( Question question :questions ) {
-                    if ( question.getQuestionInfo().getTopic().equals( topic ) && !resultQuestions.contains( question ) ) {
-                        resultQuestions.add( question );
-                        break;
-                    }
+
+                Question question = selectQuestionForTopic( questions, topic, code, resultQuestions );
+                if ( question != null ) {
+                    code = question.getQuestionInfo().getCode();
                 }
+
                 if ( resultQuestions.size() == rule.getQuestionCount() ) {
                     break;
                 }
             }
         }
         return resultQuestions;
+    }
+
+    private Question selectQuestionForTopic( List<Question> questions, SubTopic topic, int code, List<Question> resultQuestions ) {
+        for ( Question question :questions ) {
+            if ( code == 0 ) {
+                // regular mode for selecting question
+                if ( question.getQuestionInfo().getTopic().equals( topic ) ) {
+                    resultQuestions.add( question );
+                    return question;
+                }
+            } else {
+                // random strategy will work for question from first topic.
+                // for other topics select question with the same code
+                if ( question.getQuestionInfo().getTopic().equals( topic ) && question.getQuestionInfo().getCode() == code ) {
+                    if ( !resultQuestions.contains( question ) ) {
+                        resultQuestions.add( question );
+                        return question;
+                    }
+                    else {
+                        break;
+                    }
+                }
+            }
+        }
+        if ( code > 0 ) {
+            return selectQuestionForTopic( questions, topic, 0, resultQuestions );
+        }
+        return null;
     }
 }

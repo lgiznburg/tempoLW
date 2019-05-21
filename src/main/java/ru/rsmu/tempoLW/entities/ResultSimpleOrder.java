@@ -6,7 +6,6 @@ import java.util.Objects;
 /**
  * @author leonid.
  */
-
 @Entity
 @DiscriminatorValue( "SIMPLE_ORDER" )
 public class ResultSimpleOrder extends ResultElement {

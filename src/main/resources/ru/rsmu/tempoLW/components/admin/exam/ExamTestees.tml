@@ -101,6 +101,9 @@
                     <t:eventlink event="cancelTestees" context="examId" class="btn btn-default">${message:back}</t:eventlink>
                 </div>
             </div>
+            <t:pagelink page="admin/examgeneralstatement" context="[exam]" class="btn btn-primary" aria-label="Print">
+                ${message:general-statement}
+            </t:pagelink>
         </div>
 
         <t:block t:id="emptyTestees">

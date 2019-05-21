@@ -7,6 +7,8 @@ import org.hibernate.annotations.Type;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author leonid.
@@ -15,6 +17,8 @@ import java.util.Objects;
 @Table(name = "answer_variant")
 public class AnswerVariant implements Serializable, Comparable<AnswerVariant> {
     private static final long serialVersionUID = 5012066124661313001L;
+
+    private static final Pattern USE_REGEX = Pattern.compile( "^%(.*)%(=(.*))?$" );
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY )
@@ -88,6 +92,27 @@ public class AnswerVariant implements Serializable, Comparable<AnswerVariant> {
 
     public void setImage( UploadedImage image ) {
         this.image = image;
+    }
+
+    @Transient
+    public String getRegex() {
+        Matcher matcher = USE_REGEX.matcher( text );
+        if ( matcher.matches() ) {
+            return matcher.group(1);
+        }
+        return null;
+    }
+
+    @Transient
+    public String getReadableText() {
+        Matcher matcher = USE_REGEX.matcher( text );
+        if ( matcher.matches() ) {
+            return matcher.group(3);
+        }
+        if ( text.contains( "|" ) ) {
+            return text.replace( "|", " или " );
+        }
+        return text;
     }
 
     @Override

@@ -26,9 +26,6 @@ public class ExamLoginRecords {
     @PageActivationContext
     private ExamSchedule exam;
 
-    @PageActivationContext(index = 1)
-    private Boolean xlsx;
-
     @Inject
     private UserDao userDao;
 
@@ -39,72 +36,65 @@ public class ExamLoginRecords {
     private Locale currentLocale;
 
     public StreamResponse onActivate() {
-        FileNameTransliterator trans = new FileNameTransliterator();
+        // prepare all paragraphs before creating RTF section
+        List<RtfPara> docContent = new LinkedList<>();
+        docContent.add(
+                RtfPara.p( RtfText.bold(
+                RtfText.textJoinWithSpace(  true,
+                        exam.getTestingPlan().getSubject().getTitle(), "(",
+                        exam.getTestingPlan().getName(), ")" ) )
+                ).alignCentered() );
+        docContent.add( RtfPara.p( new SimpleDateFormat( "dd MMMM yyyy", currentLocale ).format( exam.getExamDate() ) ) );
 
-        //if(!xlsx) {
-            // prepare all paragraphs before creating RTF section
-            List<RtfPara> docContent = new LinkedList<>();
-            docContent.add(
-                    RtfPara.p(RtfText.bold(
-                            RtfText.textJoinWithSpace(true,
-                                    exam.getTestingPlan().getSubject().getTitle(), "(",
-                                    exam.getTestingPlan().getName(), ")"))
-                    ).alignCentered());
-            docContent.add(RtfPara.p(new SimpleDateFormat("dd MMMM yyyy", currentLocale).format(exam.getExamDate())));
+        docContent.add( RtfPara.row( "Номер дела", "ФИО", "ФИО", "Логин", "Пароль" )
+                .bottomCellBorder()
+                .leftCellBorder()
+                .topCellBorder()
+                .rightCellBorder()
+                .cellSpace( 0.4, RtfUnit.CM )
+        );
+        // check for already assigned passwords ??
 
-            docContent.add(RtfPara.row("Номер дела", "ФИО", "ФИО", "Логин", "Пароль")
+        exam.getTestees().sort( new Comparator<Testee>() {
+            @Override
+            public int compare( Testee o1, Testee o2 ) {
+                return o1.getLastName().compareTo( o2.getLastName() );
+            }
+        } );
+        for ( Testee testee : exam.getTestees() ) {
+            String password = RandomStringUtils.randomAlphanumeric( 8 )
+                    .replace( 'l', 'k' )
+                    .replace( 'I', 'N' )
+                    .replace( '1', '7' ); //exclude symbols which can be miss read
+            testee.setPassword( userDao.encrypt( password ) );
+            Calendar expDate = Calendar.getInstance();
+            expDate.setTime( exam.getExamDate() );
+            expDate.add( Calendar.DAY_OF_YEAR, 1 );
+            testee.setExpirationDate( expDate.getTime() );
+            docContent.add( RtfPara.row( testee.getCaseNumber(), testee.getLastName(), testee.getLastName(), testee.getLogin(), password )
                     .bottomCellBorder()
                     .leftCellBorder()
                     .topCellBorder()
                     .rightCellBorder()
-                    .cellSpace(0.4, RtfUnit.CM)
-            );
-            //TODO check for already assigned passwords ??
+                    .cellSpace( 0.4, RtfUnit.CM ) );
+            testeeDao.save( testee );
+        }
 
+        ByteArrayOutputStream document = new ByteArrayOutputStream();
 
-            exam.getTestees().sort(new Comparator<Testee>() {
-                @Override
-                public int compare(Testee o1, Testee o2) {
-                    return o1.getLastName().compareTo(o2.getLastName());
-                }
-            });
-            for (Testee testee : exam.getTestees()) {
-                String password = RandomStringUtils.randomAlphanumeric(8);
-                testee.setPassword(userDao.encrypt(password));
-                Calendar expDate = Calendar.getInstance();
-                expDate.setTime(exam.getExamDate());
-                expDate.add(Calendar.DAY_OF_YEAR, 1);
-                testee.setExpirationDate(expDate.getTime());
-                docContent.add(RtfPara.row(testee.getCaseNumber(), testee.getLastName(), testee.getLastName(), testee.getLogin(), password)
-                        .bottomCellBorder()
-                        .leftCellBorder()
-                        .topCellBorder()
-                        .rightCellBorder()
-                        .cellSpace(0.4, RtfUnit.CM));
-                testeeDao.save(testee);
-            }
+        // create RTF file
+        Rtf.rtf()
+                .header( RtfHeader.font( RtfHeaderFont.TIMES_ROMAN ).charset( RtfHeaderFont.CharSet.CYRILLIC ).at( 0 ) )
+                .section( docContent )
+        .out( new OutputStreamWriter( document ) );
 
-            ByteArrayOutputStream document = new ByteArrayOutputStream();
+        //additional parts of login file name
+        String examName = exam.getName();
+        examName = examName.replaceAll("\\s", "_");
+        examName = FileNameTransliterator.transliterateRuEn(examName);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd_MM_yyyy");
+        String examDate = sdf.format(exam.getExamDate());
 
-            // create RTF file
-            Rtf.rtf()
-                    .header(RtfHeader.font(RtfHeaderFont.TIMES_ROMAN).charset(RtfHeaderFont.CharSet.CYRILLIC).at(0))
-                    .section(docContent)
-                    .out(new OutputStreamWriter(document));
-
-            //additional parts of login file name
-            String examName = exam.getName();
-            examName = examName.replaceAll("\\s", "_");
-            examName = FileNameTransliterator.transliterateRuEn(examName);
-            SimpleDateFormat sdf = new SimpleDateFormat("dd_MM_yyyy");
-            String examDate = sdf.format(exam.getExamDate());
-
-            return new AttachmentRtf(document.toByteArray(), "exam_" + examName + "_" + examDate + "_" + "logins.rtf");
-        //} else {
-        //    XSSFWorkbook workbook = new XSSFWorkbook();
-        //    XSSFSheet sheet = workbook.createSheet(trans.transliterateRuEn(exam.getName()).replaceAll("\\s", "_"));
-
-
-        //}
+        return new AttachmentRtf(  document.toByteArray(), "exam_" + examName + "_" + examDate + "_" + "logins.rtf" );
     }
 }
