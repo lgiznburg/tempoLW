@@ -16,6 +16,7 @@ import java.util.List;
  */
 @SuppressWarnings( "unchecked" )
 public class QuestionDaoImpl extends BaseDaoImpl implements QuestionDao {
+
     @Override
     public SubTopic findTopicByName( String topicTitle, ExamSubject subject ) {
         Criteria criteria = session.createCriteria( SubTopic.class )

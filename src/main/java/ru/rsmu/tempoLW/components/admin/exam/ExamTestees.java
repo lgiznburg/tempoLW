@@ -24,12 +24,16 @@ public class ExamTestees {
     @Property
     private Testee testee;
 
+    @Property
+    private Boolean rtf;
+
     private Map<Long,ExamResult> resultsMap;
 
     @Inject
     private ExamDao examDao;
 
     public void setupRender() {
+        rtf = true;
         resultsMap = new HashMap<>();
         exam = examId != null ? examDao.find( ExamSchedule.class, examId ) : null;
         if ( exam != null && exam.getTestees() != null ) {

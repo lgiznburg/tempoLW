@@ -30,17 +30,17 @@
             <div class="form-group">
                 <t:label for="examDuration" class="col-sm-3"/>
                 <div class="col-sm-3">
-                    <t:select t:id="examDuration" value="exam.durationHours" model="literal:1,2,3,4" validate="required"/>
+                    <t:select t:id="examDuration" value="exam.durationHours" model="literal:1,2,3,4" validate="required" title="${message:hours}"/>
                 </div>
                 <div class="col-sm-3">
-                    <t:select value="exam.durationMinutes" model="literal:0,10,15,20,30,45" validate="required"/>
+                    <t:select value="exam.durationMinutes" model="literal:0,10,15,20,30,45" validate="required" title="${message:minutes}"/>
                 </div>
             </div>
 
             <div class="form-group">
                 <div class="col-sm-4 col-sm-offset-4">
-                    <t:submit value="Save" class="btn btn-primary"/>
-                    <t:eventlink event="cancelEdit" context="examId" class="btn btn-default">Cancel</t:eventlink>
+                    <t:submit value="${message:save}" class="btn btn-primary"/>
+                    <t:eventlink event="cancelEdit" context="examId" class="btn btn-default">${message:cancel}</t:eventlink>
                 </div>
             </div>
 
