@@ -3,6 +3,7 @@ package ru.rsmu.tempoLW.pages;
 import org.apache.tapestry5.annotations.PageActivationContext;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.annotations.SessionState;
+import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import ru.rsmu.tempoLW.dao.ExamDao;
 import ru.rsmu.tempoLW.dao.QuestionDao;
@@ -39,25 +40,25 @@ public class StartExam {
     @Inject
     private SecurityUserHelper securityUserHelper;
 
+    @Inject
+    private Messages messages;
+
     public Object onActivate() {
         testee = securityUserHelper.getCurrentTestee();
         if ( exam == null || testee == null ) {
-            return Index.class;  // exam nor testee should not be NULL
+            return Index.class;  // not exam nor testee should be NULL
         }
-        if ( examResult == null ) {
+        // it's possible to get empty examResult for some reason...
+        // so we need to check examResult is correct
+        if ( examResult == null || examResult.getExam() == null ) {
             // check stored result in case of exam interruption (this is second enter)
             examResult = examDao.findExamResultForTestee( exam, testee );
         }
         if ( examResult != null && examResult.getExam() != null && examResult.getExam().equals( exam ) ) {
-            //if ( !examResult.isFinished() ) {
-                return TestFinal.class;  // test has been already created and not finished
-            //}
-            //else {
-            //    return null;  // test has been finished !
-            //}
+            return TestFinal.class;  // test has been already created
+            // we don't care test finished or not. Final page does do the work
         }
         examResult = new ExamBuilder( questionDao ).buildTestVariant( exam.getTestingPlan() );
-        //examResult.setStartTime( new Date() );  //set now
         examResult.setExam( exam );
 
         examResult.setTestee( testee );
@@ -66,7 +67,8 @@ public class StartExam {
         return null;
     }
 
-    public int getQuestionNumber() {
-        return examResult.getQuestionResults().size();
+    public String getStartExamMessage() {
+        return messages.format( "start-exam-greeting", examResult.getQuestionResults().size() );
     }
+
 }
