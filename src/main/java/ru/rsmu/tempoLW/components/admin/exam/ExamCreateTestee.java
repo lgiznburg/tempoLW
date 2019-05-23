@@ -75,14 +75,16 @@ public class ExamCreateTestee {
     }
 
     boolean onValidateFromAddTesteeForm() {
-        if (this.caseNumber != null && !this.lastName.isEmpty() && !this.firstName.isEmpty() && !this.middleName.isEmpty()) {
+        if ( this.caseNumber != null && !this.lastName.isEmpty() && !this.firstName.isEmpty() && !this.middleName.isEmpty() ) {
             this.exam = examDao.find( ExamSchedule.class, examId );
-            if(!isTesteeInExam()) {
+            if ( !isTesteeInExam() && !testeeAlreadyExists() ) {
                 this.testee = new Testee();
                 TesteeLoader tloader = new TesteeLoader(testeeDao);
                 testee.setCaseNumber(caseNumber);
                 testee.setLastName(lastName + " " + firstName + " " + middleName);
                 testee.setLogin(tloader.createLogin(caseNumber));
+            } else if ( !isTesteeInExam() && testeeAlreadyExists() ) {
+                this.testee = testeeDao.findByCaseNumber(caseNumber);
             } else {
                 addTesteeForm.recordError(messages.get("testee-already-exists"));
             }
@@ -95,7 +97,9 @@ public class ExamCreateTestee {
 
     boolean onSuccessFromAddTesteeForm() {
         String event = "testeeAdded";
-        testeeDao.save( testee );
+        if ( !testeeAlreadyExists() ) {
+            testeeDao.save(testee);
+        }
         this.exam = examDao.find( ExamSchedule.class, examId );
         exam.addTestee(testee);
         examDao.save( exam );
@@ -115,6 +119,15 @@ public class ExamCreateTestee {
             }
         }
         return false;
+    }
+
+    public Boolean testeeAlreadyExists () {
+        Testee testee = testeeDao.findByCaseNumber(caseNumber);
+        if( testee != null ) {
+            return true;
+        }
+        return false;
+
     }
 
 

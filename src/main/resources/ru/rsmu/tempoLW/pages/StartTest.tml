@@ -7,7 +7,7 @@
 </div>
 
 <div class="row" id="questionView">
-    <div class="col-sm-8 col-sm-offset-2 text-lg">Ваш вариант теста готов. Всего ${questionNumber} вопросов.</div>
+    <div class="col-sm-8 col-sm-offset-2 text-lg">${startTestMessage}</div>
 </div>
 
 <div class="row subquestion-nav">

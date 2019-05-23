@@ -44,7 +44,7 @@ public class QuestionOpen extends Question {
                 String[] parts = variant.getText().split( "\\|" );
                 for ( String part : parts ) {
                     String match = part.trim().toLowerCase().replaceAll( "(\\d)[.](\\d)", "$1,$2" );
-                    if ( result.contains( match ) ) {
+                    if ( match.length() > 0 && result.contains( match ) ) {
                         correctCount++;
                         break;
                     }
