@@ -80,7 +80,7 @@ public class TreeQuestionBuilder extends QuestionBuilder {
         writeQuestionInfo( row, question, TREE_TYPE );
 
         Cell cell;
-        for ( CorrespondenceVariant variant : ((QuestionCorrespondence)question).getCorrespondenceVariants() ) {
+        for ( CorrespondenceVariant variant : ((QuestionTree)question).getCorrespondenceVariants() ) {
             row = sheet.createRow( rowN++ );
 
             cell = row.createCell( COLUMN_ROW_TYPE );

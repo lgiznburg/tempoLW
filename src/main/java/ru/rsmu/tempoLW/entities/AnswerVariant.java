@@ -110,7 +110,7 @@ public class AnswerVariant implements Serializable, Comparable<AnswerVariant> {
             return matcher.group(3);
         }
         if ( text.contains( "|" ) ) {
-            return text.replace( "|", " или " );
+            return text.replace( "|", " ИЛИ " );
         }
         return text;
     }
