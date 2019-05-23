@@ -208,7 +208,7 @@ public class QuestionDaoImpl extends BaseDaoImpl implements QuestionDao {
         for ( Question question :questions ) {
             if ( code == 0 ) {
                 // regular mode for selecting question
-                if ( question.getQuestionInfo().getTopic().equals( topic ) && !resultQuestions.contains( question ) ) {
+                if ( question.getQuestionInfo().getTopic().equals( topic ) ) {
                     resultQuestions.add( question );
                     return question;
                 }

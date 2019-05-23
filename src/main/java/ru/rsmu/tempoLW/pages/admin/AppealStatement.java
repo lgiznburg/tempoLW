@@ -57,16 +57,9 @@ public class AppealStatement {
             XSSFWorkbook workbook = new XSSFWorkbook();
             XSSFSheet sheet = workbook.createSheet(testee.getCaseNumber());
 
-            //map with borders
-            Map<String, Object> borders = new LinkedMap<>();
-            borders.put(CellUtil.BORDER_BOTTOM, BorderStyle.THIN);
-            borders.put(CellUtil.BORDER_TOP, BorderStyle.THIN);
-            borders.put(CellUtil.BORDER_LEFT, BorderStyle.THIN);
-            borders.put(CellUtil.BORDER_RIGHT, BorderStyle.THIN);
-
             //row w/ title
             Row rowTitle = sheet.createRow(0);
-            sheet.addMergedRegion(new CellRangeAddress(0,0,0,2));
+            sheet.addMergedRegion(new CellRangeAddress(0,0,0,1));
             Cell cellHead = CellUtil.createCell(rowTitle,0, "Аппеляционная ведомость абитуриента");
             CellUtil.setAlignment(cellHead, HorizontalAlignment.CENTER);
             CellUtil.setFont(cellHead, styles.getBoldFont(workbook));
@@ -77,15 +70,16 @@ public class AppealStatement {
             Cell cellExamNameTitle = rowExamName.createCell(0);
             cellExamNameTitle.setCellStyle(styles.getPropertyNameStyle(workbook));
             cellExamNameTitle.setCellValue("ФИО абитуриента:");
-            Cell cellExamNameValue = CellUtil.createCell(rowExamName, 2, testee.getLastName());
+            Cell cellExamNameValue = CellUtil.createCell(rowExamName, 1, testee.getLastName());
             CellUtil.setFont(cellExamNameValue, styles.getDefaultFont(workbook));
 
             //row with subject
             Row rowExamSubject = sheet.createRow(2);
+            //sheet.addMergedRegion(new CellRangeAddress(2,2,1,1));
             Cell cellExamSubjectTitle = rowExamSubject.createCell(0);
             cellExamSubjectTitle.setCellStyle(styles.getPropertyNameStyle(workbook));
             cellExamSubjectTitle.setCellValue("Предмет:");
-            Cell cellExamSubjectValue = CellUtil.createCell(rowExamSubject, 2, exam.getTestingPlan().getSubject().getTitle());
+            Cell cellExamSubjectValue = CellUtil.createCell(rowExamSubject, 1, exam.getTestingPlan().getSubject().getTitle());
             CellUtil.setFont(cellExamSubjectValue, styles.getDefaultFont(workbook));
 
             //row with language
@@ -94,7 +88,7 @@ public class AppealStatement {
             Cell cellExamLocaleTitle = rowExamLocale.createCell(0);
             cellExamLocaleTitle.setCellStyle(styles.getPropertyNameStyle(workbook));
             cellExamLocaleTitle.setCellValue("Язык:");
-            Cell cellExamLocaleValue = CellUtil.createCell(rowExamLocale, 2, exam.getTestingPlan().getSubject().getLocale().equals("ru") ? "русский" : "английский");
+            Cell cellExamLocaleValue = CellUtil.createCell(rowExamLocale, 1, exam.getTestingPlan().getSubject().getLocale().equals("ru") ? "русский" : "английский");
             CellUtil.setFont(cellExamLocaleValue, styles.getDefaultFont(workbook));
 
             //row with the date of exam
@@ -103,7 +97,7 @@ public class AppealStatement {
             Cell cellExamDateTitle = rowExamDate.createCell(0);
             cellExamDateTitle.setCellStyle(styles.getPropertyNameStyle(workbook));
             cellExamDateTitle.setCellValue("Дата экзамена:");
-            Cell cellExamDateValue = CellUtil.createCell(rowExamDate, 2, new SimpleDateFormat("dd.MM.yyyy").format(exam.getExamDate()));
+            Cell cellExamDateValue = CellUtil.createCell(rowExamDate, 1, new SimpleDateFormat("dd.MM.yyyy").format(exam.getExamDate()));
             CellUtil.setFont(cellExamDateValue, styles.getDefaultFont(workbook));
 
             //row with the date of фззуфд
@@ -112,7 +106,7 @@ public class AppealStatement {
             Cell cellAppealDateTitle = rowAppealDate.createCell(0);
             cellAppealDateTitle.setCellStyle(styles.getPropertyNameStyle(workbook));
             cellAppealDateTitle.setCellValue("Дата апелляции:");
-            Cell cellAppealDateValue = CellUtil.createCell(rowAppealDate, 2, new SimpleDateFormat("dd.MM.yyyy").format(new Date()));
+            Cell cellAppealDateValue = CellUtil.createCell(rowAppealDate, 1, new SimpleDateFormat("dd.MM.yyyy").format(new Date()));
             CellUtil.setFont(cellAppealDateValue, styles.getDefaultFont(workbook));
 
             //empty row
@@ -128,10 +122,6 @@ public class AppealStatement {
             cell.setCellValue( "№ и тема" );
 
             cell = row.createCell(1);
-            cell.setCellStyle( styles.getHeaderStyle(workbook) );
-            cell.setCellValue( "Правильность" );
-
-            cell = row.createCell(2);
             cell.setCellStyle( styles.getHeaderStyle(workbook) );
             cell.setCellValue( "Вопрос" );
 
@@ -155,11 +145,11 @@ public class AppealStatement {
                     textTitleCell.setCellValue( "Текст задания:" );
                     CellUtil.setCellStyleProperty(textTitleCell, CellUtil.ALIGNMENT, HorizontalAlignment.RIGHT);
                     CellUtil.setFont(textTitleCell, styles.getBoldFont(workbook));
-                    sheet.addMergedRegion(new CellRangeAddress(rownum-1,rownum-1,1,2));
-                    Cell textValueCell = CellUtil.createCell(row, 1, questionResult.getQuestion().getText());
-                    CellUtil.setCellStyleProperties(textValueCell, borders);
+                    Cell textValueCell = row.createCell(1);
+                    textValueCell.setCellStyle( styles.getBodyStyle(workbook) );
+                    textValueCell.setCellValue( questionResult.getQuestion().getText() );
 
-                    /*
+                    /**
                      * for simple questions
                      */
                     if(questionResult.getQuestion().getType().equals(QuestionType.SIMPLE)) {
@@ -186,9 +176,6 @@ public class AppealStatement {
                                     CellUtil.setFont(correctTitleCell, styles.getBoldFont(workbook));
                                     cell = row.createCell(1);
                                     cell.setCellStyle(styles.getBodyStyle(workbook));
-                                    cell.setCellType(CellType.BLANK);
-                                    cell = row.createCell(2);
-                                    cell.setCellStyle(styles.getBodyStyle(workbook));
                                     cell.setCellValue(answerVariant.getText());
                                 }
                             }
@@ -205,9 +192,6 @@ public class AppealStatement {
                                 CellUtil.setFont(chosenTitleCell, styles.getBoldFont(workbook));
                                 cell = row.createCell(1);
                                 cell.setCellStyle(styles.getBodyStyle(workbook));
-                                cell.setCellValue(resultSimple.isCorrect() ? "верно" : "неверно");
-                                cell = row.createCell(2);
-                                cell.setCellStyle(styles.getBodyStyle(workbook));
                                 cell.setCellValue(resultSimple.getAnswerVariant().getText());
                             }
                         } else {
@@ -219,14 +203,11 @@ public class AppealStatement {
                             CellUtil.setFont(chosenTitleCell, styles.getBoldFont(workbook));
                             cell = row.createCell(1);
                             cell.setCellStyle(styles.getBodyStyle(workbook));
-                            cell.setCellValue("неверно");
-                            cell = row.createCell(2);
-                            cell.setCellStyle(styles.getBodyStyle(workbook));
                             cell.setCellValue("Не выбран");
                         }
                     }
 
-                    /*
+                    /**
                      * for open questions
                      */
                     if(questionResult.getQuestion().getType().equals(QuestionType.OPEN)) {
@@ -252,10 +233,8 @@ public class AppealStatement {
                                     CellUtil.setCellStyleProperty(correctTitleCell, CellUtil.ALIGNMENT, HorizontalAlignment.RIGHT);
                                     CellUtil.setFont(correctTitleCell, styles.getBoldFont(workbook));
                                     cell = row.createCell(1);
-                                    cell.setCellType(CellType.BLANK);
-                                    cell = row.createCell(2);
                                     cell.setCellStyle(styles.getBodyStyle(workbook));
-                                    cell.setCellValue(answerVariant.getReadableText());
+                                    cell.setCellValue(answerVariant.getText());
                                 }
                             }
                         }
@@ -271,9 +250,6 @@ public class AppealStatement {
                                 CellUtil.setFont(chosenTitleCell, styles.getBoldFont(workbook));
                                 cell = row.createCell(1);
                                 cell.setCellStyle(styles.getBodyStyle(workbook));
-                                cell.setCellValue(resultOpen.isCorrect() ? "верно" : "неверно");
-                                cell = row.createCell(2);
-                                cell.setCellStyle(styles.getBodyStyle(workbook));
                                 cell.setCellValue(resultOpen.getValue());
                             }
                         } else {
@@ -285,14 +261,11 @@ public class AppealStatement {
                             CellUtil.setFont(chosenTitleCell, styles.getBoldFont(workbook));
                             cell = row.createCell(1);
                             cell.setCellStyle(styles.getBodyStyle(workbook));
-                            cell.setCellValue("неверно");
-                            cell = row.createCell(2);
-                            cell.setCellStyle(styles.getBodyStyle(workbook));
                             cell.setCellValue("Не введён");
                         }
                     }
 
-                    /*
+                    /**
                      * for correspondence questions
                      */
                     if(questionResult.getQuestion().getType().equals(QuestionType.CORRESPONDENCE)) {
@@ -309,9 +282,9 @@ public class AppealStatement {
                         }
 
                         if (resultsCorrespondence != null) {
-                            for(CorrespondenceVariant var : allVariants) {
-                                //for (ResultCorrespondence correspondenceResult : resultsCorrespondence) {
-                                    List<AnswerVariant> correspondenceAnswers = var.getCorrectAnswers();
+                            //for(CorrespondenceVariant var : allVariants) {
+                                for (ResultCorrespondence correspondenceResult : resultsCorrespondence) {
+                                    List<AnswerVariant> correspondenceAnswers = correspondenceResult.getCorrespondenceVariant().getCorrectAnswers();
 
                                     row = sheet.createRow(rownum++);
                                     Cell correctTitleCell = row.createCell(0);
@@ -319,9 +292,9 @@ public class AppealStatement {
                                     correctTitleCell.setCellValue("Вариант:");
                                     CellUtil.setCellStyleProperty(correctTitleCell, CellUtil.ALIGNMENT, HorizontalAlignment.RIGHT);
                                     CellUtil.setFont(correctTitleCell, styles.getBoldFont(workbook));
-                                    cell = row.createCell(2);
+                                    cell = row.createCell(1);
                                     cell.setCellStyle(styles.getBodyStyle(workbook));
-                                    cell.setCellValue(var.getText());
+                                    cell.setCellValue(correspondenceResult.getCorrespondenceVariant().getText());
 
                                     if(correspondenceAnswers != null) {
                                         for (AnswerVariant answer : correspondenceAnswers) {
@@ -331,31 +304,10 @@ public class AppealStatement {
                                             correctCorrespondenceCell.setCellValue("Верный ответ:");
                                             CellUtil.setCellStyleProperty(correctCorrespondenceCell, CellUtil.ALIGNMENT, HorizontalAlignment.RIGHT);
                                             CellUtil.setFont(correctCorrespondenceCell, styles.getBoldFont(workbook));
-                                            cell = row.createCell(2);
+                                            cell = row.createCell(1);
                                             cell.setCellStyle(styles.getBodyStyle(workbook));
                                             cell.setCellValue(answer.getText());
-                                        }
-                                    }
-                                    if(resultsCorrespondence != null) {
-                                        Boolean answered = false;
-                                        for ( ResultCorrespondence resultCorrespondence : resultsCorrespondence ) {
-                                            if( resultCorrespondence.getCorrespondenceVariant() == var ) {
-                                                row = sheet.createRow(rownum++);
-                                                Cell chosenTitleCell = row.createCell(0);
-                                                chosenTitleCell.setCellStyle(markStyle);
-                                                chosenTitleCell.setCellValue("Выбранный ответ:");
-                                                CellUtil.setCellStyleProperty(chosenTitleCell, CellUtil.ALIGNMENT, HorizontalAlignment.RIGHT);
-                                                CellUtil.setFont(chosenTitleCell, styles.getBoldFont(workbook));
-                                                cell = row.createCell(1);
-                                                cell.setCellStyle(styles.getBodyStyle(workbook));
-                                                cell.setCellValue(resultCorrespondence.isCorrect() ? "верно" : "неверно");
-                                                cell = row.createCell(2);
-                                                cell.setCellStyle(styles.getBodyStyle(workbook));
-                                                cell.setCellValue(resultCorrespondence.getAnswerVariant().getText());
-                                                answered = true;
-                                            }
-                                        }
-                                        if (!answered) {
+
                                             row = sheet.createRow(rownum++);
                                             Cell chosenTitleCell = row.createCell(0);
                                             chosenTitleCell.setCellStyle(markStyle);
@@ -364,157 +316,11 @@ public class AppealStatement {
                                             CellUtil.setFont(chosenTitleCell, styles.getBoldFont(workbook));
                                             cell = row.createCell(1);
                                             cell.setCellStyle(styles.getBodyStyle(workbook));
-                                            cell.setCellValue("неверно");
-                                            cell = row.createCell(2);
-                                            cell.setCellStyle(styles.getBodyStyle(workbook));
-                                            cell.setCellValue("Не выбран");
+                                            cell.setCellValue(correspondenceResult.getAnswerVariant().getText());
                                         }
                                     }
-                                //}
-                            }
-                        }
-                    }
-
-                    /*
-                     * for simple_order questions
-                     */
-                    if(questionResult.getQuestion().getType().equals(QuestionType.SIMPLE_ORDER)) {
-                        QuestionSimpleOrder question = (QuestionSimpleOrder) questionResult.getQuestion();
-                        List<ResultSimpleOrder> orderResults = new ArrayList<>();
-                        List<ResultElement> elements = questionResult.getElements();
-
-                        for (ResultElement element : elements) {
-                            ResultSimpleOrder resultSimpleOrder = (ResultSimpleOrder) element;
-                            orderResults.add(resultSimpleOrder);
-                        }
-
-                        orderResults.sort(new Comparator<ResultSimpleOrder>() {
-                            @Override
-                            public int compare( ResultSimpleOrder o1, ResultSimpleOrder o2 ) {
-                                return Integer.valueOf(o1.getEnteredOrder()).compareTo(Integer.valueOf(o2.getEnteredOrder()));
-                            }
-                        });
-
-                        int order = 1;
-                        for ( ResultSimpleOrder resultSimpleOrder : orderResults ) {
-                            if ( resultSimpleOrder.getEnteredOrder() == order ) {
-                                row = sheet.createRow(rownum++);
-                                Cell chosenTitleCell = row.createCell(0);
-                                chosenTitleCell.setCellStyle(markStyle);
-                                chosenTitleCell.setCellValue("Выбранный ответ ( № " + resultSimpleOrder.getEnteredOrder() + " ):");
-                                CellUtil.setCellStyleProperty(chosenTitleCell, CellUtil.ALIGNMENT, HorizontalAlignment.RIGHT);
-                                CellUtil.setFont(chosenTitleCell, styles.getBoldFont(workbook));
-                                cell = row.createCell(1);
-                                cell.setCellStyle(styles.getBodyStyle(workbook));
-                                cell.setCellValue(resultSimpleOrder.isCorrect() ? "верно" : "неверно, правильный №: " + resultSimpleOrder.getAnswerVariant().getSequenceOrder());
-                                cell = row.createCell(2);
-                                cell.setCellStyle(styles.getBodyStyle(workbook));
-                                cell.setCellValue(resultSimpleOrder.getAnswerVariant().getText());
-                                order++;
-                            } else {
-                                row = sheet.createRow(rownum++);
-                                Cell chosenTitleCell = row.createCell(0);
-                                chosenTitleCell.setCellStyle(markStyle);
-                                chosenTitleCell.setCellValue("Выбранный ответ ( № " + order + " ):");
-                                CellUtil.setCellStyleProperty(chosenTitleCell, CellUtil.ALIGNMENT, HorizontalAlignment.RIGHT);
-                                CellUtil.setFont(chosenTitleCell, styles.getBoldFont(workbook));
-                                cell = row.createCell(1);
-                                cell.setCellStyle(styles.getBodyStyle(workbook));
-                                cell.setCellValue("неверно, правильный вариант №: " + resultSimpleOrder.getAnswerVariant().getSequenceOrder());
-                                cell = row.createCell(2);
-                                cell.setCellStyle(styles.getBodyStyle(workbook));
-                                cell.setCellValue("Не выбран");
-                                order++;
-                            }
-                        }
-
-                    }
-
-                    /*
-                     * for tree questions
-                     */
-                    if(questionResult.getQuestion().getType().equals(QuestionType.TREE)) {
-                        QuestionTree question = (QuestionTree) questionResult.getQuestion();
-                        List<CorrespondenceVariant> allVariants = question.getCorrespondenceVariants();
-                        List<ResultElement> resultElements = questionResult.getElements();
-                        List<ResultTree> resultsTree = new ArrayList<>();
-
-                        if(resultElements != null) {
-                            for (ResultElement element : resultElements) {
-                                ResultTree tree = (ResultTree) element;
-                                resultsTree.add(tree);
-                            }
-                        }
-
-                        if (resultsTree != null) {
-                            for(CorrespondenceVariant var : allVariants) {
-                                List<AnswerVariant> correspondenceAnswers = var.getCorrectAnswers();
-                                List<AnswerVariant> correctAnswers = new ArrayList<>();
-
-                                for ( AnswerVariant answerVariant : correspondenceAnswers ) {
-                                    if ( answerVariant.isCorrect() ) {
-                                        correctAnswers.add(answerVariant);
-                                    }
                                 }
-
-                                row = sheet.createRow(rownum++);
-                                Cell correctTitleCell = row.createCell(0);
-                                correctTitleCell.setCellStyle(markStyle);
-                                correctTitleCell.setCellValue("Вариант:");
-                                CellUtil.setCellStyleProperty(correctTitleCell, CellUtil.ALIGNMENT, HorizontalAlignment.RIGHT);
-                                CellUtil.setFont(correctTitleCell, styles.getBoldFont(workbook));
-                                cell = row.createCell(2);
-                                cell.setCellStyle(styles.getBodyStyle(workbook));
-                                cell.setCellValue(var.getText());
-
-                                if(correspondenceAnswers != null) {
-                                    for (AnswerVariant answer : correctAnswers) {
-                                        row = sheet.createRow(rownum++);
-                                        Cell correctCorrespondenceCell = row.createCell(0);
-                                        correctCorrespondenceCell.setCellStyle(markStyle);
-                                        correctCorrespondenceCell.setCellValue("Верный ответ:");
-                                        CellUtil.setCellStyleProperty(correctCorrespondenceCell, CellUtil.ALIGNMENT, HorizontalAlignment.RIGHT);
-                                        CellUtil.setFont(correctCorrespondenceCell, styles.getBoldFont(workbook));
-                                        cell = row.createCell(2);
-                                        cell.setCellStyle(styles.getBodyStyle(workbook));
-                                        cell.setCellValue(answer.getText());
-                                    }
-                                }
-                                if(resultsTree != null) {
-                                    Boolean answered = false;
-                                    for ( ResultTree resultTree : resultsTree ) {
-                                        if( resultTree.getCorrespondenceVariant() == var ) {
-                                            row = sheet.createRow(rownum++);
-                                            Cell chosenTitleCell = row.createCell(0);
-                                            chosenTitleCell.setCellStyle(markStyle);
-                                            chosenTitleCell.setCellValue("Выбранный ответ:");
-                                            CellUtil.setCellStyleProperty(chosenTitleCell, CellUtil.ALIGNMENT, HorizontalAlignment.RIGHT);
-                                            CellUtil.setFont(chosenTitleCell, styles.getBoldFont(workbook));
-                                            cell = row.createCell(1);
-                                            cell.setCellStyle(styles.getBodyStyle(workbook));
-                                            cell.setCellValue(resultTree.isCorrect() ? "верно" : "неверно");
-                                            cell = row.createCell(2);
-                                            cell.setCellStyle(styles.getBodyStyle(workbook));
-                                            cell.setCellValue(resultTree.getAnswerVariant().getText());
-                                            answered = true;
-                                        }
-                                    }
-                                    if (!answered) {
-                                        row = sheet.createRow(rownum++);
-                                        Cell chosenTitleCell = row.createCell(0);
-                                        chosenTitleCell.setCellStyle(markStyle);
-                                        chosenTitleCell.setCellValue("Выбранный ответ:");
-                                        CellUtil.setCellStyleProperty(chosenTitleCell, CellUtil.ALIGNMENT, HorizontalAlignment.RIGHT);
-                                        CellUtil.setFont(chosenTitleCell, styles.getBoldFont(workbook));
-                                        cell = row.createCell(1);
-                                        cell.setCellStyle(styles.getBodyStyle(workbook));
-                                        cell.setCellValue("неверно");
-                                        cell = row.createCell(2);
-                                        cell.setCellStyle(styles.getBodyStyle(workbook));
-                                        cell.setCellValue("Не выбран");
-                                    }
-                                }
-                            }
+                            //}
                         }
                     }
 
@@ -537,6 +343,13 @@ public class AppealStatement {
             Cell finalMarkCell = CellUtil.createCell(finalMarkRow, 0, "Результирующая оценка");
             CellUtil.setAlignment(finalMarkCell, HorizontalAlignment.LEFT);
             CellUtil.setFont(finalMarkCell, styles.getBoldFont(workbook));
+
+            //map with borders
+            Map<String, Object> borders = new LinkedMap<>();
+            borders.put(CellUtil.BORDER_BOTTOM, BorderStyle.THIN);
+            borders.put(CellUtil.BORDER_TOP, BorderStyle.THIN);
+            borders.put(CellUtil.BORDER_LEFT, BorderStyle.THIN);
+            borders.put(CellUtil.BORDER_RIGHT, BorderStyle.THIN);
 
             CellUtil.setCellStyleProperties(finalMarkCell, borders);
             CellUtil.setCellStyleProperty(finalMarkCell, CellUtil.BORDER_RIGHT, BorderStyle.NONE);

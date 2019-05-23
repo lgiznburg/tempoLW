@@ -81,7 +81,7 @@
                                 </t:pagelink>
                             </span>
                             <span title="${message:good-reason} (.xlsx)" class="text-center"><!-- col-xs-3 -->
-                                <t:pagelink page="admin/goodreasonstatement" context="[exam,testee]" class="btn btn-warning btn-sm" aria-label="Print">
+                                <t:pagelink page="admin/examtesteeresult" context="[exam,testee]" class="btn btn-warning btn-sm" aria-label="Print">
                                     <span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
                                 </t:pagelink>
                             </span>
@@ -101,6 +101,9 @@
                     <t:eventlink event="cancelTestees" context="examId" class="btn btn-default">${message:back}</t:eventlink>
                 </div>
             </div>
+            <t:pagelink page="admin/examgeneralstatement" context="[exam]" class="btn btn-primary" aria-label="Print">
+                ${message:general-statement}
+            </t:pagelink>
         </div>
 
         <t:block t:id="emptyTestees">

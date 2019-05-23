@@ -8,7 +8,7 @@
 </div>
 
 <div class="row" id="questionView">
-    <div class="col-sm-8 col-sm-offset-2 text-lg">${startExamMessage}</div>
+    <div class="col-sm-8 col-sm-offset-2 text-lg">Ваш вариант готов. Всего ${questionNumber} вопросов.</div>
 </div>
 
 <div class="row subquestion-nav">
