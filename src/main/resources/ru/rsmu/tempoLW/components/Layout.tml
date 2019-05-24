@@ -6,49 +6,49 @@
     <link rel="shortcut icon" href="${context:static/icons/favicon.ico}" type="image/x-icon" />
 </head>
 <body>
-<div class="navbar navbar-default navbar-dark bg-dark">
+<div class="navbar navbar-default navbar-dark bg-dark" role="navigation">
     <div class="container-fluid">
 
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbarsReque" aria-expanded="false">
+            <t:pagelink style="padding-top: 1.15rem" page="index" class="navbar-brand">
+                <img title="${message:navbar.logotitle}" src="${context:static/img/logoRNIMUwhite.svg}" width="120px"/>
+            </t:pagelink>
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbarsTempoLW" aria-expanded="false">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <t:pagelink style="padding-top: 1.15rem" page="index" class="navbar-brand">
-                <img title="${message:navbar.logotitle}" src="${context:static/img/logoRNIMUwhite.svg}" width="120px"/>
-            </t:pagelink>
         </div>
 
-        <div class="collapse navbar-collapse" id="navbarsReque">
+        <div class="collapse navbar-collapse" id="navbarsTempoLW" aria-expanded="false">
             <t:security.user>
                 <ul class="nav navbar-nav navbar-right">
                     <t:security.lacksrole role="testee">
-                        <li><t:eventlink event="togglelocale" class="nav-link">${localeNameToSwitch}</t:eventlink></li>
+                        <li role="presentation"><t:eventlink event="togglelocale" class="nav-link">${localeNameToSwitch}</t:eventlink></li>
                         <li class="dropdown">
-                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" id="userDropdown" aria-expanded="false">
+                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" id="userDropdown" aria-expanded="false"><!-- id="userDropdown" aria-haspopup="true"-->
                                 ${message:navbar.welcome} ${username}. <span class="caret"/></a>
-                            <ul class="dropdown-menu bg-light" aria-labelledby="userDropdown">
+                            <ul style="background-color: #fff" class="dropdown-menu" aria-labelledby="userDropdown" role="menu"><!-- bg-light -->
                                 <t:security.hasAnyRoles roles="admin,subject_admin,teacher">
-                                    <li><t:pagelink page="admin/subjects">${message:navbar.admin.subjects}</t:pagelink></li>
-                                    <li><t:pagelink page="admin/exams">${message:navbar.admin.exams}</t:pagelink></li>
-                                    <li role="separator" class="divider"></li>
+                                    <li style="background-color: #fff" role="presentation"><t:pagelink page="admin/subjects">${message:navbar.admin.subjects}</t:pagelink></li>
+                                    <li style="background-color: #fff" role="presentation"><t:pagelink page="admin/exams">${message:navbar.admin.exams}</t:pagelink></li>
+                                    <li style="background-color: #fff" role="separator" class="divider"></li>
                                 </t:security.hasAnyRoles>
                                 <t:security.hasRole role="admin">
-                                    <li><t:pagelink page="admin/users">${message:navbar.admin.users}</t:pagelink></li>
-                                    <li role="separator" class="divider"></li>
+                                    <li style="background-color: #fff" role="presentation"><t:pagelink page="admin/users">${message:navbar.admin.users}</t:pagelink></li>
+                                    <li style="background-color: #fff" role="separator" class="divider"></li>
                                 </t:security.hasRole>
                                 <t:security.hasAnyRoles roles="admin, subject_admin, teacher">
-                                    <li><t:pagelink page="userpassword">${message:navbar.admin.password}</t:pagelink></li>
-                                    <li role="separator" class="divider"></li>
+                                    <li style="background-color: #fff" role="presentation"><t:pagelink page="userpassword">${message:navbar.admin.password}</t:pagelink></li>
+                                    <li style="background-color: #fff" role="separator" class="divider"></li>
                                 </t:security.hasAnyRoles>
-                                <li><t:eventlink event="logout">${message:navbar.logout}</t:eventlink></li>
+                                <li style="background-color: #fff" role="presentation"><t:eventlink event="logout">${message:navbar.logout}</t:eventlink></li>
 
                             </ul>
                         </li>
                         <p:else>
-                            <li></li>
+                            <li role="presentation"></li>
                         </p:else>
                     </t:security.lacksrole>
 
@@ -56,8 +56,8 @@
                 <p:else>
                     <ul class="nav navbar-nav navbar-right">
                         <!-- locale switch for unlogged users -->
-                        <li><t:eventlink event="togglelocale" class="nav-link">${localeNameToSwitch}</t:eventlink></li>
-                        <li><t:pagelink page="login" class="nav-link">${message:navbar.login}</t:pagelink></li>
+                        <li role="presentation"><t:eventlink event="togglelocale" class="nav-link">${localeNameToSwitch}</t:eventlink></li>
+                        <li role="presentation"><t:pagelink page="login" class="nav-link">${message:navbar.login}</t:pagelink></li>
                     </ul>
                 </p:else>
             </t:security.user>

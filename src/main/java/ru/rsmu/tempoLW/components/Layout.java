@@ -23,7 +23,7 @@ import java.util.Locale;
  */
 @Import(stylesheet = {"context:/static/css/jquery-ui.min.css", "context:/static/css/tempolw.css",
     "context:/static/css/ubuntu.css"},
-        module = {"bootstrap/dropdown"})
+        library = {"context:/static/js/bootstrap.min.js"}) //module = {"bootstrap/dropdown"},
 public class Layout {
 
     @Property
