@@ -3,6 +3,7 @@ package ru.rsmu.tempoLW.pages;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.annotations.SessionState;
 import org.apache.tapestry5.ioc.annotations.Inject;
+import org.hibernate.LazyInitializationException;
 import org.tynamo.security.services.SecurityService;
 import ru.rsmu.tempoLW.dao.ExamDao;
 import ru.rsmu.tempoLW.dao.QuestionDao;
@@ -41,6 +42,10 @@ public class TestFinal {
     public Object onActivate() {
         if ( examResult == null || examResult.getQuestionResults() == null ) {
             return Index.class;
+        }
+        if ( examResult.getId() > 0 ) {
+            //proof lazy init exception
+            examDao.refresh( examResult );
         }
         int finalMark = 0;
         for ( QuestionResult questionResult : examResult.getQuestionResults() ) {

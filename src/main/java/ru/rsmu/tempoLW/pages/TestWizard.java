@@ -56,6 +56,10 @@ public class TestWizard {
         if ( testee != null && examResult.getTestee().getId() != testee.getId() ) {
             return Index.class;
         }
+        if ( examResult.getId() > 0 ) {
+            //proof lazy init exception
+            examDao.refresh( examResult );
+        }
         if ( examResult.getStartTime() == null ) {
             //just started
             examResult.setStartTime( new Date() );

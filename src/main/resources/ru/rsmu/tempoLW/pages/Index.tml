@@ -6,7 +6,7 @@
     <t:if test="examDay">
         <h2>${message:exam-day}</h2>
         <div class="row">
-            <div class="col-sm-8 col-sm-offset-2">${message:exam-day-introducing}</div>
+            <div class="col-sm-8 col-sm-offset-2 text-lg" style="padding-bottom: 1rem;">${message:exam-day-introducing}</div>
         </div>
         <div class="row">
             <div class="col-sm-8 col-sm-offset-2">
@@ -20,21 +20,34 @@
     <t:if test="assignedExam">
         <h2>${message:testee-greeting} ${testee.lastName}</h2>
         <div class="row">
-            <p class="col-sm-10 col-sm-offset-2">
+            <div class="col-sm-10 col-sm-offset-2 text-lg">
                 ${message:testee-exam-assigned} <strong>${assignedExam.testingPlan.subject.title}</strong>
-            </p>
-        </div>
-
-        <div class="row">
-            <div class="col-sm-10 col-sm-offset-2">
-                <t:pagelink page="startexam" context="assignedExam" class="btn btn-primary">${message:start-exam}</t:pagelink>
             </div>
         </div>
+
+        <t:if test="examFinished">
+            <div class="row">
+                <div class="col-sm-8 col-sm-offset-2 text-lg">${message:exam-finished} <span class="text-info"><strong>${examResult.markTotal}</strong></span> </div>
+                <div class="col-sm-8 col-sm-offset-2 text-lg">${message:exam-finished-info}</div>
+            </div>
+            <p:else>
+                <div class="row">
+                    <div class="col-sm-10 col-sm-offset-2">
+                        <t:pagelink page="startexam" context="assignedExam" class="btn btn-primary">${message:start-exam}</t:pagelink>
+                    </div>
+                </div>
+            </p:else>
+        </t:if>
     </t:if>
 </t:security.hasrole>
 
 <h2>${message:available-tests}</h2>
-<t:loop source="testingPlans" value="plan">
+<div class="row">
+    <div class="col-sm-10 text-info" style="padding-top: 1rem; padding-bottom: 1rem;">
+        ${message:test-mode-info}
+    </div>
+</div>
+<t:loop source="testingPlans" value="plan" empty="block:notests">
     <div class="row">
         <div class="col-sm-10 col-sm-offset-2">
             <t:pagelink page="starttest" context="plan"><strong>${plan.subject.title}</strong> ( ${plan.name} )</t:pagelink>
@@ -42,4 +55,12 @@
         </div>
     </div>
 </t:loop>
+
+<t:block t:id="notests" id="notests">
+    <div class="row">
+        <div class="col-sm-10 col-sm-offset-2">
+            ${message:no-tests-available}
+        </div>
+    </div>
+</t:block>
 </html>

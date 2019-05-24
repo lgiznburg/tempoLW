@@ -55,8 +55,6 @@ public class ExamTesteeResult {
 
     private SimpleDateFormat sdf = new SimpleDateFormat("dd_MM_yyyy");
 
-    private ExcelStyles styles = new ExcelStyles();
-
     public StreamResponse onActivate() {
         if(rtf == null) { rtf = false; }
         if(rtf) {
@@ -148,49 +146,49 @@ public class ExamTesteeResult {
                 String filename = testee.getCaseNumber() + "_" + FileNameTransliterator.transliterateRuEn(exam.getTestingPlan().getSubject().getTitle()).replaceAll("\\s", "_") + "-" + sdf.format(exam.getExamDate()) + "-result.xlsx";
                 XSSFWorkbook workbook = new XSSFWorkbook();
                 XSSFSheet sheet = workbook.createSheet(testee.getCaseNumber());
-
+                ExcelStyles styles = new ExcelStyles( workbook );
                 //row w/ title
                 Row rowTitle = sheet.createRow(0);
                 sheet.addMergedRegion(new CellRangeAddress(0,0,0,2));
                 Cell cellHead = CellUtil.createCell(rowTitle,0, "Результаты вступительных испытаний абитуриента");
                 CellUtil.setAlignment(cellHead, HorizontalAlignment.CENTER);
-                CellUtil.setFont(cellHead, styles.getBoldFont(workbook));
+                CellUtil.setFont(cellHead, styles.getBoldFont());
 
                 //row w/ testee name
                 Row rowExamName = sheet.createRow(1);
                 sheet.addMergedRegion(new CellRangeAddress(1,1,1,2));
                 Cell cellExamNameTitle = rowExamName.createCell(0);
-                cellExamNameTitle.setCellStyle(styles.getPropertyNameStyle(workbook));
+                cellExamNameTitle.setCellStyle( styles.getPropertyNameStyle());
                 cellExamNameTitle.setCellValue("ФИО абитуриента:");
                 Cell cellExamNameValue = CellUtil.createCell(rowExamName, 1, testee.getLastName());
-                CellUtil.setFont(cellExamNameValue, styles.getDefaultFont(workbook));
+                CellUtil.setFont(cellExamNameValue, styles.getDefaultFont());
 
                 //row with subject
                 Row rowExamSubject = sheet.createRow(2);
                 sheet.addMergedRegion(new CellRangeAddress(2,2,1,2));
                 Cell cellExamSubjectTitle = rowExamSubject.createCell(0);
-                cellExamSubjectTitle.setCellStyle(styles.getPropertyNameStyle(workbook));
+                cellExamSubjectTitle.setCellStyle( styles.getPropertyNameStyle());
                 cellExamSubjectTitle.setCellValue("Предмет:");
                 Cell cellExamSubjectValue = CellUtil.createCell(rowExamSubject, 1, exam.getTestingPlan().getSubject().getTitle());
-                CellUtil.setFont(cellExamSubjectValue, styles.getDefaultFont(workbook));
+                CellUtil.setFont(cellExamSubjectValue, styles.getDefaultFont());
 
                 //row with language
                 Row rowExamLocale = sheet.createRow(3);
                 sheet.addMergedRegion(new CellRangeAddress(3,3,1,2));
                 Cell cellExamLocaleTitle = rowExamLocale.createCell(0);
-                cellExamLocaleTitle.setCellStyle(styles.getPropertyNameStyle(workbook));
+                cellExamLocaleTitle.setCellStyle( styles.getPropertyNameStyle());
                 cellExamLocaleTitle.setCellValue("Язык:");
                 Cell cellExamLocaleValue = CellUtil.createCell(rowExamLocale, 1, exam.getTestingPlan().getSubject().getLocale().equals("ru") ? "русский" : "английский");
-                CellUtil.setFont(cellExamLocaleValue, styles.getDefaultFont(workbook));
+                CellUtil.setFont(cellExamLocaleValue, styles.getDefaultFont());
 
                 //row with the date of exam
                 Row rowExamDate = sheet.createRow(4);
                 sheet.addMergedRegion(new CellRangeAddress(4,4,1,2));
                 Cell cellExamDateTitle = rowExamDate.createCell(0);
-                cellExamDateTitle.setCellStyle(styles.getPropertyNameStyle(workbook));
+                cellExamDateTitle.setCellStyle( styles.getPropertyNameStyle());
                 cellExamDateTitle.setCellValue("Дата экзамена:");
                 Cell cellExamDateValue = CellUtil.createCell(rowExamDate, 1, new SimpleDateFormat("dd.MM.yyyy").format(exam.getExamDate()));
-                CellUtil.setFont(cellExamDateValue, styles.getDefaultFont(workbook));
+                CellUtil.setFont(cellExamDateValue, styles.getDefaultFont());
 
                 //empty row
                 Row rowEmpty = sheet.createRow(5);
@@ -201,18 +199,18 @@ public class ExamTesteeResult {
                 //result table header
                 Row row = sheet.createRow(rownum++);
                 Cell cell = row.createCell(0);
-                cell.setCellStyle( styles.getHeaderStyle(workbook) );
+                cell.setCellStyle( styles.getHeaderStyle() );
                 cell.setCellValue( "Вопрос" );
 
                 cell = row.createCell(1);
-                cell.setCellStyle( styles.getHeaderStyle(workbook) );
+                cell.setCellStyle( styles.getHeaderStyle() );
                 cell.setCellValue( "Базовый балл" );
 
                 cell = row.createCell(2);
-                cell.setCellStyle( styles.getHeaderStyle(workbook) );
+                cell.setCellStyle( styles.getHeaderStyle() );
                 cell.setCellValue( "Итоговая оценка" );
 
-                CellStyle markStyle = styles.getBodyStyle(workbook);
+                CellStyle markStyle = styles.getBodyStyle();
 
                 int num = 1;
 
@@ -221,7 +219,7 @@ public class ExamTesteeResult {
                     for (QuestionResult questionResult : result.getQuestionResults()) {
                         row = sheet.createRow(rownum++);
                         cell = row.createCell(0);
-                        cell.setCellStyle( styles.getBodyStyle(workbook) );
+                        cell.setCellStyle( styles.getBodyStyle() );
                         cell.setCellValue(num + ". " + questionResult.getQuestion().getQuestionInfo().getName());
 
                         num++;
@@ -240,7 +238,7 @@ public class ExamTesteeResult {
                 Row finalMarkRow = sheet.createRow(rownum++);
                 Cell finalMarkCell = CellUtil.createCell(finalMarkRow, 0, "Результирующая оценка");
                 CellUtil.setAlignment(finalMarkCell, HorizontalAlignment.LEFT);
-                CellUtil.setFont(finalMarkCell, styles.getBoldFont(workbook));
+                CellUtil.setFont(finalMarkCell, styles.getBoldFont());
 
                 //map with borders
                 Map<String, Object> borders = new LinkedMap<>();
@@ -254,7 +252,7 @@ public class ExamTesteeResult {
 
                 Cell finalMarkEmptyCell = CellUtil.createCell(finalMarkRow, 1, "");
                 CellUtil.setAlignment(finalMarkCell, HorizontalAlignment.LEFT);
-                CellUtil.setFont(finalMarkCell, styles.getBoldFont(workbook));
+                CellUtil.setFont(finalMarkCell, styles.getBoldFont());
 
                 CellUtil.setCellStyleProperties(finalMarkEmptyCell, borders);
                 CellUtil.setCellStyleProperty(finalMarkEmptyCell, CellUtil.BORDER_RIGHT, BorderStyle.NONE);
@@ -273,26 +271,26 @@ public class ExamTesteeResult {
                 Row acknowledgeRow = sheet.createRow(rownum++);
                 sheet.addMergedRegion(new CellRangeAddress(rownum - 1,rownum - 1,0,2));
                 Cell acknowledgeCell = CellUtil.createCell(acknowledgeRow, 0, "С результатами вступительного испытания ознакомлен.");
-                CellUtil.setFont(acknowledgeCell, styles.getDefaultFont(workbook));
+                CellUtil.setFont(acknowledgeCell, styles.getDefaultFont());
                 CellUtil.setCellStyleProperty(acknowledgeCell, CellUtil.WRAP_TEXT, true);
                 CellUtil.setAlignment(acknowledgeCell, HorizontalAlignment.LEFT);
 
                 Row acknowledgeRow1 = sheet.createRow(rownum++);
                 sheet.addMergedRegion(new CellRangeAddress(rownum - 1,rownum - 1,0,2));
                 Cell acknowledgeCell1 = CellUtil.createCell(acknowledgeRow1, 0, "Жалоб на самочувствие в процессе вступительного испытания не возникло.");
-                CellUtil.setFont(acknowledgeCell1, styles.getDefaultFont(workbook));
+                CellUtil.setFont(acknowledgeCell1, styles.getDefaultFont());
                 CellUtil.setAlignment(acknowledgeCell1, HorizontalAlignment.LEFT);
 
                 Row acknowledgeRow2 = sheet.createRow(rownum++);
                 sheet.addMergedRegion(new CellRangeAddress(rownum - 1,rownum - 1,0,2));
                 Cell acknowledgeCell2 = CellUtil.createCell(acknowledgeRow2, 0, "К процессу проведения вступительного испытания претензий не имею.");
-                CellUtil.setFont(acknowledgeCell2, styles.getDefaultFont(workbook));
+                CellUtil.setFont(acknowledgeCell2, styles.getDefaultFont());
                 CellUtil.setAlignment(acknowledgeCell2, HorizontalAlignment.LEFT);
 
                 Row studentRow = sheet.createRow(rownum++);
                 sheet.addMergedRegion(new CellRangeAddress(rownum - 1,rownum - 1,0,2));
                 Cell studentCell = CellUtil.createCell(studentRow, 0, "Абитуриент: _______________________ / " + testee.getLastName() + " /");
-                CellUtil.setFont(studentCell, styles.getDefaultFont(workbook));
+                CellUtil.setFont(studentCell, styles.getDefaultFont());
                 CellUtil.setAlignment(studentCell, HorizontalAlignment.RIGHT);
 
                 //spaces for signatures of the Examination commission members
@@ -300,7 +298,7 @@ public class ExamTesteeResult {
                     Row rowExaminer = sheet.createRow(rownum++);
                     sheet.addMergedRegion(new CellRangeAddress(rownum - 1,rownum - 1,0,2));
                     Cell examinerSignature = CellUtil.createCell(rowExaminer, 0, "Член экзаменационной комиссии: _______________________ / ______________ /");
-                    CellUtil.setFont(examinerSignature, styles.getDefaultFont(workbook));
+                    CellUtil.setFont(examinerSignature, styles.getDefaultFont());
                     CellUtil.setAlignment(examinerSignature, HorizontalAlignment.RIGHT);
                 }
 

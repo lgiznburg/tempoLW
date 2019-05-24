@@ -3,12 +3,10 @@ package ru.rsmu.tempoLW.pages.admin;
 import com.tutego.jrtf.*;
 import org.apache.tapestry5.StreamResponse;
 import org.apache.tapestry5.annotations.PageActivationContext;
+import org.apache.tapestry5.ioc.annotations.Inject;
 import ru.rsmu.tempoLW.consumabales.AttachmentRtf;
 import ru.rsmu.tempoLW.consumabales.FileNameTransliterator;
-import ru.rsmu.tempoLW.consumabales.MonthNameConverter;
-import ru.rsmu.tempoLW.entities.ExamResult;
 import ru.rsmu.tempoLW.entities.ExamSchedule;
-import ru.rsmu.tempoLW.entities.QuestionResult;
 import ru.rsmu.tempoLW.entities.Testee;
 
 import java.io.ByteArrayOutputStream;
@@ -17,6 +15,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 public class GoodReasonStatement {
     @PageActivationContext(index = 0)
@@ -24,6 +23,9 @@ public class GoodReasonStatement {
 
     @PageActivationContext(index = 1)
     private Testee testee;
+
+    @Inject
+    private Locale currentLocale;
 
     public StreamResponse onActivate() {
         String fileName = "unknown.rtf";
@@ -62,7 +64,7 @@ public class GoodReasonStatement {
         docContent.add(RtfPara.p("________________________________________________________________"));
         docContent.add(RtfPara.p(""));
         Date today = new Date();
-        docContent.add(RtfPara.p(new SimpleDateFormat("\"dd\" ").format(today), MonthNameConverter.getMonthName(new SimpleDateFormat("MM").format(today)), new SimpleDateFormat(" yyyy г.").format(today)).alignRight());
+        docContent.add(RtfPara.p(new SimpleDateFormat("dd MMMM yyyy", currentLocale)).alignRight());
         docContent.add(RtfPara.p(""));
         docContent.add(RtfPara.p("____________________ / " + testee.getLastName() + " /").alignRight());
 

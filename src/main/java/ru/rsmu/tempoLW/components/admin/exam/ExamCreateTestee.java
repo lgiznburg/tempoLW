@@ -77,13 +77,16 @@ public class ExamCreateTestee {
     boolean onValidateFromAddTesteeForm() {
         if ( this.caseNumber != null && !this.lastName.isEmpty() && !this.firstName.isEmpty() && !this.middleName.isEmpty() ) {
             this.exam = examDao.find( ExamSchedule.class, examId );
-            if ( !isTesteeInExam() && !testeeAlreadyExists() ) {
+
+            this.testee = testeeDao.findByCaseNumber(caseNumber);
+            if ( testee == null ) {
                 this.testee = new Testee();
                 TesteeLoader tloader = new TesteeLoader(testeeDao);
                 testee.setCaseNumber(caseNumber);
                 testee.setLastName(lastName + " " + firstName + " " + middleName);
                 testee.setLogin(tloader.createLogin(caseNumber));
-            } else if ( !isTesteeInExam() && testeeAlreadyExists() ) {
+            }
+            if ( !isTesteeInExam() ) {
                 this.testee = testeeDao.findByCaseNumber(caseNumber);
             } else {
                 addTesteeForm.recordError(messages.get("testee-already-exists"));
@@ -97,10 +100,10 @@ public class ExamCreateTestee {
 
     boolean onSuccessFromAddTesteeForm() {
         String event = "testeeAdded";
-        if ( !testeeAlreadyExists() ) {
+        if ( testee.getId() == 0 ) { //new testee
             testeeDao.save(testee);
         }
-        this.exam = examDao.find( ExamSchedule.class, examId );
+        //this.exam = examDao.find( ExamSchedule.class, examId );
         exam.addTestee(testee);
         examDao.save( exam );
 
@@ -109,7 +112,7 @@ public class ExamCreateTestee {
         return true;
     }
 
-    public Boolean isTesteeInExam () {
+    private Boolean isTesteeInExam() {
         List<Testee> testees = exam.getTestees();
         if(testees.size() != 0) {
             for (Testee testee : testees) {
@@ -120,15 +123,5 @@ public class ExamCreateTestee {
         }
         return false;
     }
-
-    public Boolean testeeAlreadyExists () {
-        Testee testee = testeeDao.findByCaseNumber(caseNumber);
-        if( testee != null ) {
-            return true;
-        }
-        return false;
-
-    }
-
 
 }

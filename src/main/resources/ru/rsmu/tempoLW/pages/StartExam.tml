@@ -7,11 +7,21 @@
     <h4>${examResult.testee.lastName}</h4>
 </div>
 
-<div class="row" id="questionView">
-    <div class="col-sm-8 col-sm-offset-2 text-lg">${startExamMessage}</div>
-</div>
+<t:if test="examResult.finished">
+    <div class="row">
+        <div class="col-sm-8 col-sm-offset-2 text-lg">${message:exam-finished} <span class="text-info"><strong>${examResult.markTotal}</strong></span> </div>
+        <div class="col-sm-8 col-sm-offset-2 text-lg">${message:exam-finished-info}</div>
+    </div>
+    <p:else>
+        <div class="row" id="questionView">
+            <div class="col-sm-8 col-sm-offset-2 text-lg">${startExamMessage}</div>
+        </div>
 
-<div class="row subquestion-nav">
-    <div class="col-sm-8 col-sm-offset-2"><t:pagelink page="testwizard" context="0" class="btn btn-primary">${message:start-exam}</t:pagelink> </div>
-</div>
+        <div class="row subquestion-nav">
+            <div class="col-sm-8 col-sm-offset-2">
+                <t:pagelink page="testwizard" context="0" class="btn btn-primary">${message:start-exam}</t:pagelink>
+            </div>
+        </div>
+    </p:else>
+</t:if>
 </html>

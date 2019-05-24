@@ -55,8 +55,12 @@ public class StartExam {
             examResult = examDao.findExamResultForTestee( exam, testee );
         }
         if ( examResult != null && examResult.getExam() != null && examResult.getExam().equals( exam ) ) {
-            return TestFinal.class;  // test has been already created
-            // we don't care test finished or not. Final page does do the work
+            if ( examResult.isFinished() ) {
+                return null;
+            }
+            else {
+                return TestFinal.class;  // test has been already created
+            }
         }
         examResult = new ExamBuilder( questionDao ).buildTestVariant( exam.getTestingPlan() );
         examResult.setExam( exam );

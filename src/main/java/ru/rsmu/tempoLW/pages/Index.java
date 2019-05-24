@@ -62,4 +62,8 @@ public class Index {
         }
     }
 
+    public boolean isExamFinished() {
+        return examResult != null && examResult.isFinished();
+    }
+
 }

@@ -8,8 +8,62 @@ import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class ExcelStyles {
+    private final XSSFWorkbook workbook;
+    private XSSFFont defaultFont;
+    private XSSFFont boldFont;
+    private CellStyle bodyStyle;
+    private CellStyle headerStyle;
+    private CellStyle propertyNameStyle;
+    private CellStyle propertyValueStyle;
+
+    public ExcelStyles( XSSFWorkbook workbook ) {
+        this.workbook = workbook;
+    }
+
+    public XSSFFont getDefaultFont() {
+        if ( defaultFont == null ) {
+            defaultFont = createDefaultFont();
+        }
+        return defaultFont;
+    }
+
+    public XSSFFont getBoldFont() {
+        if ( boldFont == null ) {
+            boldFont = createBoldFont();
+        }
+        return boldFont;
+    }
+
+    public CellStyle getBodyStyle() {
+        if ( bodyStyle == null ) {
+            bodyStyle = createBodyStyle();
+        }
+        return bodyStyle;
+    }
+
+    public CellStyle getHeaderStyle() {
+        if ( headerStyle == null ) {
+            headerStyle = createHeaderStyle();
+        }
+        return headerStyle;
+    }
+
+    public CellStyle getPropertyNameStyle() {
+        if ( propertyNameStyle == null ) {
+            propertyNameStyle = createPropertyNameStyle();
+        }
+        return propertyNameStyle;
+    }
+
+    public CellStyle getPropertyValueStyle() {
+        if ( propertyValueStyle == null ) {
+            propertyValueStyle = createPropertyValueStyle();
+        }
+        return propertyValueStyle;
+    }
+
     //standard font
-    public XSSFFont getDefaultFont(XSSFWorkbook workbook) {
+    private XSSFFont createDefaultFont() {
         XSSFFont defaultFont = workbook.createFont();
         defaultFont.setFontHeightInPoints((short) 10);
         defaultFont.setFontName("Times");
@@ -20,7 +74,7 @@ public class ExcelStyles {
     }
 
     //bold font
-    public XSSFFont getBoldFont(XSSFWorkbook workbook) {
+    private XSSFFont createBoldFont() {
         XSSFFont bold = workbook.createFont();
         bold.setFontHeightInPoints((short) 10);
         bold.setBold(true);
@@ -31,10 +85,10 @@ public class ExcelStyles {
     }
 
     //style for standard value cells
-    public CellStyle getBodyStyle (XSSFWorkbook workbook) {
+    private CellStyle createBodyStyle() {
         CellStyle body = workbook.createCellStyle();
         body.setWrapText(true);
-        body.setFont(getDefaultFont(workbook));
+        body.setFont(getDefaultFont());
         body.setBorderBottom(BorderStyle.THIN);
         body.setBorderTop(BorderStyle.THIN);
         body.setBorderLeft(BorderStyle.THIN);
@@ -44,17 +98,17 @@ public class ExcelStyles {
     }
 
     //style for table headers
-    public CellStyle getHeaderStyle (XSSFWorkbook workbook){
+    private CellStyle createHeaderStyle(){
         CellStyle header = workbook.createCellStyle();
-        header.cloneStyleFrom(getBodyStyle(workbook));
-        header.setFont(getBoldFont(workbook));
+        header.cloneStyleFrom(getBodyStyle());
+        header.setFont(getBoldFont());
         return header;
     }
 
     //style for bold texts (without borders)
-    public CellStyle getPropertyNameStyle (XSSFWorkbook workbook){
+    private CellStyle createPropertyNameStyle(){
         CellStyle propertyName = workbook.createCellStyle();
-        propertyName.cloneStyleFrom(getHeaderStyle(workbook));
+        propertyName.cloneStyleFrom(getHeaderStyle());
         propertyName.setBorderBottom(BorderStyle.NONE);
         propertyName.setBorderTop(BorderStyle.NONE);
         propertyName.setBorderLeft(BorderStyle.NONE);
@@ -64,10 +118,10 @@ public class ExcelStyles {
     }
 
     //style for standerd texts (without borders)
-    public CellStyle getPropertyValueStyle(XSSFWorkbook workbook){
+    private CellStyle createPropertyValueStyle(){
         CellStyle propertyValue = workbook.createCellStyle();
-        propertyValue.cloneStyleFrom(getPropertyNameStyle(workbook));
-        propertyValue.setFont(getDefaultFont(workbook));
+        propertyValue.cloneStyleFrom(getPropertyNameStyle());
+        propertyValue.setFont(getDefaultFont());
         return propertyValue;
     }
 }
