@@ -4,6 +4,8 @@ import org.apache.tapestry5.Asset;
 import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.javascript.JavaScriptSupport;
+import org.hibernate.Hibernate;
+import org.hibernate.LazyInitializationException;
 import ru.rsmu.tempoLW.dao.ExamDao;
 import ru.rsmu.tempoLW.dao.QuestionDao;
 import ru.rsmu.tempoLW.entities.*;
@@ -12,6 +14,7 @@ import ru.rsmu.tempoLW.services.SecurityUserHelper;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author leonid.
@@ -58,7 +61,9 @@ public class TestWizard {
         }
         if ( examResult.getId() > 0 ) {
             //proof lazy init exception
-            examDao.refresh( examResult );
+            if ( !Hibernate.isInitialized( examResult.getQuestionResults() ) ) {
+                examDao.refresh( examResult );
+            }
         }
         if ( examResult.getStartTime() == null ) {
             //just started

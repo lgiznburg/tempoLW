@@ -1,6 +1,7 @@
 package ru.rsmu.tempoLW.dao.internal;
 
 import org.apache.tapestry5.hibernate.annotations.CommitAfter;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import ru.rsmu.tempoLW.dao.BaseDao;
 
@@ -38,6 +39,13 @@ public class BaseDaoImpl implements BaseDao {
     @Override
     public <T> void refresh( T entity ) {
         session.refresh( entity );
+    }
+
+    @Override
+    public <T> void softInitialize( T entity ) {
+        if ( ! Hibernate.isInitialized( entity ) ) {
+            Hibernate.initialize( entity );
+        }
     }
 
 }

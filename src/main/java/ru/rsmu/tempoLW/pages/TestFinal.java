@@ -3,6 +3,7 @@ package ru.rsmu.tempoLW.pages;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.annotations.SessionState;
 import org.apache.tapestry5.ioc.annotations.Inject;
+import org.hibernate.Hibernate;
 import org.hibernate.LazyInitializationException;
 import org.tynamo.security.services.SecurityService;
 import ru.rsmu.tempoLW.dao.ExamDao;
@@ -14,6 +15,7 @@ import ru.rsmu.tempoLW.services.SecurityUserHelper;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author leonid.
@@ -45,7 +47,9 @@ public class TestFinal {
         }
         if ( examResult.getId() > 0 ) {
             //proof lazy init exception
-            examDao.refresh( examResult );
+            if ( !Hibernate.isInitialized( examResult.getQuestionResults() ) ) {
+                examDao.refresh( examResult );
+            }
         }
         int finalMark = 0;
         for ( QuestionResult questionResult : examResult.getQuestionResults() ) {
@@ -81,7 +85,7 @@ public class TestFinal {
     public Date getEstimatedEndTime() {
         Calendar calendar = Calendar.getInstance();
         if ( examResult.isExamMode() ) {
-            calendar.setTime( examResult.getStartTime() );
+            calendar.setTime( examResult.getStartTime() != null ? examResult.getStartTime() : new Date() );
             if ( examResult.getExam().getDurationHours() > 0 ) {
                 calendar.add( Calendar.HOUR, examResult.getExam().getDurationHours() );
             }
