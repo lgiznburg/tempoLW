@@ -2,6 +2,7 @@ package ru.rsmu.tempoLW.pages;
 
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.ioc.annotations.Inject;
+import org.tynamo.security.services.SecurityService;
 import ru.rsmu.tempoLW.dao.ExamDao;
 import ru.rsmu.tempoLW.dao.QuestionDao;
 import ru.rsmu.tempoLW.entities.ExamResult;
@@ -46,6 +47,9 @@ public class Index {
     private SecurityUserHelper securityUserHelper;
 
     @Inject
+    private SecurityService securityService;
+
+    @Inject
     private Locale currentLocale;
 
 
@@ -64,6 +68,13 @@ public class Index {
 
     public boolean isExamFinished() {
         return examResult != null && examResult.isFinished();
+    }
+
+    public void onLogoutTestee()
+    {
+        if ( securityService.isUser() ) {
+            securityService.getSubject().logout();
+        }
     }
 
 }

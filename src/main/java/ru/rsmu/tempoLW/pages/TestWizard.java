@@ -56,7 +56,7 @@ public class TestWizard {
             return Index.class;
         }
         Testee testee = securityUserHelper.getCurrentTestee();
-        if ( testee != null && examResult.getTestee().getId() != testee.getId() ) {
+        if ( testee != null && (examResult.getTestee() == null || examResult.getTestee().getId() != testee.getId()) ) {
             return Index.class;
         }
         if ( examResult.getId() > 0 ) {

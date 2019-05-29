@@ -163,9 +163,10 @@ public class QuestionTreeForm {
                 break;  // do not go if no more answers present
             }
             List<String> currentAnswers = new ArrayList<>();
-            for ( ResultElement resultTree : questionResult.getElements() ) {
-                if ( ((ResultTree)resultTree).getCorrespondenceVariant() == previousVariant ) {
-                    currentAnswers.add( ((ResultTree)resultTree).getAnswerVariant().getText() );
+            for ( ResultElement resultElement : questionResult.getElements() ) {
+                ResultTree resultTree = (ResultTree) resultElement;
+                if ( resultTree.getCorrespondenceVariant() == previousVariant && resultTree.getAnswerVariant() != null ) {
+                    currentAnswers.add( resultTree.getAnswerVariant().getText() );
                     existedAnswers--;
                 }
             }

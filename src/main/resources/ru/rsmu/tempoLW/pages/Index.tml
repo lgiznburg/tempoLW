@@ -29,6 +29,7 @@
             <div class="row">
                 <div class="col-sm-8 col-sm-offset-2 text-lg">${message:exam-finished} <span class="text-info"><strong>${examResult.markTotal}</strong></span> </div>
                 <div class="col-sm-8 col-sm-offset-2 text-lg">${message:exam-finished-info}</div>
+                <div class="col-sm-8 col-sm-offset-2"><t:eventlink event="logoutTestee" class="btn btn-default">${message:navbar.logout}</t:eventlink></div>
             </div>
             <p:else>
                 <div class="row">
@@ -41,26 +42,29 @@
     </t:if>
 </t:security.hasrole>
 
-<h2>${message:available-tests}</h2>
-<div class="row">
-    <div class="col-sm-10 text-info" style="padding-top: 1rem; padding-bottom: 1rem;">
-        ${message:test-mode-info}
-    </div>
-</div>
-<t:loop source="testingPlans" value="plan" empty="block:notests">
+<t:security.lacksrole role="testee">
+    <h2>${message:available-tests}</h2>
     <div class="row">
-        <div class="col-sm-10 col-sm-offset-2">
-            <t:pagelink page="starttest" context="plan"><strong>${plan.subject.title}</strong> ( ${plan.name} )</t:pagelink>
-
+        <div class="col-sm-10 text-info" style="padding-top: 1rem; padding-bottom: 1rem;">
+            ${message:test-mode-info}
         </div>
     </div>
-</t:loop>
+    <t:loop source="testingPlans" value="plan" empty="block:notests">
+        <div class="row">
+            <div class="col-sm-10 col-sm-offset-2">
+                <t:pagelink page="starttest" context="plan"><strong>${plan.subject.title}</strong> ( ${plan.name} )
+                </t:pagelink>
 
-<t:block t:id="notests" id="notests">
-    <div class="row">
-        <div class="col-sm-10 col-sm-offset-2">
-            ${message:no-tests-available}
+            </div>
         </div>
-    </div>
-</t:block>
+    </t:loop>
+
+    <t:block t:id="notests" id="notests">
+        <div class="row">
+            <div class="col-sm-10 col-sm-offset-2">
+                ${message:no-tests-available}
+            </div>
+        </div>
+    </t:block>
+</t:security.lacksrole>
 </html>
