@@ -128,8 +128,10 @@ public class ExamTesteeResult {
             docContent.add(RtfPara.p("Жалоб на самочувствие в процессе вступительного испытания не возникло."));
             docContent.add(RtfPara.p("К процессу проведения вступительного испытания претензий не имею.", "", ""));
             docContent.add(RtfPara.p(RtfText.textJoinWithSpace(true, "Абитуриент", "________________", "/", testee.getLastName(), "/")));
-            docContent.add(RtfPara.p(RtfText.textJoinWithSpace(true, "Член экзаменационной комиссии:", "___________________", "/____________________________/")));
-            docContent.add(RtfPara.p(RtfText.textJoinWithSpace(true, "Член экзаменационной комиссии:", "___________________", "/____________________________/")));
+
+            for (int i = 0; i <= 2; i++) {
+                docContent.add(RtfPara.p(RtfText.textJoinWithSpace(true, "Член экзаменационной комиссии:", "___________________", "/____________________________/")));
+            }
 
             ByteArrayOutputStream document = new ByteArrayOutputStream();
 
@@ -294,7 +296,7 @@ public class ExamTesteeResult {
                 CellUtil.setAlignment(studentCell, HorizontalAlignment.RIGHT);
 
                 //spaces for signatures of the Examination commission members
-                for (int i = 0; i <= 1; i++) {
+                for (int i = 0; i <= 2; i++) {
                     Row rowExaminer = sheet.createRow(rownum++);
                     sheet.addMergedRegion(new CellRangeAddress(rownum - 1,rownum - 1,0,2));
                     Cell examinerSignature = CellUtil.createCell(rowExaminer, 0, "Член экзаменационной комиссии: _______________________ / ______________ /");
