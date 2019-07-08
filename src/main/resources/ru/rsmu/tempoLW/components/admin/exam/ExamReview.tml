@@ -21,13 +21,13 @@
     <div class="row">
         <div class="col-sm-3 text-right">${message:testeeCount}:</div>
         <div class="col-sm-3">
-            <t:if test="exam.testees">
-                ${exam.testees.size()}
+            <t:if test="exam.examToTestees">
+                ${exam.examToTestees.size()}
                 <p:else>${message:exam-no-testees}</p:else>
             </t:if>
         </div>
     </div>
-    <t:if test="exam.testees">
+    <t:if test="exam.examToTestees">
         <div class="row">
             <div class="col-sm-3 text-right">${message:testeeList}:</div>
             <div class="col-sm-3" style="padding-top: 8px">

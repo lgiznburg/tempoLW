@@ -1,14 +1,12 @@
 package ru.rsmu.tempoLW.pages;
 
 import org.apache.tapestry5.annotations.Property;
+import org.apache.tapestry5.annotations.SessionState;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.tynamo.security.services.SecurityService;
 import ru.rsmu.tempoLW.dao.ExamDao;
 import ru.rsmu.tempoLW.dao.QuestionDao;
-import ru.rsmu.tempoLW.entities.ExamResult;
-import ru.rsmu.tempoLW.entities.ExamSchedule;
-import ru.rsmu.tempoLW.entities.Testee;
-import ru.rsmu.tempoLW.entities.TestingPlan;
+import ru.rsmu.tempoLW.entities.*;
 import ru.rsmu.tempoLW.services.SecurityUserHelper;
 
 import java.util.List;
@@ -37,6 +35,10 @@ public class Index {
     @Property
     private ExamResult examResult;
 
+    @Property
+    @SessionState
+    private String examKey;
+
     @Inject
     private QuestionDao questionDao;
 
@@ -60,8 +62,11 @@ public class Index {
         if ( examDay ) {
             testee = securityUserHelper.getCurrentTestee();
             if ( testee != null ) {
-                assignedExam = examDao.findExamForTestee( testee );
-                examResult = examDao.findExamResultForTestee( assignedExam, testee );
+                ExamToTestee examToTestee = examDao.findExamForTestee( testee, examKey );
+                if ( examToTestee != null ) {
+                    assignedExam = examToTestee.getExam();
+                    examResult = examDao.findExamResultForTestee( assignedExam, testee );
+                }
             }
         }
     }

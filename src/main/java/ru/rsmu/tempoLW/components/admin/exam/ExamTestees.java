@@ -6,6 +6,7 @@ import org.apache.tapestry5.ioc.annotations.Inject;
 import ru.rsmu.tempoLW.dao.ExamDao;
 import ru.rsmu.tempoLW.entities.ExamResult;
 import ru.rsmu.tempoLW.entities.ExamSchedule;
+import ru.rsmu.tempoLW.entities.ExamToTestee;
 import ru.rsmu.tempoLW.entities.Testee;
 
 import java.util.*;
@@ -27,6 +28,9 @@ public class ExamTestees {
     @Property
     private Boolean rtf;
 
+    @Property
+    private List<Testee> testees;
+
     private Map<Long,ExamResult> resultsMap;
 
     @Inject
@@ -35,18 +39,20 @@ public class ExamTestees {
     public void setupRender() {
         rtf = true;
         resultsMap = new HashMap<>();
+        testees = new ArrayList<>();
         exam = examId != null ? examDao.find( ExamSchedule.class, examId ) : null;
-        if ( exam != null && exam.getTestees() != null ) {
+        if ( exam != null && exam.getExamToTestees() != null ) {
             List<ExamResult> results = examDao.findExamResults( exam );
             if ( results != null ) {
                 results.forEach( result -> resultsMap.put( result.getTestee().getId(), result ) );
             }
-            exam.getTestees().sort( new Comparator<Testee>() {
+            exam.getExamToTestees().sort( new Comparator<ExamToTestee>() {
                 @Override
-                public int compare( Testee o1, Testee o2 ) {
-                    return o1.getLastName().compareTo( o2.getLastName() );
+                public int compare( ExamToTestee o1, ExamToTestee o2 ) {
+                    return o1.getTestee().getLastName().compareTo( o2.getTestee().getLastName() );
                 }
             } );
+            exam.getExamToTestees().forEach( examToTestee -> testees.add( examToTestee.getTestee() ) );
         }
     }
 

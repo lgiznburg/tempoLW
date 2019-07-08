@@ -1,9 +1,6 @@
 package ru.rsmu.tempoLW.dao;
 
-import ru.rsmu.tempoLW.entities.ExamResult;
-import ru.rsmu.tempoLW.entities.ExamSchedule;
-import ru.rsmu.tempoLW.entities.ExamSubject;
-import ru.rsmu.tempoLW.entities.Testee;
+import ru.rsmu.tempoLW.entities.*;
 
 import java.util.List;
 
@@ -16,7 +13,7 @@ public interface ExamDao extends BaseDao {
     List<ExamSchedule> findExams();
 
     ExamSchedule findExamToday();
-    ExamSchedule findExamForTestee( Testee testee );
+    ExamToTestee findExamForTestee( Testee testee, String password );
 
     List<ExamResult> findExamResults( ExamSchedule exam );
 

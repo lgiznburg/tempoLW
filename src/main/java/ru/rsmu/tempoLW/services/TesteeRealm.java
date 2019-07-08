@@ -14,9 +14,12 @@ import org.apache.tapestry5.ioc.Messages;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
 import ru.rsmu.tempoLW.entities.ExamSchedule;
+import ru.rsmu.tempoLW.entities.ExamToTestee;
 import ru.rsmu.tempoLW.entities.Testee;
 import ru.rsmu.tempoLW.entities.auth.UserRoleName;
+import ru.rsmu.tempoLW.utils.PasswordEncoder;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -68,18 +71,25 @@ public class TesteeRealm extends AuthorizingRealm {
             return null;
         }
 
-        if ( !checkCurrentExam( testee ) ) {
+        ExamToTestee examToTestee = null;
+        try {
+            examToTestee = checkCurrentExam( testee, PasswordEncoder.encrypt( new String( upToken.getPassword() ) ) );
+            if ( examToTestee == null ) {
+                throw new LockedAccountException( messages.get( "realm.account-locked" ) ); //"Account [" + login + "] is locked."
+            }
+        } catch (NoSuchAlgorithmException e) { // really? is it even possible?
             throw new LockedAccountException( messages.get( "realm.account-locked" ) ); //"Account [" + login + "] is locked."
         }
-        if (testee.isCredentialsExpired()) {
+        // expired feature doesn't work, isn't actual
+        /*if (testee.isCredentialsExpired()) {
             String msg = messages.get( "realm.account-expired" ); //"The credentials for account [" + login + "] are expired";
             throw new ExpiredCredentialsException(msg);
-        }
+        }*/
         if ( ((UsernamePasswordToken) token).isRememberMe() ) {
             //remember me is not allowed for testees
             ((UsernamePasswordToken) token).setRememberMe( false );
         }
-        return new SimpleAuthenticationInfo(login, testee.getPassword(), /*new SimpleByteSource(testee.getPasswordSalt()),*/ getName());
+        return new SimpleAuthenticationInfo(login, examToTestee.getPassword(), /*new SimpleByteSource(testee.getPasswordSalt()),*/ getName());
     }
 
     private Testee findByUsername( String login ) {
@@ -88,13 +98,15 @@ public class TesteeRealm extends AuthorizingRealm {
         return (Testee) criteria.uniqueResult();
     }
 
-    private boolean checkCurrentExam( Testee testee ) {
-        Criteria criteria = sessionManager.getSession().createCriteria( ExamSchedule.class )
-                .add( Restrictions.eq( "examDate", new Date() ) )
-                .createAlias( "testees", "testee" )
+    private ExamToTestee checkCurrentExam( Testee testee, String password ) {
+        Criteria criteria = sessionManager.getSession().createCriteria( ExamToTestee.class )
+                .createAlias( "exam", "exam" )
+                .createAlias( "testee", "testee" )
+                .add( Restrictions.eq( "exam.examDate", new Date() ) )
                 .add( Restrictions.eq( "testee.id", testee.getId() ) )
+                .add( Restrictions.eq( "password", password ) )
                 .setMaxResults( 1 );
-        return criteria.uniqueResult() != null;
+        return (ExamToTestee) criteria.uniqueResult();
     }
 
 }

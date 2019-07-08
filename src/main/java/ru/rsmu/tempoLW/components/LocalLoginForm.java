@@ -6,6 +6,7 @@ import org.apache.shiro.web.util.WebUtils;
 import org.apache.tapestry5.ValidationException;
 import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.annotations.Property;
+import org.apache.tapestry5.annotations.SessionState;
 import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.ioc.annotations.Symbol;
@@ -13,6 +14,8 @@ import org.apache.tapestry5.services.Request;
 import org.tynamo.security.SecuritySymbols;
 import org.tynamo.security.internal.services.LoginContextService;
 import org.tynamo.security.services.SecurityService;
+import ru.rsmu.tempoLW.dao.UserDao;
+import ru.rsmu.tempoLW.entities.auth.UserRoleName;
 
 import java.io.IOException;
 
@@ -37,6 +40,10 @@ public class LocalLoginForm {
     @Property
     private String loginMessage;
 
+    @Property
+    @SessionState
+    private String examKey;
+
     @Inject
     private Messages messages;
 
@@ -52,6 +59,9 @@ public class LocalLoginForm {
 
     @Inject
     private Request request;
+
+    @Inject
+    private UserDao userDao;
 
 
     public void onValidateFromTempoLoginForm() throws ValidationException {
@@ -84,6 +94,10 @@ public class LocalLoginForm {
         if (loginMessage != null)
         {
             throw new ValidationException(loginMessage);
+        }
+        // save encrypted password in session to select correct exam
+        if ( !securityService.isUser() || securityService.hasRole( UserRoleName.testee.name() ) ) {
+            examKey = userDao.encrypt( password );
         }
     }
 

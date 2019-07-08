@@ -16,6 +16,7 @@ import ru.rsmu.tempoLW.dao.TesteeDao;
 import ru.rsmu.tempoLW.consumabales.FileNameTransliterator;
 import ru.rsmu.tempoLW.entities.ExamResult;
 import ru.rsmu.tempoLW.entities.ExamSchedule;
+import ru.rsmu.tempoLW.entities.ExamToTestee;
 import ru.rsmu.tempoLW.entities.Testee;
 
 import java.io.ByteArrayOutputStream;
@@ -160,15 +161,15 @@ public class ExamGeneralStatement {
         List<ExamResult> results = examDao.findExamResults( exam );
         int num = 1;
 
-        if (exam.getTestees().size() != 0) {
-            exam.getTestees().sort( new Comparator<Testee>() {
+        if (exam.getExamToTestees().size() != 0) {
+            exam.getExamToTestees().sort( new Comparator<ExamToTestee>() {
                 @Override
-                public int compare( Testee o1, Testee o2 ) {
-                    return o1.getLastName().compareTo( o2.getLastName() );
+                public int compare( ExamToTestee o1, ExamToTestee o2 ) {
+                    return o1.getTestee().getLastName().compareTo( o2.getTestee().getLastName() );
                 }
             } );
             // print results
-            for (Testee testee : exam.getTestees() ) {
+            for (ExamToTestee examToTestee : exam.getExamToTestees() ) {
                 row = sheet.createRow( rownum++ );
                 cell = row.createCell(0);
                 cell.setCellStyle( body );
@@ -178,13 +179,13 @@ public class ExamGeneralStatement {
 
                 cell = row.createCell(1);
                 cell.setCellStyle( body );
-                cell.setCellValue( testee.getCaseNumber() );
+                cell.setCellValue( examToTestee.getTestee().getCaseNumber() );
 
                 cell = row.createCell(2);
                 cell.setCellStyle( body );
-                cell.setCellValue( testee.getLastName() );
+                cell.setCellValue( examToTestee.getTestee().getLastName() );
 
-                ExamResult result = findResultForTestee( testee, results );
+                ExamResult result = findResultForTestee( examToTestee.getTestee(), results );
                 cell = row.createCell(3);
                 cell.setCellStyle( body );
                 if ( result == null ) {

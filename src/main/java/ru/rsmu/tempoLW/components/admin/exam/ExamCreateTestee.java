@@ -13,6 +13,7 @@ import org.apache.tapestry5.ioc.annotations.Inject;
 import ru.rsmu.tempoLW.dao.ExamDao;
 import ru.rsmu.tempoLW.dao.TesteeDao;
 import ru.rsmu.tempoLW.entities.ExamSchedule;
+import ru.rsmu.tempoLW.entities.ExamToTestee;
 import ru.rsmu.tempoLW.entities.Testee;
 import ru.rsmu.tempoLW.utils.TesteeLoader;
 
@@ -113,10 +114,10 @@ public class ExamCreateTestee {
     }
 
     private Boolean isTesteeInExam() {
-        List<Testee> testees = exam.getTestees();
+        List<ExamToTestee> testees = exam.getExamToTestees();
         if(testees.size() != 0) {
-            for (Testee testee : testees) {
-                if (testee.getCaseNumber().equals(caseNumber)) {
+            for (ExamToTestee examToTestee : testees) {
+                if (examToTestee.getTestee().getCaseNumber().equals(caseNumber)) {
                     return true;
                 }
             }

@@ -5,10 +5,7 @@ import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import ru.rsmu.tempoLW.dao.ExamDao;
-import ru.rsmu.tempoLW.entities.ExamResult;
-import ru.rsmu.tempoLW.entities.ExamSchedule;
-import ru.rsmu.tempoLW.entities.ExamSubject;
-import ru.rsmu.tempoLW.entities.Testee;
+import ru.rsmu.tempoLW.entities.*;
 
 import java.util.Date;
 import java.util.List;
@@ -43,13 +40,15 @@ public class ExamDaoImpl extends BaseDaoImpl implements ExamDao {
     }
 
     @Override
-    public ExamSchedule findExamForTestee( Testee testee ) {
-        Criteria criteria = session.createCriteria( ExamSchedule.class )
-                .add( Restrictions.eq( "examDate", new Date() ) )
-                .createAlias( "testees", "testees"  )
-                .add( Restrictions.eq( "testees.id", testee.getId() ) )
+    public ExamToTestee findExamForTestee( Testee testee, String password ) {
+        Criteria criteria = session.createCriteria( ExamToTestee.class )
+                .createAlias( "exam", "exam" )
+                .createAlias( "testee", "testee" )
+                .add( Restrictions.eq( "exam.examDate", new Date() ) )
+                .add( Restrictions.eq( "testee.id", testee.getId() ) )
+                .add( Restrictions.eq( "password", password ) )
                 .setMaxResults( 1 );
-        return (ExamSchedule) criteria.uniqueResult();
+        return (ExamToTestee) criteria.uniqueResult();
     }
 
     @Override
