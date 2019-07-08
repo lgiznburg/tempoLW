@@ -74,21 +74,34 @@ public class ExamCreateTestee {
         this.exam = examDao.find( ExamSchedule.class, examId );
     }
 
+    public void onPrepareForRender() {
+        if ( addTesteeForm.isValid() ) {
+            prepare();
+        }
+    }
+
+    public void onPrepareForSubmit() {
+        prepare();
+    }
+
+    public void prepare () {
+        this.exam = examDao.find( ExamSchedule.class, examId );
+        this.testee = testeeDao.findByCaseNumber(caseNumber);
+        if ( this.testee == null ) {
+            this.testee = new Testee();
+        }
+    }
+
     boolean onValidateFromAddTesteeForm() {
         if ( this.caseNumber != null && !this.lastName.isEmpty() && !this.firstName.isEmpty() && !this.middleName.isEmpty() ) {
-            this.exam = examDao.find( ExamSchedule.class, examId );
 
-            this.testee = testeeDao.findByCaseNumber(caseNumber);
-            if ( testee == null ) {
-                this.testee = new Testee();
-                TesteeLoader tloader = new TesteeLoader(testeeDao);
+            if ( testee.getId() == 0 ) {
                 testee.setCaseNumber(caseNumber);
                 testee.setLastName(lastName + " " + firstName + " " + middleName);
-                testee.setLogin(tloader.createLogin(caseNumber));
+                testee.setLogin(new TesteeLoader(testeeDao).createLogin( caseNumber ) );
             }
-            if ( !isTesteeInExam() ) {
-                this.testee = testeeDao.findByCaseNumber(caseNumber);
-            } else {
+
+            if ( isTesteeInExam() ) {
                 addTesteeForm.recordError(messages.get("testee-already-exists"));
             }
         } else {

@@ -203,7 +203,7 @@ public class ExamGeneralStatement {
         cellEmpty1.setCellType(CellType.BLANK);
 
         //spaces for signatures of the Examination commission members
-        for (int i = 0; i <= 1; i++) {
+        for (int i = 0; i <= 2; i++) {
             Row rowExaminer = sheet.createRow(rownum++);
             sheet.addMergedRegion(new CellRangeAddress(rownum - 1,rownum - 1,0,3));
             Cell examinerSignature = CellUtil.createCell(rowExaminer, 0, "Член экзаменационной комиссии: _______________________ / ______________ /");

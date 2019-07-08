@@ -270,7 +270,8 @@ public class AppealStatement {
                                 CellUtil.setFont(chosenTitleCell, styles.getBoldFont());
                                 cell = row.createCell(1);
                                 cell.setCellStyle( styles.getBodyStyle());
-                                cell.setCellValue(resultOpen.isCorrect() ? "верно" : "неверно");
+                                List<ResultElement> results = questionResult.getElements();
+                                cell.setCellValue(resultOpen.getQuestionResult().getQuestion().countErrors(results) == 0 ? "верно" : "неверно");
                                 cell = row.createCell(2);
                                 cell.setCellStyle( styles.getBodyStyle());
                                 cell.setCellValue(resultOpen.getValue());
@@ -587,7 +588,7 @@ public class AppealStatement {
             CellUtil.setAlignment(studentCell, HorizontalAlignment.RIGHT);
 
             //spaces for signatures of the Examination commission members
-            for (int i = 0; i <= 1; i++) {
+            for (int i = 0; i <= 2; i++) {
                 Row rowExaminer = sheet.createRow(rownum++);
                 sheet.addMergedRegion(new CellRangeAddress(rownum - 1,rownum - 1,0,2));
                 Cell examinerSignature = CellUtil.createCell(rowExaminer, 0, "Член экзаменационной комиссии: _______________________ / ______________ /");
