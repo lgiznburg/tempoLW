@@ -12,7 +12,7 @@
                 <t:textfield value="answerVariant.text"/>
             </div>
             <div class="col-sm-4">
-                <t:select value="answerVariant.sequenceOrder" model="literal:0,1,2,3,4,5"/>
+                <t:select value="answerVariant.sequenceOrder" model="sequenceModel"/>
             </div>
         </div>
     </t:loop>

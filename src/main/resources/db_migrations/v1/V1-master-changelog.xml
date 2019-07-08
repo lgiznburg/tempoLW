@@ -12,5 +12,6 @@
     <include file="2019-04-13-add-subject-locale.xml" relativeToChangelogFile="true"/>
     <include file="2019-04-15-testee-expiration.xml" relativeToChangelogFile="true"/>
     <include file="2019-05-21-result-order-fix.xml" relativeToChangelogFile="true"/>
+    <include file="2019-07-07-add-exm-to-testee.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

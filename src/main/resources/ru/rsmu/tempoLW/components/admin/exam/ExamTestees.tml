@@ -7,7 +7,7 @@
             <h4>${message:exam} ${exam.name}</h4>
         </div>
 
-        <t:grid t:id="testeesGrid" source="exam.testees" row="testee"
+        <t:grid t:id="testeesGrid" source="testees" row="testee"
                 exclude="id,firstName,middleName,login,password,expirationDate,credentialsExpired"
                 add="testResult,printStatement" class="table table-bordered table-hover"
                 rowsPerPage="50" pagerPosition="bottom"

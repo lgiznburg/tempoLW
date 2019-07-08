@@ -11,6 +11,7 @@ import ru.rsmu.tempoLW.dao.TesteeDao;
 import ru.rsmu.tempoLW.dao.UserDao;
 import ru.rsmu.tempoLW.consumabales.FileNameTransliterator;
 import ru.rsmu.tempoLW.entities.ExamSchedule;
+import ru.rsmu.tempoLW.entities.ExamToTestee;
 import ru.rsmu.tempoLW.entities.Testee;
 
 import java.io.ByteArrayOutputStream;
@@ -55,29 +56,34 @@ public class ExamLoginRecords {
         );
         // check for already assigned passwords ??
 
-        exam.getTestees().sort( new Comparator<Testee>() {
+        exam.getExamToTestees().sort( new Comparator<ExamToTestee>() {
             @Override
-            public int compare( Testee o1, Testee o2 ) {
-                return o1.getLastName().compareTo( o2.getLastName() );
+            public int compare( ExamToTestee o1, ExamToTestee o2 ) {
+                return o1.getTestee().getLastName().compareTo( o2.getTestee().getLastName() );
             }
         } );
-        for ( Testee testee : exam.getTestees() ) {
+        for ( ExamToTestee examToTestee : exam.getExamToTestees() ) {
             String password = RandomStringUtils.randomAlphanumeric( 8 )
                     .replace( 'l', 'k' )
                     .replace( 'I', 'N' )
                     .replace( '1', '7' ); //exclude symbols which can be miss read
-            testee.setPassword( userDao.encrypt( password ) );
+            examToTestee.setPassword( userDao.encrypt( password ) );
             Calendar expDate = Calendar.getInstance();
             expDate.setTime( exam.getExamDate() );
             expDate.add( Calendar.DAY_OF_YEAR, 1 );
-            testee.setExpirationDate( expDate.getTime() );
-            docContent.add( RtfPara.row( testee.getCaseNumber(), testee.getLastName(), testee.getLastName(), testee.getLogin(), password )
+            //examToTestee.setExpirationDate( expDate.getTime() );
+            docContent.add( RtfPara.row(
+                    examToTestee.getTestee().getCaseNumber(),
+                    examToTestee.getTestee().getLastName(),
+                    examToTestee.getTestee().getLastName(),
+                    examToTestee.getTestee().getLogin(), password
+            )
                     .bottomCellBorder()
                     .leftCellBorder()
                     .topCellBorder()
                     .rightCellBorder()
                     .cellSpace( 0.4, RtfUnit.CM ) );
-            testeeDao.save( testee );
+            testeeDao.save( examToTestee );
         }
 
         ByteArrayOutputStream document = new ByteArrayOutputStream();

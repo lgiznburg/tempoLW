@@ -5,6 +5,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -31,12 +32,12 @@ public class ExamSchedule implements Serializable {
     @NotNull
     private TestingPlan testingPlan;
 
-    @ManyToMany
-    @JoinTable( name = "exam_testees",
+    @ManyToMany( mappedBy = "exam", cascade = CascadeType.ALL)
+    /*@JoinTable( name = "exam_testees",
             joinColumns = @JoinColumn(name = "exam_id"),
             inverseJoinColumns = @JoinColumn(name = "testee_id")
-    )
-    private List<Testee> testees;
+    )*/
+    private List<ExamToTestee> examToTestees;
 
     @Column
     @NotEmpty
@@ -72,17 +73,30 @@ public class ExamSchedule implements Serializable {
         this.testingPlan = testingPlan;
     }
 
+/*
     public List<Testee> getTestees() {
         return testees;
     }
+*/
 
     public void setTestees( List<Testee> testees ) {
-        this.testees = testees;
+        //this.testees = testees;
+        addTestees( testees );
     }
 
     /** add single testee to schedule */
     public void addTestee (Testee testee) {
-        this.testees.add(testee);
+        List<Testee> testees = new ArrayList<>();
+        testees.add( testee );
+        addTestees( testees );
+    }
+
+    public List<ExamToTestee> getExamToTestees() {
+        return examToTestees;
+    }
+
+    public void setExamToTestees( List<ExamToTestee> examToTestees ) {
+        this.examToTestees = examToTestees;
     }
 
     public String getName() {
@@ -125,5 +139,27 @@ public class ExamSchedule implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash( id, examDate, testingPlan, name, durationHours, durationMinutes );
+    }
+
+    private void addTestees( List<Testee> testees ) {
+        for ( Testee testee : testees ) {
+            if ( examToTestees == null ) {
+                examToTestees = new ArrayList<>();
+            }
+            ExamToTestee examToTestee = null;
+            for ( ExamToTestee existed : examToTestees ) {
+                if ( existed.getTestee().equals( testee ) ) {
+                    examToTestee = existed;
+                    break;
+                }
+            }
+            if ( examToTestee != null ) {
+                continue;
+            }
+            examToTestee = new ExamToTestee();
+            examToTestee.setExam( this );
+            examToTestee.setTestee( testee );
+            this.examToTestees.add( examToTestee );
+        }
     }
 }

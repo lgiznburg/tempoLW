@@ -73,12 +73,7 @@ public class ExamUploadTestees {
             if ( file.getFileName().matches( ".*\\.xlsx?" ) ) {
                 TesteeLoader loader = new TesteeLoader( testeeDao );
                 List<Testee> testees = loader.loadTestee( file.getStream(), file.getFileName().matches( ".*\\.xls" ) );
-                if ( exam.getTestees() == null ) {
-                    exam.setTestees( testees );
-                }
-                else {
-                    exam.getTestees().addAll( testees );
-                }
+                exam.setTestees( testees );
                 examDao.save( exam );
             }
             // We want to tell our containing page explicitly what upload has done, so we trigger a new event with a
