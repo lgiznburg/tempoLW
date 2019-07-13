@@ -154,7 +154,7 @@ public class AppealStatement {
                     textTitleCell.setCellValue( "Текст задания:" );
                     CellUtil.setCellStyleProperty(textTitleCell, CellUtil.ALIGNMENT, HorizontalAlignment.RIGHT);
                     CellUtil.setFont(textTitleCell, styles.getBoldFont());
-                    sheet.addMergedRegion(new CellRangeAddress(rownum-1,rownum-1,1,2));
+                    //sheet.addMergedRegion(new CellRangeAddress(rownum-1,rownum-1,1,2));
                     Cell textValueCell = CellUtil.createCell(row, 1, questionResult.getQuestion().getText());
                     CellUtil.setCellStyleProperties(textValueCell, borders);
 
@@ -520,12 +520,26 @@ public class AppealStatement {
 
 
                     row = sheet.createRow(rownum++);
-                    Cell ballTitleCell = row.createCell(0);
+                    Cell scoreTitleCell = row.createCell(0);
+                    scoreTitleCell.setCellStyle( markStyle );
+                    scoreTitleCell.setCellValue( "Исходный балл:" );
+                    CellUtil.setCellStyleProperty(scoreTitleCell, CellUtil.ALIGNMENT, HorizontalAlignment.RIGHT);
+                    CellUtil.setFont(scoreTitleCell, styles.getBoldFont());
+                    cell = row.createCell(1);
+                    cell.setCellStyle( styles.getBodyStyle() );
+                    cell.setCellValue(
+                            String.format( "%d (из %d) * %d",
+                                    questionResult.getScore(),
+                                    questionResult.getQuestion().getQuestionInfo().getMaxScore(),
+                                    questionResult.getScoreCost() )
+                    );
+
+                    Cell ballTitleCell = row.createCell(2);
                     ballTitleCell.setCellStyle( markStyle );
-                    ballTitleCell.setCellValue( "Балл:" );
+                    ballTitleCell.setCellValue( "Оценка:" );
                     CellUtil.setCellStyleProperty(ballTitleCell, CellUtil.ALIGNMENT, HorizontalAlignment.RIGHT);
                     CellUtil.setFont(ballTitleCell, styles.getBoldFont());
-                    cell = row.createCell(1);
+                    cell = row.createCell(3);
                     cell.setCellStyle( styles.getBodyStyle() );
                     cell.setCellValue( questionResult.getMark() );
 
