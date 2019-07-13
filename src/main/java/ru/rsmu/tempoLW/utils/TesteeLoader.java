@@ -34,6 +34,15 @@ public class TesteeLoader extends ExcelReader {
 
 
     public List<Testee> loadTestee( InputStream input, boolean excel2007 ) throws IOException {
+        return doLoadTestee( input, excel2007, true );
+    }
+
+    public List<Testee> findTestee( InputStream input, boolean excel2007 ) throws IOException {
+        return doLoadTestee( input, excel2007, false );
+    }
+
+
+    private List<Testee> doLoadTestee( InputStream input, boolean excel2007, boolean createNewTestee ) throws IOException {
         Workbook wb;
         if ( excel2007 ) {
             wb = new HSSFWorkbook( input );
@@ -63,7 +72,9 @@ public class TesteeLoader extends ExcelReader {
                 testee.setCaseNumber( caseNumber );
                 testee.setLastName( getCellValue( row, FULL_NAME_CELL ) );
                 testee.setLogin( createLogin( caseNumber ) );
-                testeeDao.save( testee );
+                if ( createNewTestee ) {
+                    testeeDao.save( testee );
+                }
             }
 
             testees.add( testee );
@@ -71,10 +82,11 @@ public class TesteeLoader extends ExcelReader {
         } while ( true );
 
         return testees;
+
     }
 
     public String createLogin( String caseNumber ) {
-        Long number = Long.parseLong( caseNumber );
+        long number = Long.parseLong( caseNumber );
         String numberCode = Long.toHexString( number );
         String random = RandomStringUtils.randomAlphanumeric( 4 ).toLowerCase();
         random = random.replace( 'l', 'k' ).replace( 'I', 'U' );

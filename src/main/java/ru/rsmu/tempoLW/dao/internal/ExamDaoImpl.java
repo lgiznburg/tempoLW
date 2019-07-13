@@ -66,4 +66,12 @@ public class ExamDaoImpl extends BaseDaoImpl implements ExamDao {
                 .setMaxResults( 1 );
         return (ExamResult) criteria.uniqueResult();
     }
+
+    @Override
+    public List<ExamResult> findExamResultsForSubject( ExamSubject subject ) {
+        Criteria criteria = session.createCriteria( ExamResult.class )
+                .createAlias( "testingPlan", "testingPlan" )
+                .add( Restrictions.eq( "testingPlan.subject", subject ) );
+        return criteria.list();
+    }
 }

@@ -41,4 +41,8 @@ public class ExamReview {
         }
         return false;
     }
+
+    public boolean isAfterExamDate() {
+        return exam != null && exam.getExamDate().before( new Date() );
+    }
 }
