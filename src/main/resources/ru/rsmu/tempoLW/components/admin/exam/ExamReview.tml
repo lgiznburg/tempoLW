@@ -55,6 +55,10 @@
                     <t:pagelink page="admin/examloginrecords" class="btn btn-primary"
                                 context="exam">${message:exam-print-logins}</t:pagelink>
                 </t:if>
+                <t:if test="afterExamDate">
+                    <t:pagelink page="admin/examresultexport" class="btn btn-primary"
+                                context="exam">${message:exam-export-scores}</t:pagelink>
+                </t:if>
             </t:security.hasrole>
             <!-- delete -->
         </div>

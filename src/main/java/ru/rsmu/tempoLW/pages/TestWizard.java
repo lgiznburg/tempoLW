@@ -53,11 +53,14 @@ public class TestWizard {
 
     public Object onActivate() {
         if ( examResult == null || examResult.getQuestionResults() == null ) {
-            return Index.class;
+            return Index.class;  // no exam
         }
         Testee testee = securityUserHelper.getCurrentTestee();
         if ( testee != null && (examResult.getTestee() == null || examResult.getTestee().getId() != testee.getId()) ) {
-            return Index.class;
+            return Index.class;  // exam and testee do not match
+        }
+        if ( examResult.isFinished() ) {  // protect from changing results after exam finish
+            return TestFinal.class;
         }
         if ( examResult.getId() > 0 ) {
             //proof lazy init exception
@@ -87,6 +90,16 @@ public class TestWizard {
         current = examResult.getQuestionResults().get( questionNumber );
         if ( current.getElements() == null ) {
             current.setElements( new LinkedList<>() );
+        }
+        // lazy init for Correspondence and Tree questions
+        Question question = current.getQuestion();
+        if ( question instanceof QuestionCorrespondence &&
+                !Hibernate.isInitialized( ((QuestionCorrespondence)question).getCorrespondenceVariants() ) ) {
+            examDao.refresh( question );
+        }
+        if ( question instanceof QuestionTree &&
+                !Hibernate.isInitialized( ((QuestionTree)question).getCorrespondenceVariants() ) ) {
+            examDao.refresh( question );
         }
         return null;
     }
