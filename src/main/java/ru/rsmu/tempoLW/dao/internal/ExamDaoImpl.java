@@ -68,6 +68,13 @@ public class ExamDaoImpl extends BaseDaoImpl implements ExamDao {
     }
 
     @Override
+    public List<ExamResult> findResultsForTestee( Testee testee ) {
+        Criteria criteria = session.createCriteria( ExamResult.class )
+                .add( Restrictions.eq( "testee", testee ) );
+        return (List<ExamResult>) criteria.list();
+    }
+
+    @Override
     public List<ExamResult> findExamResultsForSubject( ExamSubject subject ) {
         Criteria criteria = session.createCriteria( ExamResult.class )
                 .createAlias( "testingPlan", "testingPlan" )

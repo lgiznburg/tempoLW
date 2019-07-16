@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html t:type="layout" t:pageTitle="${message:findresults-pagetitle}"
+      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
+      xmlns:p="tapestry:parameter">
+<div>
+    <div class="row">
+        <h2>${message:findresults}</h2>
+    </div>
+    <div class="row">
+        <t:form t:id="searchResultsForm" class="form-inline">
+            <div class="col-sm-7">
+                <t:label for="searchcasenumber">${message:casenumber}</t:label>
+            </div>
+            <div class="col-lg-6">
+                <div class="input-group">
+                    <t:textfield value="casenumber" t:id="searchcasenumber" pattern="[0-9]{9}" class="form-control"/>
+                    <span class="input-group-btn">
+                        <input type="submit" class="btn btn-primary" value="${message:find}"/>
+                    </span>
+                </div>
+            </div>
+        </t:form>
+    </div>
+    <div>
+        <t:if test="isMode('REVIEW')">
+            <t:admin.ResultsTable testee="testee" t:id="resultsTable"/>
+        </t:if>
+    </div>
+</div>
+
+
+
+</html>

@@ -69,20 +69,20 @@ public class ExamResult implements Serializable {
         this.endTime = endTime;
     }
 
-    public int getMarkTotal() {
-        return markTotal;
-    }
-
-    public void setMarkTotal( int markTotal ) {
-        this.markTotal = markTotal;
-    }
-
     public String getTitle() {
         return title;
     }
 
     public void setTitle( String title ) {
         this.title = title;
+    }
+
+    public int getMarkTotal() {
+        return markTotal;
+    }
+
+    public void setMarkTotal( int markTotal ) {
+        this.markTotal = markTotal;
     }
 
     public List<QuestionResult> getQuestionResults() {
