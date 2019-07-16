@@ -18,6 +18,7 @@ public interface ExamDao extends BaseDao {
     List<ExamResult> findExamResults( ExamSchedule exam );
 
     ExamResult findExamResultForTestee( ExamSchedule exam, Testee testee );
+    List<ExamResult> findResultsForTestee( Testee testee );
 
     List<ExamResult> findExamResultsForSubject( ExamSubject subject );
 }
