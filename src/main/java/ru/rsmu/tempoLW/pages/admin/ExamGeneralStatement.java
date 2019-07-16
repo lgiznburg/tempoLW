@@ -88,22 +88,31 @@ public class ExamGeneralStatement {
         propertyValue.cloneStyleFrom(propertyName);
         propertyValue.setFont(defaultFont);
 
-        //row with the title of statement
+        //row with the header
         Row rowTitle = sheet.createRow(0);
         sheet.addMergedRegion(new CellRangeAddress(0,0,0,3));
-        Cell cellHead = CellUtil.createCell(rowTitle,0, "Результаты экзамена абитуриентов");
+        Cell cellHead = CellUtil.createCell(rowTitle,0, "Российский национальный исследовательский медицинский университет им. Н.И. Пирогова Минздрава России");
+        CellUtil.setAlignment(cellHead, HorizontalAlignment.CENTER);
+        CellUtil.setFont(cellHead, bold);
+
+        //row with the title of statement
+        rowTitle = sheet.createRow(1);
+        sheet.addMergedRegion(new CellRangeAddress(1,1,1,3));
+        cellHead = CellUtil.createCell(rowTitle,0, "Результаты экзамена абитуриентов");
         CellUtil.setAlignment(cellHead, HorizontalAlignment.CENTER);
         CellUtil.setFont(cellHead, bold);
         propertyName.setAlignment(HorizontalAlignment.RIGHT);
 
         //row with the name of exam
-        Row rowExamName = sheet.createRow(1);
+/*
+        Row rowExamName = sheet.createRow(2);
         Cell cellExamNameTitle = rowExamName.createCell(1);
         cellExamNameTitle.setCellStyle(propertyName);
         cellExamNameTitle.setCellValue("Название экзамена:");
         Cell cellExamNameValue = rowExamName.createCell(2);
         cellExamNameValue.setCellStyle(propertyValue);
         cellExamNameValue.setCellValue(exam.getName());
+*/
 
         //row with subject
         Row rowExamSubject = sheet.createRow(2);
@@ -115,6 +124,7 @@ public class ExamGeneralStatement {
         cellExamSubjectValue.setCellValue(exam.getTestingPlan().getSubject().getTitle());
 
         //row with language
+/*
         Row rowExamLocale = sheet.createRow(3);
         Cell cellExamLocaleTitle = rowExamLocale.createCell(1);
         cellExamLocaleTitle.setCellStyle(propertyName);
@@ -122,9 +132,10 @@ public class ExamGeneralStatement {
         Cell cellExamLocaleValue = rowExamLocale.createCell(2);
         cellExamLocaleValue.setCellStyle(propertyValue);
         cellExamLocaleValue.setCellValue(exam.getTestingPlan().getSubject().getLocale().equals("ru") ? "русский" : "английский");
+*/
 
         //row with the date of exam
-        Row rowExamDate = sheet.createRow(4);
+        Row rowExamDate = sheet.createRow(3);
         Cell cellExamDateTitle = rowExamDate.createCell(1);
         cellExamDateTitle.setCellStyle(propertyName);
         cellExamDateTitle.setCellValue("Дата экзамена:");
@@ -133,13 +144,13 @@ public class ExamGeneralStatement {
         cellExamDateValue.setCellValue(new SimpleDateFormat("dd.MM.yyyy").format(exam.getExamDate()));
 
         //empty row
-        Row rowEmpty = sheet.createRow(5);
+        Row rowEmpty = sheet.createRow(4);
         Cell cellEmpty = rowEmpty.createCell(0);
         cellEmpty.setCellType(CellType.BLANK);
 
         //fill result table
 
-        int rownum = 6;
+        int rownum = 5;
         //result table header
         Row row = sheet.createRow(rownum++);
         Cell cell = row.createCell(0);

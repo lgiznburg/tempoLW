@@ -26,7 +26,7 @@ public class CorrespondenceVariant implements Serializable, Comparable<Correspon
     @Type( type = "org.hibernate.type.TextType" )
     private String text = "";
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable( name = "correspondence_answers",
             joinColumns = @JoinColumn(name = "correspondence_id"),
             inverseJoinColumns = @JoinColumn(name = "answer_id")
