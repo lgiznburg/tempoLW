@@ -149,16 +149,23 @@ public class ExamTesteeResult {
                 XSSFWorkbook workbook = new XSSFWorkbook();
                 XSSFSheet sheet = workbook.createSheet(testee.getCaseNumber());
                 ExcelStyles styles = new ExcelStyles( workbook );
-                //row w/ title
+                //row with the header
                 Row rowTitle = sheet.createRow(0);
                 sheet.addMergedRegion(new CellRangeAddress(0,0,0,2));
-                Cell cellHead = CellUtil.createCell(rowTitle,0, "Результаты вступительных испытаний абитуриента");
+                Cell cellHead = CellUtil.createCell(rowTitle,0, "Российский национальный исследовательский медицинский университет им. Н.И. Пирогова Минздрава России");
+                CellUtil.setAlignment(cellHead, HorizontalAlignment.CENTER);
+                CellUtil.setFont(cellHead, styles.getBoldFont());
+
+                //row w/ title
+                rowTitle = sheet.createRow(1);
+                sheet.addMergedRegion(new CellRangeAddress(1,1,0,2));
+                cellHead = CellUtil.createCell(rowTitle,0, "Результаты вступительных испытаний абитуриента");
                 CellUtil.setAlignment(cellHead, HorizontalAlignment.CENTER);
                 CellUtil.setFont(cellHead, styles.getBoldFont());
 
                 //row w/ testee name
-                Row rowExamName = sheet.createRow(1);
-                sheet.addMergedRegion(new CellRangeAddress(1,1,1,2));
+                Row rowExamName = sheet.createRow(2);
+                sheet.addMergedRegion(new CellRangeAddress(2,2,1,2));
                 Cell cellExamNameTitle = rowExamName.createCell(0);
                 cellExamNameTitle.setCellStyle( styles.getPropertyNameStyle());
                 cellExamNameTitle.setCellValue("ФИО абитуриента:");
@@ -166,8 +173,8 @@ public class ExamTesteeResult {
                 CellUtil.setFont(cellExamNameValue, styles.getDefaultFont());
 
                 //row with subject
-                Row rowExamSubject = sheet.createRow(2);
-                sheet.addMergedRegion(new CellRangeAddress(2,2,1,2));
+                Row rowExamSubject = sheet.createRow(3);
+                sheet.addMergedRegion(new CellRangeAddress(3,3,1,2));
                 Cell cellExamSubjectTitle = rowExamSubject.createCell(0);
                 cellExamSubjectTitle.setCellStyle( styles.getPropertyNameStyle());
                 cellExamSubjectTitle.setCellValue("Предмет:");
@@ -175,6 +182,7 @@ public class ExamTesteeResult {
                 CellUtil.setFont(cellExamSubjectValue, styles.getDefaultFont());
 
                 //row with language
+/*
                 Row rowExamLocale = sheet.createRow(3);
                 sheet.addMergedRegion(new CellRangeAddress(3,3,1,2));
                 Cell cellExamLocaleTitle = rowExamLocale.createCell(0);
@@ -182,6 +190,7 @@ public class ExamTesteeResult {
                 cellExamLocaleTitle.setCellValue("Язык:");
                 Cell cellExamLocaleValue = CellUtil.createCell(rowExamLocale, 1, exam.getTestingPlan().getSubject().getLocale().equals("ru") ? "русский" : "английский");
                 CellUtil.setFont(cellExamLocaleValue, styles.getDefaultFont());
+*/
 
                 //row with the date of exam
                 Row rowExamDate = sheet.createRow(4);

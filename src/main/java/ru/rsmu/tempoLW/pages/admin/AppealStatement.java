@@ -155,7 +155,7 @@ public class AppealStatement {
                     CellUtil.setCellStyleProperty(textTitleCell, CellUtil.ALIGNMENT, HorizontalAlignment.RIGHT);
                     CellUtil.setFont(textTitleCell, styles.getBoldFont());
                     //sheet.addMergedRegion(new CellRangeAddress(rownum-1,rownum-1,1,2));
-                    Cell textValueCell = CellUtil.createCell(row, 1, questionResult.getQuestion().getText());
+                    Cell textValueCell = CellUtil.createCell(row, 2, questionResult.getQuestion().getText());
                     CellUtil.setCellStyleProperties(textValueCell, borders);
 
                     /*
@@ -243,7 +243,7 @@ public class AppealStatement {
 
                         if (answerVariants != null) {
                             for (AnswerVariant answerVariant : answerVariants) {
-                                if (answerVariant.isCorrect()) {
+                                //if (answerVariant.isCorrect()) {  // for Open question each answer variant is correct
                                     row = sheet.createRow(rownum++);
                                     Cell correctTitleCell = row.createCell(0);
                                     correctTitleCell.setCellStyle(markStyle);
@@ -255,7 +255,7 @@ public class AppealStatement {
                                     cell = row.createCell(2);
                                     cell.setCellStyle( styles.getBodyStyle());
                                     cell.setCellValue(answerVariant.getReadableText());
-                                }
+                                //}
                             }
                         }
 
@@ -391,7 +391,7 @@ public class AppealStatement {
                         orderResults.sort(new Comparator<ResultSimpleOrder>() {
                             @Override
                             public int compare( ResultSimpleOrder o1, ResultSimpleOrder o2 ) {
-                                return Integer.valueOf(o1.getEnteredOrder()).compareTo(Integer.valueOf(o2.getEnteredOrder()));
+                                return Integer.compare( o1.getEnteredOrder(), o2.getEnteredOrder() );
                             }
                         });
 
@@ -446,7 +446,7 @@ public class AppealStatement {
                             }
                         }
 
-                        if (resultsTree != null) {
+                        if (!resultsTree.isEmpty()) {
                             for(CorrespondenceVariant var : allVariants) {
                                 List<AnswerVariant> correspondenceAnswers = var.getCorrectAnswers();
                                 List<AnswerVariant> correctAnswers = new ArrayList<>();
