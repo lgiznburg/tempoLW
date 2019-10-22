@@ -110,6 +110,14 @@ public class QuestionResult implements Serializable {
         this.orderNumber = orderNumber;
     }
 
+    public Date getUpdated() {
+        return updated;
+    }
+
+    public void setUpdated( Date updated ) {
+        this.updated = updated;
+    }
+
     public void checkCorrectness() {
         if ( elements != null && elements.size() > 0 ) {
             elements.forEach( ResultElement::checkCorrectness );

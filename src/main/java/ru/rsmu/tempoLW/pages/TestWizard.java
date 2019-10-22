@@ -75,12 +75,6 @@ public class TestWizard {
                 examDao.save( examResult );
             }
         }
-        else if ( examResult.isExamMode() && getEstimatedEndTime().before( new Date() ) ) {
-            // check time - if testee used "Next/Prev question" button
-            examResult.setEndTime( new Date() );
-            examDao.save( examResult );
-            return TestFinal.class;
-        }
 
         if ( questionNumber < 0 ||
                 questionNumber >= examResult.getQuestionResults().size() ) {
@@ -106,6 +100,7 @@ public class TestWizard {
 
     public Object onSuccess() {
         current.checkCorrectness();
+        current.setUpdated( new Date() );
 
         //save only existed result
         if ( examResult.getId() > 0 ) {
@@ -122,6 +117,12 @@ public class TestWizard {
     }
 
     public Object onNextQuestion() {
+        if ( examResult.isExamMode() && getEstimatedEndTime().before( new Date() ) ) {
+            // check time - if testee used "Next/Prev question" button
+            examResult.setEndTime( new Date() );
+            examDao.save( examResult );
+            return TestFinal.class;
+        }
         if ( examResult.getQuestionResults().size()-1 > questionNumber ) {
             questionNumber++;
         }
@@ -129,6 +130,12 @@ public class TestWizard {
     }
 
     public Object onPrevQuestion() {
+        if ( examResult.isExamMode() && getEstimatedEndTime().before( new Date() ) ) {
+            // check time - if testee used "Next/Prev question" button
+            examResult.setEndTime( new Date() );
+            examDao.save( examResult );
+            return TestFinal.class;
+        }
         if ( questionNumber > 0 ) {
             questionNumber--;
         }

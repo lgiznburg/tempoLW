@@ -96,6 +96,10 @@ public class ExamCreateTestee {
     boolean onValidateFromAddTesteeForm() {
         if ( this.caseNumber != null && !this.lastName.isEmpty() && !this.firstName.isEmpty() && !this.middleName.isEmpty() ) {
 
+            Testee existedOne = testeeDao.findByCaseNumber( caseNumber );
+            if ( existedOne != null ) {
+                testee = existedOne;
+            }
             if ( testee.getId() == 0 ) {
                 testee.setCaseNumber(caseNumber);
                 testee.setLastName(lastName + " " + firstName + " " + middleName);
