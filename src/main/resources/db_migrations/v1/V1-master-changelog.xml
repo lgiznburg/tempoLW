@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                   http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <include file="2019-03-30-exam-schedule.xml" relativeToChangelogFile="true"/>
+    <include file="2019-04-12-add-exam-to-result.xml" relativeToChangelogFile="true"/>
+    <include file="2019-04-13-add-subject-locale.xml" relativeToChangelogFile="true"/>
+    <include file="2019-04-15-testee-expiration.xml" relativeToChangelogFile="true"/>
+    <include file="2019-05-21-result-order-fix.xml" relativeToChangelogFile="true"/>
+    <include file="2019-07-07-add-exm-to-testee.xml" relativeToChangelogFile="true"/>
+
+</databaseChangeLog>

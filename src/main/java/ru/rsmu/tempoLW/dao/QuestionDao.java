@@ -20,7 +20,9 @@ public interface QuestionDao extends BaseDao {
     List<Question> findRandomQuestions( TestingPlanRule rule );
 
     List<TestingPlan> findTestingPlans();
+    List<TestingPlan> findTestingPlans( String language );
     List<TestingPlan> findTestingPlan( ExamSubject subject );
+    List<TestingPlan> findTestingPlans( List<ExamSubject> subjects );
 
     List<SubTopic> findTopicsOfSubject( ExamSubject subject );
 
@@ -29,4 +31,6 @@ public interface QuestionDao extends BaseDao {
     long findTopicsCount( ExamSubject subject );
 
     Question findQuestionByFilter( SubTopic topic, Integer complexity, Integer maxScore, String text );
+
+    List<Question> findSubjectQuestions( ExamSubject subject );
 }

@@ -39,7 +39,7 @@
             <t:if test="questionOpen">
                 <ul>
                     <t:loop source="simpleAnswers" value="answer">
-                        <li><span class="alert-success">${answer.text}</span></li>
+                        <li><span class="alert-success">${answer.readableText}</span></li>
                     </t:loop>
                 </ul>
             </t:if>

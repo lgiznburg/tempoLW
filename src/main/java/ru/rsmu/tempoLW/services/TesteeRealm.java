@@ -10,11 +10,17 @@ import org.apache.shiro.crypto.hash.Md5Hash;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.tapestry5.hibernate.HibernateSessionManager;
+import org.apache.tapestry5.ioc.Messages;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
+import ru.rsmu.tempoLW.entities.ExamSchedule;
+import ru.rsmu.tempoLW.entities.ExamToTestee;
 import ru.rsmu.tempoLW.entities.Testee;
 import ru.rsmu.tempoLW.entities.auth.UserRoleName;
+import ru.rsmu.tempoLW.utils.PasswordEncoder;
 
+import java.security.NoSuchAlgorithmException;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,10 +30,12 @@ import java.util.Set;
 public class TesteeRealm extends AuthorizingRealm {
 
     private final HibernateSessionManager sessionManager;
+    private final Messages messages;
 
-    public TesteeRealm( HibernateSessionManager sessionManager ) {
+    public TesteeRealm( HibernateSessionManager sessionManager, Messages messages ) {
         super(new MemoryConstrainedCacheManager());
         this.sessionManager = sessionManager;
+        this.messages = messages;
         setName("testeeAccounts");
         setAuthenticationTokenClass( UsernamePasswordToken.class);
         setCredentialsMatcher(new HashedCredentialsMatcher( Md5Hash.ALGORITHM_NAME));
@@ -63,18 +71,42 @@ public class TesteeRealm extends AuthorizingRealm {
             return null;
         }
 
-        //if ( !testee.isEnabled() ) { throw new LockedAccountException("Account [" + login + "] is locked."); }
-        /*iif (testee.isCredentialsExpired()) {
-            String msg = "The credentials for account [" + login + "] are expired";
+        ExamToTestee examToTestee = null;
+        try {
+            examToTestee = checkCurrentExam( testee, PasswordEncoder.encrypt( new String( upToken.getPassword() ) ) );
+            if ( examToTestee == null ) {
+                throw new LockedAccountException( messages.get( "realm.account-locked" ) ); //"Account [" + login + "] is locked."
+            }
+        } catch (NoSuchAlgorithmException e) { // really? is it even possible?
+            throw new LockedAccountException( messages.get( "realm.account-locked" ) ); //"Account [" + login + "] is locked."
+        }
+        // expired feature doesn't work, isn't actual
+        /*if (testee.isCredentialsExpired()) {
+            String msg = messages.get( "realm.account-expired" ); //"The credentials for account [" + login + "] are expired";
             throw new ExpiredCredentialsException(msg);
         }*/
-        return new SimpleAuthenticationInfo(login, testee.getPassword(), /*new SimpleByteSource(testee.getPasswordSalt()),*/ getName());
+        if ( ((UsernamePasswordToken) token).isRememberMe() ) {
+            //remember me is not allowed for testees
+            ((UsernamePasswordToken) token).setRememberMe( false );
+        }
+        return new SimpleAuthenticationInfo(login, examToTestee.getPassword(), /*new SimpleByteSource(testee.getPasswordSalt()),*/ getName());
     }
 
     private Testee findByUsername( String login ) {
         Criteria criteria = sessionManager.getSession().createCriteria( Testee.class )
                 .add( Restrictions.eq( "login", login ) );
         return (Testee) criteria.uniqueResult();
+    }
+
+    private ExamToTestee checkCurrentExam( Testee testee, String password ) {
+        Criteria criteria = sessionManager.getSession().createCriteria( ExamToTestee.class )
+                .createAlias( "exam", "exam" )
+                .createAlias( "testee", "testee" )
+                .add( Restrictions.eq( "exam.examDate", new Date() ) )
+                .add( Restrictions.eq( "testee.id", testee.getId() ) )
+                .add( Restrictions.eq( "password", password ) )
+                .setMaxResults( 1 );
+        return (ExamToTestee) criteria.uniqueResult();
     }
 
 }

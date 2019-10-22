@@ -58,6 +58,9 @@ public class TestingPlanRule implements Serializable, Comparable<TestingPlanRule
     @Formula( "max_score * score_cost" )
     private int maxMark;
 
+    @Formula( "question_count * score_cost * max_score" )
+    private int totalRuleMark;
+
     public long getId() {
         return id;
     }
@@ -126,7 +129,14 @@ public class TestingPlanRule implements Serializable, Comparable<TestingPlanRule
         return maxMark;
     }
 
-    public void setMaxMark( int maxMark ) {
+    public int getTotalRuleMark() {
+        //this.totalRuleMark = questionCount * maxMark;
+        return totalRuleMark;
+    }
+
+    public void setTotalRuleMark(int totalRuleMark) { this.totalRuleMark = totalRuleMark; }
+
+    public void setMaxMark(int maxMark ) {
         this.maxMark = maxMark;
     }
 

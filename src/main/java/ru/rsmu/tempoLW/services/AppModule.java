@@ -1,5 +1,6 @@
 package ru.rsmu.tempoLW.services;
 
+import com.anjlab.tapestry5.services.liquibase.LiquibaseModule;
 import org.apache.shiro.codec.Base64;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.realm.Realm;
@@ -17,6 +18,7 @@ import org.tynamo.security.SecuritySymbols;
 import org.tynamo.security.services.SecurityFilterChainFactory;
 import org.tynamo.security.services.impl.SecurityFilterChain;
 import ru.rsmu.tempoLW.dao.HibernateModule;
+import com.anjlab.tapestry5.services.liquibase.AutoConfigureLiquibaseDatasourceModule;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
@@ -25,13 +27,15 @@ import java.security.SecureRandom;
  * @author leonid.
  */
 @ImportModule( {
+        //LiquibaseModule.class,
+        //AutoConfigureLiquibaseDatasourceModule.class,
         HibernateModule.class
 } )
 public class AppModule {
 
     @ApplicationDefaults
     @Contribute(SymbolProvider.class)
-    public static void configureTapestryHotelBooking(
+    public static void configureTempoLW(
             MappedConfiguration<String, String> configuration)
     {
 
@@ -61,6 +65,9 @@ public class AppModule {
         //create rememberMe cipher key, 16 bytes long
         byte[] cipherKeySource = {10, 33, 28, 77, 48, 115, 3, 47, 109, 75, 55, 55, 68, 121, 19, 63};
         configuration.add( SecuritySymbols.REMEMBERME_CIPHERKERY, Base64.encodeToString( cipherKeySource ) );
+
+        // provide liquibase integration with master changelog file
+        configuration.add( LiquibaseModule.LIQUIBASE_CHANGELOG, "db_migrations/change_log.xml");
     }
 
     /*
@@ -88,10 +95,9 @@ public class AppModule {
 
     public static void bind(ServiceBinder binder) {
         binder.bind(AuthorizingRealm.class, UserDetailsRealm.class).withId(UserDetailsRealm.class.getSimpleName());
+        binder.bind( AuthorizingRealm.class, TesteeRealm.class ).withId( TesteeRealm.class.getSimpleName() );
 
         binder.bind( SecurityUserHelper.class );
-
-        //binder.bind( LiquidbaseService.class, LiquibaseServiceImpl.class );
 
     }
 
@@ -104,26 +110,11 @@ public class AppModule {
         configuration.add("anon", factory.createChain("/**").add(factory.anon()).build());
     }
 
-    public static void contributeWebSecurityManager(Configuration<Realm> configuration, @InjectService("UserDetailsRealm") AuthorizingRealm userRealm) {
+    public static void contributeWebSecurityManager(Configuration<Realm> configuration,
+                                                    @InjectService("UserDetailsRealm") AuthorizingRealm userRealm,
+                                                    @InjectService( "TesteeRealm" ) AuthorizingRealm testeeRealm ) {
         configuration.add(userRealm);
+        configuration.add( testeeRealm );
     }
 
-    /*public static void contributeRegistryStartup(
-            final Logger logger, final LiquidbaseService liquibaseService,
-            OrderedConfiguration<Runnable> configuration)
-    {
-        configuration.add("Liquibase", new Runnable()
-        {
-            public void run()
-            {
-                logger.info("Updating database by liquibase service...");
-                try {
-                    liquibaseService.update();
-                } catch (Exception e) {
-                    logger.error( "Liquibase exception", e );
-                }
-                logger.info("update-db done.");
-            }
-        }, "before:HibernateStartup");
-    }*/
 }

@@ -1,8 +1,8 @@
-<html t:type="layout" t:pageTitle="Администрирование:Редактирование предмета"
+<html t:type="layout" t:pageTitle="${message:questionedit-pagetitle}"
       xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
-      xmlns:p="tapestry:parameter">
+      xmlns:p="tapestry:parameter"><!-- Администрирование:Редактирование предмета -->
 <div class="row">
-    <h2>${question.questionInfo.subject.title} : Edit Question </h2>
+    <h2>${question.questionInfo.subject.title} : ${message:edit} ${message:question} </h2>
 </div>
 
 <div>
@@ -51,7 +51,7 @@
             </div>
             <t:if test="question.image">
                 <div class="col-sm-3">
-                    <t:eventlink t:id="deleteImage" event="deleteImage" class="btn btn-default">Delete image</t:eventlink>
+                    <t:eventlink t:id="deleteImage" event="deleteImage" class="btn btn-default">${message:delete-image}</t:eventlink>
                 </div>
             </t:if>
 
@@ -66,8 +66,8 @@
 
         <div class="form-group">
             <div class="col-sm-6 col-sm-offset-3">
-                <input type="submit" class="btn btn-primary" value="Save"/>&nbsp;
-                <t:pagelink page="admin/previewquestion" context="[question.questionInfo.subject,question]" class="btn btn-default">Cancel</t:pagelink>
+                <input type="submit" class="btn btn-primary" value="${message:save}"/>&nbsp;
+                <t:pagelink page="admin/previewquestion" context="[question.questionInfo.subject,question]" class="btn btn-default">${message:cancel}</t:pagelink>
             </div>
         </div>
     </t:form>

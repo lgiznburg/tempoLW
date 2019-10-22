@@ -37,6 +37,14 @@ public class ExamResult implements Serializable {
     @ManyToOne
     private Testee testee;
 
+    @ManyToOne
+    @JoinColumn(name = "testing_plan_id")
+    private TestingPlan testingPlan;
+
+    @ManyToOne
+    @JoinColumn(name = "exam_id")
+    private ExamSchedule exam;
+
     public long getId() {
         return id;
     }
@@ -61,20 +69,20 @@ public class ExamResult implements Serializable {
         this.endTime = endTime;
     }
 
-    public int getMarkTotal() {
-        return markTotal;
-    }
-
-    public void setMarkTotal( int markTotal ) {
-        this.markTotal = markTotal;
-    }
-
     public String getTitle() {
         return title;
     }
 
     public void setTitle( String title ) {
         this.title = title;
+    }
+
+    public int getMarkTotal() {
+        return markTotal;
+    }
+
+    public void setMarkTotal( int markTotal ) {
+        this.markTotal = markTotal;
     }
 
     public List<QuestionResult> getQuestionResults() {
@@ -93,8 +101,29 @@ public class ExamResult implements Serializable {
         this.testee = testee;
     }
 
+    public TestingPlan getTestingPlan() {
+        return testingPlan;
+    }
+
+    public void setTestingPlan( TestingPlan testingPlan ) {
+        this.testingPlan = testingPlan;
+    }
+
+    public ExamSchedule getExam() {
+        return exam;
+    }
+
+    public void setExam( ExamSchedule exam ) {
+        this.exam = exam;
+    }
+
     @Transient
     public boolean isFinished() {
         return endTime != null;
+    }
+
+    @Transient
+    public boolean isExamMode() {
+        return testee != null && exam != null;
     }
 }

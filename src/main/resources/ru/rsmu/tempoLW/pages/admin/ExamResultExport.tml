@@ -1,0 +1,25 @@
+<html t:type="layout" t:pageTitle="${message:exams-pagetitle}"
+      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
+      xmlns:p="tapestry:parameter"><!-- Администрирование:Список предметов -->
+<body>
+    <t:form t:id="uploadForm">
+        <div class="row">
+            <h4>${exam.testingPlan.subject.title} : ${message:exam-scores-script-title}</h4>  <!--  class="text-center" -->
+        </div>
+        <t:errors/>
+        <div class="form-group row">
+            <t:label for="file">${message:upload-testees-label}</t:label>
+            <input t:type="upload" t:id="file" t:value="file" validate="required" style="height: auto;"/>
+        </div>
+        <div class="form-group row">
+            <t:label for="file">${message:scores-tabs-number}</t:label>
+            <t:textfield value="tabNumber" validate="required"/>
+        </div>
+        <div class="form-group row">
+            <input type="submit" value="${message:upload-upload}" class="btn btn-primary"/>
+            <t:pagelink page="admin/exams" parameters="queryParams" class="btn btn-default">${message:back}</t:pagelink>
+        </div>
+    </t:form>
+</body>
+
+</html>

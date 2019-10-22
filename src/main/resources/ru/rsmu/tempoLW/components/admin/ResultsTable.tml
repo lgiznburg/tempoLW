@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<t:container xmlns="http://www.w3.org/1999/xhtml" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd" xmlns:p="tapestry:parameter">
+    <div class="row" style="margin-top: 15px">
+        <div class="col-sm-7">
+            <span style="font-weight: bold">${message:testee-name}</span><span style="color: #00565e; font-size: 16pt">${testee.getLastName()}</span><span style="font-weight: bold">${message:casenumber}</span><span style="color: #00565e; font-size: 16pt">${testee.getLastName()}</span>
+        </div>
+    </div>
+    <div class="row" id="examsList">
+        <t:grid t:id="usersGrid" source="results" row="result"
+                exclude="Id,questionResults,testee,testingPlan,exam,endTime,finished,examMode"
+                class="table table-bordered table-hover"
+                rowsPerPage="10" pagerPosition="bottom"
+                empty="block:emptyResults">
+        </t:grid>
+
+        <t:block t:id="emptyResults">
+            <div id="noResults">${message:no-exams}</div>
+        </t:block>
+    </div>
+</t:container>

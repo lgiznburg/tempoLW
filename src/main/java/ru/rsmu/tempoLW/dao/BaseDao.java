@@ -14,6 +14,7 @@ public interface BaseDao {
     @CommitAfter
     <T> T save(T entity);
     <T> void refresh( T entity );
+    <T> void softInitialize( T entity );
 
     <T, PK extends Serializable> T find(Class<T> type, PK id);
     <T> List<T> findAll( Class<T> type );

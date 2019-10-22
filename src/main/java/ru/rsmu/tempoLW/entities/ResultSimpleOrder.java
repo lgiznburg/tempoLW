@@ -1,13 +1,13 @@
 package ru.rsmu.tempoLW.entities;
 
-import javax.persistence.Column;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.util.Objects;
 
 /**
  * @author leonid.
  */
+@Entity
+@DiscriminatorValue( "SIMPLE_ORDER" )
 public class ResultSimpleOrder extends ResultElement {
     private static final long serialVersionUID = 3769942100319644254L;
 

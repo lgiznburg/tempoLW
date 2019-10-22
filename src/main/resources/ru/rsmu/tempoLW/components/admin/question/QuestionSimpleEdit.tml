@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <t:container xmlns="http://www.w3.org/1999/xhtml" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd" xmlns:p="tapestry:parameter">
 
-  <h4 class="col-sm-offset-2">Answers</h4>
+  <h4 class="col-sm-offset-2">${message:answers}</h4>
   <div class="row">
-    <div class="col-sm-6 col-sm-offset-2"><strong>Text</strong></div>
-    <div class="col-sm-4"><strong>Correctness</strong></div>
+    <div class="col-sm-6 col-sm-offset-2"><strong>${message:text}</strong></div>
+    <div class="col-sm-4"><strong>${message:correctness}</strong></div>
   </div>
   <t:loop source="questionSimple.answerVariants" value="answerVariant" encoder="answerVariantEncoder">
     <div class="form-group">

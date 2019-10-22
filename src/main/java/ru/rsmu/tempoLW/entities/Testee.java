@@ -3,6 +3,7 @@ package ru.rsmu.tempoLW.entities;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.Objects;
 
 /**
@@ -36,6 +37,10 @@ public class Testee implements Serializable {
 
     @Column
     private String lastName;
+
+    @Column(name = "expiration_date")
+    @Temporal( TemporalType.DATE )
+    private Date expirationDate;
 
     public long getId() {
         return id;
@@ -93,6 +98,14 @@ public class Testee implements Serializable {
         this.lastName = lastName;
     }
 
+    public Date getExpirationDate() {
+        return expirationDate;
+    }
+
+    public void setExpirationDate( Date expirationDate ) {
+        this.expirationDate = expirationDate;
+    }
+
     @Override
     public boolean equals( Object o ) {
         if ( this == o ) return true;
@@ -109,5 +122,10 @@ public class Testee implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash( id, login, caseNumber, firstName, middleName, lastName );
+    }
+
+    @Transient
+    public boolean isCredentialsExpired() {
+        return expirationDate == null || expirationDate.before( new Date() );
     }
 }

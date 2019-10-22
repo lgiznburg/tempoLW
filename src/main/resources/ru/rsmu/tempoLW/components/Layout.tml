@@ -3,6 +3,7 @@
 <head>
     <title>${pageTitle}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" href="${context:static/icons/favicon.ico}" type="image/x-icon" />
 </head>
 <body>
 <div class="navbar navbar-default navbar-dark bg-dark">
@@ -15,35 +16,48 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <t:pagelink page="index" class="navbar-brand">
-                <img src="${context:static/img/logoRNIMUwhite.svg}" width="120px"/>
+            <t:pagelink style="padding-top: 1.15rem" page="index" class="navbar-brand">
+                <img title="${message:navbar.logotitle}" src="${context:static/img/logoRNIMUwhite.svg}" width="120px"/>
             </t:pagelink>
         </div>
 
         <div class="collapse navbar-collapse" id="navbarsReque">
             <t:security.user>
                 <ul class="nav navbar-nav navbar-right">
-                    <li class="dropdown">
-                        <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" id="userDropdown" aria-expanded="false">
-                        ${message:navbar.welcome} ${username}. <span class="caret"/></a>
-                        <ul class="dropdown-menu bg-light" aria-labelledby="userDropdown">
-                            <t:security.hasAnyRoles roles="admin,subject_admin,teacher">
-                                <li><t:pagelink page="admin/subjects">${message:navbar.admin.subjects}</t:pagelink></li>
-                                <!--<li><t:pagelink page="admin/testingplan/testingplanlist">${message:navbar.admin.testingplans}</t:pagelink></li>-->
-                                <li role="separator" class="divider"></li>
-                            </t:security.hasAnyRoles>
-                            <t:security.hasRole role="admin">
-                                <li><t:pagelink page="admin/users">${message:navbar.admin.users}</t:pagelink></li>
-                                <li role="separator" class="divider"></li>
-                            </t:security.hasRole>
-                            <li><t:eventlink event="logout">${message:navbar.logout}</t:eventlink></li>
+                    <t:security.lacksrole role="testee">
+                        <li><t:eventlink event="togglelocale" class="nav-link">${localeNameToSwitch}</t:eventlink></li>
+                        <li class="dropdown">
+                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" id="userDropdown" aria-expanded="false">
+                                ${message:navbar.welcome} ${username}. <span class="caret"/></a>
+                            <ul class="dropdown-menu bg-light" aria-labelledby="userDropdown">
+                                <t:security.hasAnyRoles roles="admin,subject_admin,teacher">
+                                    <li><t:pagelink page="admin/subjects">${message:navbar.admin.subjects}</t:pagelink></li>
+                                    <li><t:pagelink page="admin/exams">${message:navbar.admin.exams}</t:pagelink></li>
+                                    <li><t:pagelink page="admin/results">${message:findresults}</t:pagelink></li>
+                                    <li role="separator" class="divider"></li>
+                                </t:security.hasAnyRoles>
+                                <t:security.hasRole role="admin">
+                                    <li><t:pagelink page="admin/users">${message:navbar.admin.users}</t:pagelink></li>
+                                    <li role="separator" class="divider"></li>
+                                </t:security.hasRole>
+                                <t:security.hasAnyRoles roles="admin, subject_admin, teacher">
+                                    <li><t:pagelink page="userpassword">${message:navbar.admin.password}</t:pagelink></li>
+                                    <li role="separator" class="divider"></li>
+                                </t:security.hasAnyRoles>
+                                <li><t:eventlink event="logout">${message:navbar.logout}</t:eventlink></li>
 
-                        </ul>
+                            </ul>
+                        </li>
+                        <p:else>
+                            <li></li>
+                        </p:else>
+                    </t:security.lacksrole>
 
-                    </li>
                 </ul>
                 <p:else>
                     <ul class="nav navbar-nav navbar-right">
+                        <!-- locale switch for unlogged users -->
+                        <li><t:eventlink event="togglelocale" class="nav-link">${localeNameToSwitch}</t:eventlink></li>
                         <li><t:pagelink page="login" class="nav-link">${message:navbar.login}</t:pagelink></li>
                     </ul>
                 </p:else>

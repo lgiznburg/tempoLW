@@ -4,17 +4,34 @@
     <div id="subjectReview">
         <t:form t:id="subjectForm" class="form-horizontal" validate="subject">
             <div class="row">
-                <h4>${title} Subject</h4>  <!--  class="text-center" -->
+                <h4>
+                    <t:if test="title">
+                        <t:if test="title.equals('Edit')">${message:edit-title}</t:if>
+                        <t:if test="title.equals('Create')">${message:create}</t:if>
+                    </t:if>
+                    ${message:edit-subject}
+                </h4>  <!--  class="text-center" -->
             </div>
 
             <t:errors globalOnly="true"/>
 
-            <t:beaneditor t:id="subjectEditor" object="subject" include="title"/>
+            <div class="form-group">
+                <t:label for="title" class="col-sm-3"/>
+                <div class="col-sm-6">
+                    <t:textfield t:id="title" value="subject.title" />
+                </div>
+            </div>
+            <div class="form-group">
+                <t:label for="subjectLocale" class="col-sm-3">${message:subject-basic-language}</t:label>
+                <div class="col-sm-6">
+                    <t:select t:id="subjectLocale" value="subject.locale" model="localesModel"/>
+                </div>
+            </div>
 
             <div class="form-group">
                 <div class="col-sm-4 col-sm-offset-4">
-                    <t:submit value="Save" class="btn btn-primary"/>
-                    <t:eventlink event="cancelEdit" context="subjectId" class="btn btn-default">Cancel</t:eventlink>
+                    <t:submit value="${message:save}" class="btn btn-primary"/>
+                    <t:eventlink event="cancelEdit" context="subjectId" class="btn btn-default">${message:cancel}</t:eventlink>
                 </div>
             </div>
         </t:form>

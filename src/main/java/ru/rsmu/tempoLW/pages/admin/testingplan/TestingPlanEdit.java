@@ -111,6 +111,9 @@ public class TestingPlanEdit {
             TestingPlanRule removing = ruleIterator.next();
             if ( removing.getQuestionCount() <= 0 || removing.getTopics().size() == 0 ) {
                 ruleIterator.remove();
+                if ( removing.getTopics().size() > 0 ) {
+                    removing.getTopics().clear();
+                }
                 questionDao.delete( removing );
                 continue;
             }

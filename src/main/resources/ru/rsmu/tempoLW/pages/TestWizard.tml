@@ -1,34 +1,50 @@
-<html t:type="layout" t:pageTitle="Тестирование"
+<html t:type="layout" t:pageTitle="${message:testwizard-pagetitle}"
       xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
-      xmlns:p="tapestry:parameter">
+      xmlns:p="tapestry:parameter"><!-- Тестирование -->
 
 <div class="row">
-<h2>${message:testing-header} ${examResult.title}</h2>
+    <h2 class="align-center">
+        <t:if test="examResult.examMode">
+            ${message:exam-header} <p:else>${message:testing-header}</p:else>
+        </t:if>
+        ${examResult.title}</h2>
+    <t:if test="examResult.examMode">
+        <h4>${examResult.testee.lastName}</h4>
+        <p class="text-lg">
+            ${message:exam-start} : <strong><t:output format="literal:HH:mm" value="examResult.startTime"/></strong> -
+            ${message:exam-end} :
+            <t:if test="examResult.finished">
+                <strong><t:output format="literal:HH:mm" value="examResult.endTime"/></strong>
+                <p:else><strong><t:output format="literal:HH:mm" value="estimatedEndTime"/></strong></p:else>
+            </t:if>
+
+        </p>
+    </t:if>
 </div>
 
 <t:questionform current="current"/>
 
 <div class="row subquestion-nav">
-
-    <div class="col-sm-4 align-left">
-        <t:if test="prevExist">
-            <t:eventlink event="prevQuestion" class="btn btn-default">${message:prev-question}</t:eventlink>
-            <p:else>
-                <button class="btn btn-default" disabled="disabled">${message:prev-question}</button>
-            </p:else>
-        </t:if>
-    </div>
-    <div class="col-sm-4 align-center">
-            <t:pagelink page="testfinal" class="btn btn-default">${message:to-questions-list}</t:pagelink>
-    </div>
-    <div class="col-sm-4 align-right">
-        <t:if test="nextExist">
-            <t:eventlink event="nextQuestion" class="btn btn-default">${message:next-question}</t:eventlink>
-            <p:else>
-                <button class="btn btn-default" disabled="disabled">${message:next-question}</button>
-            </p:else>
-        </t:if>
-    </div>
-
+    <ul class="pager">
+        <li class="previous">
+            <t:if test="prevExist">
+                <t:eventlink event="prevQuestion"><span aria-hidden="true">&larr;</span> ${message:prev-question}</t:eventlink>
+                <p:else>
+                    <a name="prev"><span aria-hidden="true">&larr;</span> ${message:prev-question}</a>
+                </p:else>
+            </t:if>
+        </li>
+        <li>
+            <t:pagelink page="testfinal">${message:to-questions-list}</t:pagelink>
+        </li>
+        <li class="next">
+            <t:if test="nextExist">
+                <t:eventlink event="nextQuestion">${message:next-question} <span aria-hidden="true">&rarr;</span></t:eventlink>
+                <p:else>
+                    <a name="next">${message:next-question} <span aria-hidden="true">&rarr;</span></a>
+                </p:else>
+            </t:if>
+        </li>
+    </ul>
 </div>
 </html>

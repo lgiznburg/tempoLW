@@ -3,20 +3,20 @@
 
     <t:form t:id="uploadForm">
         <div class="row">
-            <h4>${subject.title} : Upload questions</h4>  <!--  class="text-center" -->
+            <h4>${subject.title} : ${message:upload-questions-title}</h4>  <!--  class="text-center" -->
         </div>
         <t:errors/>
         <div class="form-group row">
-            <t:label for="file">Questions</t:label>
+            <t:label for="file">${message:upload-questions-label}</t:label>
             <input t:type="upload" t:id="file" t:value="file" validate="required" style="height: auto;"/>
         </div>
         <div class="form-group row">
-            <t:label for="imagesZipFile">Images ZIP file</t:label>
+            <t:label for="imagesZipFile"/>
             <input t:type="upload" t:id="imagesZipFile" t:value="imagesZipFile"  style="height: auto;"/>
         </div>
         <div class="form-group row">
-            <input type="submit" value="Upload" class="btn btn-primary"/>
-            <t:eventlink event="cancelUpload" context="subjectId" class="btn btn-default">Back to Subjects</t:eventlink>
+            <input type="submit" value="${message:upload-upload}" class="btn btn-primary"/>
+            <t:eventlink event="cancelUpload" context="subjectId" class="btn btn-default">${message:upload-back-to-subjects}</t:eventlink>
         </div>
     </t:form>
 

@@ -2,10 +2,9 @@ package ru.rsmu.tempoLW.utils.builder;
 
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
-import ru.rsmu.tempoLW.entities.AnswerVariant;
-import ru.rsmu.tempoLW.entities.QuestionSimple;
-import ru.rsmu.tempoLW.entities.UploadedImage;
+import ru.rsmu.tempoLW.entities.*;
 
+import java.util.Comparator;
 import java.util.LinkedList;
 
 /**
@@ -17,7 +16,7 @@ public class SimpleOrderQuestionBuilder extends QuestionBuilder{
 
     @Override
     public int parse( Sheet sheet, int rowN ) {
-        QuestionSimple question = new QuestionSimple();
+        QuestionSimpleOrder question = new QuestionSimpleOrder();
         question.setAnswerVariants( new LinkedList<>() );
 
         Row row = sheet.getRow( rowN );
@@ -57,5 +56,22 @@ public class SimpleOrderQuestionBuilder extends QuestionBuilder{
 
         this.result = question;
         return rowN;
+    }
+
+    @Override
+    public int write( Sheet sheet, int rowN, Question question ) {
+        Row row = sheet.createRow( rowN++ );
+        writeQuestionInfo( row, question, SIMPLE_ORDER_TYPE );
+
+        ((QuestionSimpleOrder)question).getAnswerVariants().sort(
+                new Comparator<AnswerVariant>() {
+                    @Override
+                    public int compare( AnswerVariant o1, AnswerVariant o2 ) {
+                        return o1.getSequenceOrder() - o2.getSequenceOrder();
+                    }
+                }
+        );
+
+        return writeAnswers( sheet, rowN, ((QuestionSimpleOrder)question).getAnswerVariants() );
     }
 }

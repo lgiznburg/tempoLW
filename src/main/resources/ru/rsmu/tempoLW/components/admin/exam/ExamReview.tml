@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<t:container xmlns="http://www.w3.org/1999/xhtml" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd" xmlns:p="tapestry:parameter">
+
+<div id="examReview">
+    <div class="row">
+        <h4>${message:exam} ${exam.name}</h4>
+    </div>
+    <div class="row">
+        <div class="col-sm-3 text-right">${message:testingPlan-label}:</div>
+        <div class="col-sm-8">${exam.testingPlan.subject.title} (${exam.testingPlan.name})</div>
+    </div>
+
+    <div class="row">
+        <div class="col-sm-3 text-right">${message:examDate-label}:</div>
+        <div class="col-sm-8"><t:output format="literal:dd MMMM yyyy" value="exam.examDate"/></div>
+    </div>
+    <div class="row">
+        <div class="col-sm-3 text-right">${message:examDuration-label}:</div>
+        <div class="col-sm-8">${exam.durationHours}:${exam.durationMinutes}</div>
+    </div>
+    <div class="row">
+        <div class="col-sm-3 text-right">${message:testeeCount}:</div>
+        <div class="col-sm-3">
+            <t:if test="exam.examToTestees">
+                ${exam.examToTestees.size()}
+                <p:else>${message:exam-no-testees}</p:else>
+            </t:if>
+        </div>
+    </div>
+    <t:if test="exam.examToTestees">
+        <div class="row">
+            <div class="col-sm-3 text-right">${message:testeeList}:</div>
+            <div class="col-sm-3" style="padding-top: 8px">
+                    <t:eventlink event="toTesteesList" context="examId" class="btn btn-info btn-sm">${message:exam-testees-list}</t:eventlink>
+            </div>
+        </div>
+    </t:if>
+    <br/>
+
+    <div class="row">
+        <div class="col-sm-12">
+            <t:security.hasanyroles roles="admin,subject_admin">
+                <t:eventlink class="btn btn-primary" event="toUpdate" context="examId">${message:update}</t:eventlink>
+            </t:security.hasanyroles>
+            <t:security.hasrole role="admin">
+                <t:if test="beforeExamDate">
+                    <t:eventlink class="btn btn-primary" event="toUpload"
+                                 context="examId">${message:exam-upload-testees}</t:eventlink>
+                </t:if>
+                <t:if test="beforeExamDate">
+                    <t:eventlink class="btn btn-primary" event="toAddTestee"
+                                 context="examId">${message:exam-add-testee}</t:eventlink>
+                </t:if>
+                <t:if test="atExamDate">
+                    <t:pagelink page="admin/examloginrecords" class="btn btn-primary"
+                                context="exam">${message:exam-print-logins}</t:pagelink>
+                </t:if>
+                <t:if test="afterExamDate">
+                    <t:pagelink page="admin/examresultexport" class="btn btn-primary"
+                                context="exam">${message:exam-export-scores}</t:pagelink>
+                </t:if>
+            </t:security.hasrole>
+            <!-- delete -->
+        </div>
+    </div>
+
+</div>
+</t:container>

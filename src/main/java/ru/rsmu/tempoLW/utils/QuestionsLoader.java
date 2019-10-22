@@ -18,7 +18,7 @@ import java.util.List;
 /**
  * @author leonid.
  */
-public class QuestionsLoader extends ExcelLayout {
+public class QuestionsLoader extends ExcelReader implements ExcelLayout {
     private QuestionDao questionDao;
     private ExamSubject subject;
 
@@ -43,7 +43,7 @@ public class QuestionsLoader extends ExcelLayout {
         return this;
     }
 
-    public List<String> loadFromFile( InputStream input ) throws IOException {
+    public List<String> loadFromFile() {
 
         Sheet sheet = wb.getSheetAt( 0 );  // main page
 
@@ -121,6 +121,10 @@ public class QuestionsLoader extends ExcelLayout {
             questionInfo.setName( name );
             questionInfo.setTopic( topic );
             questionInfo.setSubject( subject );
+            Long questionCode = getCellNumber( row, COLUMN_CODE );
+            if ( questionCode != null && questionCode > 0 ) {
+                questionInfo.setCode( questionCode.intValue() );
+            }
             questionDao.save( questionInfo );
         } else {
             if ( questionInfo.getMaxScore() != maxScore ) {

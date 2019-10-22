@@ -17,7 +17,7 @@ import ru.rsmu.tempoLW.entities.ExamSubject;
 /**
  * @author leonid.
  */
-@RequiresRoles(value = {"admin","subject_admin"}, logical = Logical.OR )
+@RequiresRoles(value = {"admin","subject_admin", "teacher"}, logical = Logical.OR )
 public class Subjects {
 
     @Property
@@ -73,7 +73,7 @@ public class Subjects {
     }
 
     // Update
-    public void onSubjectEdited( Long editedSubjectId ) {
+    public void onSubjectUpdated( Long editedSubjectId ) {
         mode = CrudMode.REVIEW;
         subjectId = editedSubjectId;
     }

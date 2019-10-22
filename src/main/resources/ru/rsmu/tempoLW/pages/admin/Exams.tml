@@ -1,0 +1,42 @@
+<html t:type="layout" t:pageTitle="${message:exams-pagetitle}"
+      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
+      xmlns:p="tapestry:parameter"><!-- Администрирование:Список предметов -->
+<body>
+
+<div class="row"><h3>${message:exams-list}</h3></div>
+
+<div class="row">
+    <div class="col-sm-3">
+        <t:admin.exam.examlist examId="examId" t:id="list"/>
+        <t:security.hasrole role="admin">
+            <t:eventlink t:id="toCreate" event="toCreate"
+                         class="btn btn-primary">${message:create-new-exam}</t:eventlink>
+        </t:security.hasrole>
+    </div>
+    <div class="col-sm-9">
+        <t:if test="isMode('REVIEW')">
+            <t:admin.exam.examreview t:id="subjectReview" examId="examId"/>
+        </t:if>
+        <t:if test="isMode('UPLOAD')">
+            <t:admin.exam.examuploadtestees t:id="uploadTestees" examId="examId"/>
+        </t:if>
+        <t:if test="isMode('CREATE')">
+            <t:admin.exam.examedit t:id="examCreate" examId="examId"/>
+        </t:if>
+
+        <t:if test="isMode('UPDATE')">
+            <t:admin.exam.examedit t:id="examUpdate" examId="examId"/>
+        </t:if>
+        <t:if test="isMode('VIEW_ELEMENTS')">
+            <t:admin.exam.examtestees examId="examId" t:id="examTestees"/>
+        </t:if>
+        <t:if test="isMode('ADD_ELEMENT')">
+            <t:admin.exam.examcreatetestee examId="examId" t:id="examCreateTestee"/>
+        </t:if>
+
+    </div>
+</div>
+
+</body>
+
+</html>

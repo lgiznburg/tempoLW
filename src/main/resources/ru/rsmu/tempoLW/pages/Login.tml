@@ -1,9 +1,10 @@
-<html t:type="layout" t:pageTitle="Тестирование"
+<html t:type="layout" t:pageTitle="${message:login-pagetitle}"
       xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
-      xmlns:p="tapestry:parameter">
+      xmlns:p="tapestry:parameter"> <!-- Тестирование -->
 <div class="row">
     <div class="col-sm-6 col-sm-offset-3">
-        <t:security.loginform />
+        <!--<t:security.loginform />-->
+        <t:localloginform includeRememberMe="true" />
     </div>
 </div>
 </html>

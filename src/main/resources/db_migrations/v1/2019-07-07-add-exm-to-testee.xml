@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                   http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet id="2019-07-07--01-create-table-exam-to-testee" author="leonid">
+        <createTable tableName="exam_to_testee">
+            <column autoIncrement="true" name="id" type="${id.type}">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="testee_id" type="${id.type}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="exam_id" type="${id.type}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="password" type="${string.type}"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="2019-07-07--02-create-constraints" author="leonid">
+        <addForeignKeyConstraint baseTableName="exam_to_testee" baseColumnNames="exam_id"
+                                 constraintName="FK_ett_exam_reference"
+                                 referencedTableName="exam_schedule" referencedColumnNames="id"
+                                 deferrable="false" initiallyDeferred="false"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION" validate="true"/>
+        <addForeignKeyConstraint baseTableName="exam_to_testee" baseColumnNames="testee_id"
+                                 constraintName="FK_ett_testee_reference"
+                                 referencedTableName="testee" referencedColumnNames="id"
+                                 deferrable="false" initiallyDeferred="false"
+                                 onDelete="NO ACTION" onUpdate="NO ACTION" validate="true"/>
+    </changeSet>
+
+
+</databaseChangeLog>
