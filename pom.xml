@@ -223,7 +223,15 @@ of testing facilities designed for use with TestNG (http://testng.org/), so it's
             <artifactId>jrtf</artifactId>
             <version>0.7</version>
         </dependency>
-<!-- keep this comment here just to store a link to origin project.
+
+        <dependency>
+            <groupId>com.github.joniles</groupId>
+            <artifactId>rtfparserkit</artifactId>
+            <version>1.12.0</version>
+        </dependency>
+
+
+        <!-- keep this comment here just to store a link to origin project.
 Source code has been imported into our source code with small fixes
 Original project defines some incompatible dependency
 
