@@ -1,0 +1,225 @@
+<html t:type="layout" t:pageTitle="${message:rtf-template-title}"
+      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
+      xmlns:p="tapestry:parameter">
+<body>
+
+<div class="row"><h3>${message:rtf-template}</h3></div>
+
+<div id="templates-list">
+    <table class="table table-bordered" style="width: auto">
+        <tbody>
+            <tr>
+                <td colspan="4"><b>${message:rtf-template-exam-result}</b></td>
+            </tr>
+            <tr>
+                <td colspan="4">${message:rtf-template-file} ${examResult.fileName}</td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="btn-group-vertical side-margin-fix">
+                        <t:if test="examResult.ismodified()">
+                            <t:pagelink page="admin/templates/downloadtemplate" context="[examResult.templateType,modified]" class="btn btn-default">
+                                ${message:rtf-template-download-modified}
+                            </t:pagelink>
+                            <p:else>
+                                <button class="btn btn-default disabled" title="${message:rtf-templates-default-used}">
+                                    ${message:rtf-template-download-modified}
+                                </button>
+                            </p:else>
+                        </t:if>
+                        <t:pagelink page="admin/templates/downloadtemplate" context="examResult.templateType" class="btn btn-default">
+                            ${message:rtf-template-download-default}
+                        </t:pagelink>
+                    </div>
+                </td>
+                <td>
+                    <div class="side-margin-fix">
+                        <button class="btn btn-default upload-template side-margin-fix" value="examresult">
+                            ${message:rtf-template-upload}
+                        </button>
+                    </div>
+                </td>
+                <td>
+                    <div class="side-margin-fix">
+                        <t:if test="examResult.ismodified()">
+                            <t:eventlink event="resetTemplate" context="examResult.templateType" class="btn btn-default side-margin-fix">
+                                ${message:rtf-template-reset}
+                            </t:eventlink>
+                            <p:else>
+                                <button class="btn btn-default disabled" title="${message:rtf-templates-default-used}">
+                                    ${message:rtf-template-reset}
+                                </button>
+                            </p:else>
+                        </t:if>
+                    </div>
+                </td>
+                <td>
+                    <t:form t:id="examResultCommentForm">
+                        <t:label for="examResultComment">${message:rtf-template-comment}</t:label>
+                        <t:TextArea t:id="examResultComment" value="examResultComment" placeholder="${message:rtf-template-comment}" title="${message:rtf-template-comment}">
+                            ${examResult.templateComment}
+                        </t:TextArea>
+                    </t:form>
+                </td>
+            </tr>
+            <tr id="examResultUploadRow" class="hidden">
+                <td colspan="4">
+                    <t:form t:id="examResultUploadForm">
+                        <div class="form-group side-margin-fix">
+                            <t:label for="examResultUpload">${message:rtf-template-upload}</t:label>
+                            <input t:type="upload" t:id="examResultUpload" t:value="examResultUploaded" validate="required" style="height: auto;" class="side-margin-fix"/>
+                        </div>
+                        <div class="form-group row side-margin-fix">
+                            <input type="submit" value="${message:upload-upload}" alt="examresults" class="btn btn-primary"/>
+                            <button class="btn btn-default cancel-upload" value="examresult">${message:cancel}</button>
+                        </div>
+                    </t:form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table table-bordered" style="width: auto">
+        <tbody>
+            <tr>
+                <td colspan="4"><b>${message:rtf-template-exam-statement}</b></td>
+            </tr>
+            <tr>
+                <td colspan="4">${message:rtf-template-file} ${examStatement.fileName}</td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="btn-group-vertical side-margin-fix">
+                        <t:if test="examStatement.ismodified()">
+                            <t:pagelink page="admin/templates/downloadtemplate" context="[examStatement.templateType,modified]" class="btn btn-default">
+                                ${message:rtf-template-download-modified}
+                            </t:pagelink>
+                            <p:else>
+                                <button class="btn btn-default disabled" title="${message:rtf-templates-default-used}">
+                                    ${message:rtf-template-download-modified}
+                                </button>
+                            </p:else>
+                        </t:if>
+                        <t:pagelink page="admin/templates/downloadtemplate" context="examStatement.templateType" class="btn btn-default">
+                            ${message:rtf-template-download-default}
+                        </t:pagelink>
+                    </div>
+                </td>
+                <td>
+                    <div class="side-margin-fix">
+                        <button class="btn btn-default upload-template side-margin-fix" value="examstatement">${message:rtf-template-upload}</button>
+                    </div>
+                </td>
+                <td>
+                    <div class="side-margin-fix">
+                        <t:if test="examStatement.ismodified()">
+                            <t:eventlink event="resetTemplate" context="examStatement.templateType" class="btn btn-default side-margin-fix">
+                                ${message:rtf-template-reset}
+                            </t:eventlink>
+                            <p:else>
+                                <button class="btn btn-default disabled" title="${message:rtf-templates-default-used}">
+                                    ${message:rtf-template-reset}
+                                </button>
+                            </p:else>
+                        </t:if>
+                    </div>
+                </td>
+                <td>
+                    <t:form t:id="examStatementCommentForm">
+                        <t:label for="examStatementComment">${message:rtf-template-comment}</t:label>
+                        <t:TextArea t:id="examStatementComment" value="examStatementComment" placeholder="${message:rtf-template-comment}" title="${message:rtf-template-comment}">
+                            ${examStatement.templateComment}
+                        </t:TextArea>
+                    </t:form>
+                </td>
+            </tr>
+            <tr id="examStatementUploadRow" class="hidden">
+                <td colspan="4">
+                    <t:form t:id="examStatementUploadForm" class="side-margin-fix">
+                        <div class="form-group row side-margin-fix">
+                            <t:label for="examStatementUpload">${message:rtf-template-upload}</t:label>
+                            <input t:type="upload" t:id="examStatementUpload" t:value="examStatementUploaded" validate="required" style="height: auto;" class="side-margin-fix"/>
+                        </div>
+                        <div class="form-group row side-margin-fix">
+                            <input type="submit" value="${message:upload-upload}" alt="examstatement" class="btn btn-primary"/>
+                            <button class="btn btn-default cancel-upload" value="examstatement">${message:cancel}</button>
+                        </div>
+                    </t:form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table table-bordered" style="width: auto">
+        <tbody>
+            <tr>
+                <td colspan="4"><b>${message:rtf-template-logins}</b></td>
+            </tr>
+            <tr>
+                <td colspan="4">${message:rtf-template-file} ${logins.fileName}</td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="btn-group-vertical side-margin-fix">
+                        <t:if test="logins.ismodified()">
+                            <t:pagelink page="admin/templates/downloadtemplate" context="[logins.templateType,modified]" class="btn btn-default">
+                                ${message:rtf-template-download-modified}
+                            </t:pagelink>
+                            <p:else>
+                                <button class="btn btn-default disabled" title="${message:rtf-templates-default-used}">
+                                    ${message:rtf-template-download-modified}
+                                </button>
+                            </p:else>
+                        </t:if>
+                        <t:pagelink page="admin/templates/downloadtemplate" context="logins.templateType" class="btn btn-default">
+                            ${message:rtf-template-download-default}
+                        </t:pagelink>
+                    </div>
+                </td>
+                <td>
+                    <div class="side-margin-fix">
+                        <button class="btn btn-default upload-template side-margin-fix" value="logins">${message:rtf-template-upload}</button>
+                    </div>
+                </td>
+                <td>
+                    <div class="side-margin-fix">
+                        <t:if test="logins.ismodified()">
+                            <t:eventlink event="resetTemplate" context="logins.templateType" class="btn btn-default side-margin-fix">
+                                ${message:rtf-template-reset}
+                            </t:eventlink>
+                            <p:else>
+                                <button class="btn btn-default disabled" title="${message:rtf-templates-default-used}">
+                                    ${message:rtf-template-reset}
+                                </button>
+                            </p:else>
+                        </t:if>
+                    </div>
+                </td>
+                <td>
+                    <t:form t:id="loginsCommentForm">
+                        <t:label for="loginsComment">${message:rtf-template-comment}</t:label>
+                        <t:TextArea t:id="loginsComment" value="loginsComment" placeholder="${message:rtf-template-comment}" title="${message:rtf-template-comment}">
+                            ${logins.templateComment}
+                        </t:TextArea>
+                    </t:form>
+                </td>
+            </tr>
+            <tr id="loginsUploadRow" class="hidden">
+                <td colspan="4">
+                    <t:form t:id="loginsUploadForm" class="side-margin-fix">
+                        <div class="form-group row side-margin-fix">
+                            <t:label for="loginsUpload">${message:rtf-template-upload}</t:label>
+                            <input t:type="upload" t:id="loginsUpload" t:value="loginsUploaded" validate="required" style="height: auto;" class="side-margin-fix"/>
+                        </div>
+                        <div class="form-group row side-margin-fix">
+                            <input type="submit" value="${message:upload-upload}" alt="logins" class="btn btn-primary side-margin-fix"/>
+                            <button class="btn btn-default cancel-upload" value="logins">${message:cancel}</button>
+                        </div>
+                    </t:form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

@@ -6,8 +6,10 @@
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
                    http://www.liquibase.org/xml/ns/dbchangelog
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
-
-    <include file="2019-10-22-add-rtf-templates.xml" relativeToChangelogFile="true"/>
-    <include file="2019-10-31-template-upload.xml" relativeToChangelogFile="true"/>
-
+    <changeSet id="2019-10-31-template-upload" author="polyakov_ps">
+        <addColumn tableName="document_template">
+            <column name="template_comment" type="${string.type}"/>
+            <column name="modified" type="BIT"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>
