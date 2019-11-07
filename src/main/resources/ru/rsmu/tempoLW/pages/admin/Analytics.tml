@@ -1,0 +1,7 @@
+<html t:type="layout" t:pageTitle="${message:analytics-title}"
+      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
+      xmlns:p="tapestry:parameter">
+
+    <h2>${message:analytics-title}</h2>
+
+</html>

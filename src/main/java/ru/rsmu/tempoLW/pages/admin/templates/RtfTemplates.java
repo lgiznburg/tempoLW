@@ -6,6 +6,7 @@ import org.apache.tapestry5.annotations.Import;
 import org.apache.tapestry5.annotations.InjectComponent;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.corelib.components.Form;
+import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.upload.services.UploadedFile;
 import ru.rsmu.tempoLW.dao.HibernateModule;
@@ -15,6 +16,8 @@ import ru.rsmu.tempoLW.entities.DocumentTemplateType;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * @author polyakov_ps
@@ -25,95 +28,63 @@ import java.io.InputStream;
 public class RtfTemplates {
 
     @Property
-    private Boolean modified;
-
-    //exam result template
-    @Property
-    private DocumentTemplate examResult; //template to display
+    private Boolean modified; //for context. always true
 
     @Property
-    private UploadedFile examResultUploaded; //file to upload template
+    private List<DocumentTemplate> templates;
+
+    @Property
+    private DocumentTemplate template; //active template file for manipulations
 
     @InjectComponent
-    private Form examResultUploadForm; //upload form
+    private Form commentForm;
 
     @InjectComponent
-    private Form examResultCommentForm; //comment editor form
+    private Form uploadForm;
 
     @Property
-    private String examResultComment; //comment
+    private UploadedFile uploadedFile;
 
-    //exam statement template
-    @Property
-    private DocumentTemplate examStatement; //template to display
-
-    @Property
-    private UploadedFile examStatementUploaded; //file to upload template
-
-    @InjectComponent
-    private Form examStatementUploadForm; //upload form
-
-    @InjectComponent
-    private Form examStatementCommentForm; //comment editor form
-
-    @Property
-    private String examStatementComment; //comment
-
-    //login records template
-    @Property
-    private DocumentTemplate logins; //template to display
-
-    @Property
-    private UploadedFile loginsUploaded; //file to upload template
-
-    @InjectComponent
-    private Form loginsUploadForm; //upload form
-
-    @InjectComponent
-    private Form loginsCommentForm; //comment editor form
-
-    @Property
-    private String loginsComment; //comment
+    @Inject
+    private Messages messages;
 
     @Inject
     private RtfTemplateDao rtfTemplateDao;
 
+    @Inject
+    @Property
+    private Locale currentLocale; //to use in .tml to call proper ENUM description
+
+    public RtfTemplates() {}
+
     public void setupRender() {
-
-        //loading current templates to display on page
+        //fill the templates list from the DB
+        templates = rtfTemplateDao.findAll( DocumentTemplate.class );
         modified = true;
-        examResult = rtfTemplateDao.findByType( DocumentTemplateType.EXAM_RESULT );
-        examStatement = rtfTemplateDao.findByType( DocumentTemplateType.EXAM_STATEMENT );
-        logins = rtfTemplateDao.findByType( DocumentTemplateType.LOGINS );
-
-        examResultComment = examResult.getTemplateComment();
-        examStatementComment = examStatement.getTemplateComment();
-        loginsComment = logins.getTemplateComment();
-
     }
 
-    public void onSuccessFromExamResultUploadForm() {
-        saveUploadedTemplate( examResultUploadForm, examResultUploaded, DocumentTemplateType.EXAM_RESULT );
+    public void onPrepareForSubmitFromCommentForm( DocumentTemplateType type ) {
+        //make sure template is appropriate
+        template = rtfTemplateDao.findByType( type );
     }
 
-    public void onSuccessFromExamStatementUploadForm() {
-        saveUploadedTemplate( examStatementUploadForm, examStatementUploaded, DocumentTemplateType.EXAM_STATEMENT );
+    public void onSuccessFromCommentForm( DocumentTemplateType type ) {
+        saveComment( template.getTemplateComment(), type );
     }
 
-    public void onSuccessFromLoginsUploadForm() {
-        saveUploadedTemplate( loginsUploadForm, loginsUploaded, DocumentTemplateType.LOGINS );
+    public void onValidateFromUploadForm() {
+        if ( !uploadedFile.getFileName().matches(".*\\.rtf") ) {
+            uploadForm.recordError( messages.get( "rtf-template-error" ) ); //need to debug (doesn't really validate for some reason!)
+        }
     }
 
-    public void onSuccessFromExamResultCommentForm() {
-        saveComment( examResultComment, DocumentTemplateType.EXAM_RESULT );
+    public void onPrepareForSubmitFromUploadForm( DocumentTemplateType type ) {
+        //make sure template is appropriate
+        template = rtfTemplateDao.findByType( type );
     }
 
-    public void onSuccessFromExamStatementCommentForm() {
-        saveComment( examStatementComment, DocumentTemplateType.EXAM_STATEMENT );
-    }
-
-    public void onSuccessFromLoginsCommentForm() {
-        saveComment( loginsComment, DocumentTemplateType.LOGINS );
+    public void onSuccessFromUploadForm() {
+        saveUploadedTemplate();
     }
 
     //discard modified template and use default from resources
@@ -134,18 +105,20 @@ public class RtfTemplates {
 
     }
 
-    private void saveUploadedTemplate ( Form form, UploadedFile file, DocumentTemplateType type ) {
+    //save uploaded template (from the properties of this page)
+    private void saveUploadedTemplate () {
 
         //check if something is submitted and that it's an RTF file
         try {
-            if (form.isValid() && file.getFileName().matches(".*\\.rtf")) {
-                DocumentTemplate template = rtfTemplateDao.findByType( type );
+            //check if the file is of the right format
+            if (uploadForm.isValid() && uploadedFile.getFileName().matches(".*\\.rtf")) {
+                //DocumentTemplate template = rtfTemplateDao.findByType( type );
 
                 //check if uploaded file is different from existing. If yes, change modified flag and upload file.
-                if (!template.getRtfTemplate().equals( IOUtils.toString( file.getStream() ) ) ) {
+                if (!template.getRtfTemplate().equals( IOUtils.toString( uploadedFile.getStream() ) ) ) {
                     template.setModified(true);
-                    template.setFileName( file.getFileName() );
-                    template.setRtfTemplate( IOUtils.toString( file.getStream() ) );
+                    template.setFileName( uploadedFile.getFileName() );
+                    template.setRtfTemplate( IOUtils.toString( uploadedFile.getStream() ) );
                     rtfTemplateDao.save(template);
                 }
             }
