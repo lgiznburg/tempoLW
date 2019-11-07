@@ -141,7 +141,7 @@ public class RtfTemplates {
             if (form.isValid() && file.getFileName().matches(".*\\.rtf")) {
                 DocumentTemplate template = rtfTemplateDao.findByType( type );
 
-                //check if uploaded file is different from exaisting. If yes, change modified flag.
+                //check if uploaded file is different from existing. If yes, change modified flag and upload file.
                 if (!template.getRtfTemplate().equals( IOUtils.toString( file.getStream() ) ) ) {
                     template.setModified(true);
                     template.setFileName( file.getFileName() );
