@@ -13,10 +13,14 @@
     <property name="text.type" value="NVARCHAR(max)" dbms="mssql"/>
     <property name="id.type" value="BIGINT" dbms="mysql"/>
     <property name="id.type" value="NUMERIC(19)" dbms="mssql"/>
+    <property name="blob.type" value="MEDIUMBLOB" dbms="mysql"/>
+    <property name="blob.type" value="VARBINARY(max)" dbms="mssql"/>
 
 
     <include file="init/initial_db.xml" relativeToChangelogFile="true"/>
 
     <include file="v1/V1-master-changelog.xml" relativeToChangelogFile="true"/>
+
+    <include file="v2/V2-master-changelog.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

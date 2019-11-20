@@ -12,6 +12,7 @@ import ru.rsmu.tempoLW.entities.Testee;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -86,12 +87,14 @@ public class TesteeLoader extends ExcelReader {
     }
 
     public String createLogin( String caseNumber ) {
-        long number = Long.parseLong( caseNumber );
+        long number = Long.parseLong( caseNumber.substring( 4 ) );  // skip first 4 digits (year number)
+        int yearSinceBegin = Calendar.getInstance().get( Calendar.YEAR ) - 2019;
+        number += 100000 * yearSinceBegin;
         String numberCode = Long.toHexString( number );
         String random = RandomStringUtils.randomAlphanumeric( 4 ).toLowerCase();
         random = random.replace( 'l', 'k' ).replace( 'I', 'U' );
-        return "rsmu" + numberCode.substring( 0,4 ) + "_" +
-                random.substring( 0, 2 ) + numberCode.substring( 4 ) +
+        return "rsmu_" + numberCode.substring( 0,2 ) +
+                random.substring( 0, 2 ) + numberCode.substring( 2 ) +
                 random.substring( 2 );
     }
 }
