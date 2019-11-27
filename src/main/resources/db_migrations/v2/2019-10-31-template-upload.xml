@@ -8,8 +8,10 @@
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
     <changeSet id="2019-10-31-template-upload" author="polyakov_ps">
         <addColumn tableName="document_template">
-            <column name="template_comment" type="${string.type}"/>
-            <column name="modified" type="BIT"/>
+            <column name="template_comment" type="${string.type}">
+                <constraints nullable="true"/>
+            </column>
+            <column name="modified" type="BIT" defaultValue="false"/>
         </addColumn>
     </changeSet>
 </databaseChangeLog>

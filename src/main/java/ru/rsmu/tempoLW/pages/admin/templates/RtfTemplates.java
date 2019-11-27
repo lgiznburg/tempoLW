@@ -1,5 +1,6 @@
 package ru.rsmu.tempoLW.pages.admin.templates;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.tapestry5.annotations.Import;
@@ -113,12 +114,13 @@ public class RtfTemplates {
             //check if the file is of the right format
             if (uploadForm.isValid() && uploadedFile.getFileName().matches(".*\\.rtf")) {
                 //DocumentTemplate template = rtfTemplateDao.findByType( type );
+                String uploadedTemplate = IOUtils.toString( uploadedFile.getStream() );
+                //check if uploaded file is different from existing. If yes, change modified flag and upload file. - MD5 checksum
 
-                //check if uploaded file is different from existing. If yes, change modified flag and upload file.
-                if (!template.getRtfTemplate().equals( IOUtils.toString( uploadedFile.getStream() ) ) ) {
+                if ( !DigestUtils.md5Hex(template.getRtfTemplate()).equals(DigestUtils.md5Hex(uploadedTemplate)) ) {
                     template.setModified(true);
                     template.setFileName( uploadedFile.getFileName() );
-                    template.setRtfTemplate( IOUtils.toString( uploadedFile.getStream() ) );
+                    template.setRtfTemplate( uploadedTemplate );
                     rtfTemplateDao.save(template);
                 }
             }

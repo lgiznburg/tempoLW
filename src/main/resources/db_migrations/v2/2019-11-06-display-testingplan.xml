@@ -8,7 +8,7 @@
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
     <changeSet id="2019-11-06-display-testingplan" author="polyakov_ps">
         <addColumn tableName="testing_plan">
-            <column name="displayed" type="BIT"/>
+            <column name="displayed" type="BIT" defaultValue="true"/>
         </addColumn>
     </changeSet>
 </databaseChangeLog>
