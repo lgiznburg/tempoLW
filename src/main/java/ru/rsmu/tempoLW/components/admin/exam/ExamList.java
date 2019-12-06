@@ -11,6 +11,8 @@ import ru.rsmu.tempoLW.entities.auth.User;
 import ru.rsmu.tempoLW.entities.auth.UserRoleName;
 import ru.rsmu.tempoLW.services.SecurityUserHelper;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -46,6 +48,16 @@ public class ExamList {
             List<ExamSubject> subjects = subjectManager.getSubjects();
             exams = examDao.findExamsOfSubjects( subjects );
         }
+
+        Comparator<ExamSchedule> examComparator = new Comparator<ExamSchedule>() {
+            @Override
+            public int compare(ExamSchedule o1, ExamSchedule o2) {
+                return o1.getExamDate().compareTo( o2.getExamDate() );
+            }
+        };
+
+        Collections.sort( exams, Collections.reverseOrder( examComparator ) );
+
     }
 
     public String getLinkCssClass() {

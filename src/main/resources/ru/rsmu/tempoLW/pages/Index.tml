@@ -54,10 +54,28 @@
             <div class="col-sm-10 col-sm-offset-2">
                 <t:pagelink page="starttest" context="plan"><strong>${plan.subject.title}</strong> ( ${plan.name} )
                 </t:pagelink>
-
             </div>
         </div>
     </t:loop>
+
+<t:if test="hiddenPlans">
+    <t:security.hasanyroles roles="admin,subject_admin,teacher">
+        <div class="row">
+            <div class="col-sm-10 text-info" style="padding-top: 1rem; padding-bottom: 1rem;">
+                ${message:hidden-tests}
+            </div>
+        </div>
+        <t:loop source="hiddenPlans" value="plan" empty="block:notests">
+            <div class="row">
+                <div class="col-sm-10 col-sm-offset-2">
+                    <t:pagelink page="starttest" context="plan"><strong>${plan.subject.title}</strong> ( ${plan.name} )
+                    </t:pagelink>
+                    <i> ${message:test-hidden}</i>
+                </div>
+            </div>
+        </t:loop>
+    </t:security.hasanyroles>
+</t:if>
 
     <t:block t:id="notests" id="notests">
         <div class="row">

@@ -34,10 +34,12 @@
                                     <li><t:pagelink page="admin/subjects">${message:navbar.admin.subjects}</t:pagelink></li>
                                     <li><t:pagelink page="admin/exams">${message:navbar.admin.exams}</t:pagelink></li>
                                     <li><t:pagelink page="admin/results">${message:findresults}</t:pagelink></li>
+                                    <!--<li><t:pagelink page="admin/analytics">${message:analytics-title}</t:pagelink></li>-->
                                     <li role="separator" class="divider"></li>
                                 </t:security.hasAnyRoles>
                                 <t:security.hasRole role="admin">
                                     <li><t:pagelink page="admin/users">${message:navbar.admin.users}</t:pagelink></li>
+                                    <li><t:pagelink page="admin/templates/rtftemplates">${message:rtf-template-short}</t:pagelink></li>
                                     <li role="separator" class="divider"></li>
                                 </t:security.hasRole>
                                 <t:security.hasAnyRoles roles="admin, subject_admin, teacher">
