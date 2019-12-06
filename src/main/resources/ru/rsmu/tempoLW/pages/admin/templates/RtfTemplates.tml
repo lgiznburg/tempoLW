@@ -1,0 +1,88 @@
+<html t:type="layout" t:pageTitle="${message:rtf-template-title}"
+      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
+      xmlns:p="tapestry:parameter">
+<body>
+
+<div class="row"><h3>${message:rtf-template}</h3></div>
+
+<div id="templates-list">
+    <t:loop source="templates" value="template">
+        <table class="table table-bordered" style="width: auto">
+            <tbody>
+            <tr>
+                <td colspan="4"><b>${template.templateType.getDescription( currentLocale.getLanguage() )}</b></td>
+            </tr>
+            <tr>
+                <td colspan="4">${message:rtf-template-file} ${template.fileName}</td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="btn-group-vertical side-margin-fix">
+                        <t:if test="template.ismodified()">
+                            <t:pagelink page="admin/templates/downloadtemplate" context="[template.templateType,modified]" class="btn btn-default">
+                                ${message:rtf-template-download-modified}
+                            </t:pagelink>
+                            <p:else>
+                                <button class="btn btn-default disabled" title="${message:rtf-templates-default-used}">
+                                    ${message:rtf-template-download-modified}
+                                </button>
+                            </p:else>
+                        </t:if>
+                        <t:pagelink page="admin/templates/downloadtemplate" context="template.templateType" class="btn btn-default">
+                            ${message:rtf-template-download-default}
+                        </t:pagelink>
+                    </div>
+                </td>
+                <td>
+                    <div class="side-margin-fix">
+                        <button class="btn btn-default upload-template side-margin-fix" value="${template.templateType.toString().toLowerCase()}">
+                            ${message:rtf-template-upload}
+                        </button>
+                    </div>
+                </td>
+                <td>
+                    <div class="side-margin-fix">
+                        <t:if test="template.ismodified()">
+                            <t:eventlink event="resetTemplate" context="template.templateType" class="btn btn-default side-margin-fix">
+                                ${message:rtf-template-reset}
+                            </t:eventlink>
+                            <p:else>
+                                <button class="btn btn-default disabled" title="${message:rtf-templates-default-used}">
+                                    ${message:rtf-template-reset}
+                                </button>
+                            </p:else>
+                        </t:if>
+                    </div>
+                </td>
+                <td>
+                    <t:form t:id="commentForm" class="comment-form" param="${template.templateType}" context="template.templateType">
+                        <t:label for="comment">${message:rtf-template-comment}</t:label>
+                        <t:TextArea t:id="comment" value="template.templateComment" class="comment-textarea" param="${template.templateType}" placeholder="${message:rtf-template-comment}" title="${message:rtf-template-comment}">
+                            ${template.templateComment}
+                        </t:TextArea>
+                    </t:form>
+                </td>
+            </tr>
+            <tr id="${template.templateType.toString().toLowerCase()}UploadRow" class="hidden">
+                <td colspan="4">
+                    <t:form t:id="uploadForm" selector="${template.templateType}" context="template.templateType">
+                        <div class="form-group side-margin-fix">
+                            <t:label for="uploadedFile">${message:rtf-template-upload}</t:label>
+                            <input t:type="upload" t:id="uploadedFile" t:value="uploadedFile" validate="required" style="height: auto;" class="side-margin-fix"/>
+                        </div>
+                        <div class="form-group row side-margin-fix">
+                            <input type="submit" value="${message:upload-upload}" class="btn btn-primary"/>
+                            <button class="btn btn-default cancel-upload" value="${template.templateType.toString().toLowerCase()}">${message:cancel}</button>
+                        </div>
+                        <t:errors/>
+                    </t:form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </t:loop>
+
+
+</div>
+</body>
+</html>

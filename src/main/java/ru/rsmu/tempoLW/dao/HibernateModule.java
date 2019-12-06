@@ -94,6 +94,16 @@ public class HibernateModule {
         me.getRoles().add( adminRole );
         configuration.add( "me", me );
 
+        User pps = new User();
+        pps.setUsername( "polyakov_ps@rsmu.ru" );
+        pps.setFirstName( "Павел" );
+        pps.setMiddleName( "Сергеевич" );
+        pps.setLastName( "Поляков" );
+        pps.setPassword( "25D3B13C5501D00F0E63E77CD8F6B4BB" );
+        pps.setRoles( new LinkedList<>() );
+        pps.getRoles().add( adminRole );
+        configuration.add( "pps", pps );
+
         for ( DocumentTemplateType type : DocumentTemplateType.values() ) {
             InputStream is = HibernateModule.class.getClassLoader().getResourceAsStream( "template/" + type.name().toLowerCase() + ".rtf" );
             if ( is != null ) {
@@ -102,6 +112,7 @@ public class HibernateModule {
                     template.setFileName( type.name().toLowerCase() + ".rtf" );
                     template.setTemplateType( type );
                     template.setRtfTemplate( IOUtils.toString( is ) );
+                    template.setModified( false );
                     configuration.add( type.name(), template );
                 } catch (IOException e) {
                     // can't read from file? ignore it, just do not create object

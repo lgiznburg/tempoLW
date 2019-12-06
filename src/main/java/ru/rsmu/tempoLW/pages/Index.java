@@ -9,6 +9,7 @@ import ru.rsmu.tempoLW.dao.QuestionDao;
 import ru.rsmu.tempoLW.entities.*;
 import ru.rsmu.tempoLW.services.SecurityUserHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -19,6 +20,9 @@ public class Index {
 
     @Property
     private List<TestingPlan> testingPlans;
+
+    @Property
+    private List<TestingPlan> hiddenPlans;
 
     @Property
     private TestingPlan plan;
@@ -54,9 +58,26 @@ public class Index {
     @Inject
     private Locale currentLocale;
 
+    @Property
+    private List<String> output;
+
 
     public void onActivate() {
         testingPlans = questionDao.findTestingPlans( currentLocale.getLanguage() );
+
+        if ( testingPlans != null && testingPlans.size() > 0 ) {
+            if (hiddenPlans == null) {
+                hiddenPlans = new ArrayList<>();
+            }
+            for (int i = 0; i < testingPlans.size(); i++) {
+                TestingPlan plan = testingPlans.get( i );
+                if (!plan.isDisplayed()) {
+                    hiddenPlans.add(plan);
+                    testingPlans.remove( plan );
+                    i--;
+                }
+            }
+        }
 
         examDay = examDao.findExamToday() != null;
         if ( examDay ) {

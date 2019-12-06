@@ -4,17 +4,26 @@ package ru.rsmu.tempoLW.entities;
  * @author leonid.
  */
 public enum DocumentTemplateType {
-    LOGINS("Список логинов и паролей"),
-    EXAM_RESULT("Результаты абитуриента"),
-    EXAM_STATEMENT("Экзаменационная ведомость");
 
-    private String description;
+    LOGINS("Список логинов и паролей", "Logins and passwords list" ),
+    EXAM_RESULT("Результаты абитуриента", "Entrant\'s exam results"),
+    EXAM_STATEMENT("Экзаменационная ведомость", "Exam statement");
 
-    DocumentTemplateType( String description ) {
-        this.description = description;
+    private String descriptionRu; //description in Russian locale
+    private String descriptionEn; //description in English locale
+
+    DocumentTemplateType( String descriptionRu, String descriptionEn ) {
+        this.descriptionRu = descriptionRu;
+        this.descriptionEn = descriptionEn;
     }
 
-    public String getDescription() {
-        return description;
+    //choose which language of description to return ("ru"/"en", case insensitive)
+    public String getDescription( String lang ) {
+        if ( lang.toLowerCase().equals( "ru" ) ) {
+            return descriptionRu;
+        } else {
+            return descriptionEn;
+        }
     }
+
 }

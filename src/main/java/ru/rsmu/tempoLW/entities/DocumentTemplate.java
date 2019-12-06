@@ -28,6 +28,12 @@ public class DocumentTemplate implements Serializable {
     @Column( name = "rtf_template")
     private String rtfTemplate;
 
+    @Column( name = "template_comment" )
+    private String templateComment;
+
+    @Column( name = "modified" )
+    private Boolean modified;
+
     public long getId() {
         return id;
     }
@@ -59,6 +65,14 @@ public class DocumentTemplate implements Serializable {
     public void setRtfTemplate( String rtfTemplate ) {
         this.rtfTemplate = rtfTemplate;
     }
+
+    public String getTemplateComment() { return templateComment; }
+
+    public void setTemplateComment(String templateComment) { this.templateComment = templateComment; }
+
+    public Boolean isModified() { return modified; }
+
+    public void setModified(Boolean modified) { this.modified = modified; }
 
     @Override
     public boolean equals( Object o ) {

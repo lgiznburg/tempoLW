@@ -17,9 +17,17 @@
             </div>
         </div>
         <div class="form-group">
-            <t:label for="enabled" class="col-sm-4"/>
-            <div class="col-sm-8">
-                <t:checkbox value="testingPlan.enabled" t:id="enabled"/>
+            <div class="row">
+                <t:label for="enabled" class="col-sm-4"/>
+                <div class="col-sm-8">
+                    <t:checkbox value="testingPlan.enabled" t:id="enabled"/>
+                </div>
+            </div>
+            <div class="row">
+                <t:label for="displayed" class="col-sm-4">${message:label-displayed}</t:label>
+                <div class="col-sm-8">
+                    <t:checkbox value="testingPlan.displayed" t:id="displayed"/>
+                </div>
             </div>
         </div>
         <table class="table table-hover table-bordered">
