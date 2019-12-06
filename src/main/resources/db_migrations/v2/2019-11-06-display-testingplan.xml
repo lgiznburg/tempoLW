@@ -6,9 +6,9 @@
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
                    http://www.liquibase.org/xml/ns/dbchangelog
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
-
-    <include file="2019-10-22-add-rtf-templates.xml" relativeToChangelogFile="true"/>
-    <include file="2019-10-31-template-upload.xml" relativeToChangelogFile="true"/>
-    <include file="2019-11-06-display-testingplan.xml" relativeToChangelogFile="true"/>
-
+    <changeSet id="2019-11-06-display-testingplan" author="polyakov_ps">
+        <addColumn tableName="testing_plan">
+            <column name="displayed" type="BIT" defaultValue="true"/>
+        </addColumn>
+    </changeSet>
 </databaseChangeLog>

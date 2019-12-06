@@ -7,6 +7,7 @@ import org.apache.tapestry5.annotations.ActivationRequestParameter;
 import org.apache.tapestry5.annotations.InjectComponent;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.corelib.components.Form;
+import org.apache.tapestry5.ioc.Messages;
 import ru.rsmu.tempoLW.consumabales.CrudMode;
 import ru.rsmu.tempoLW.dao.TesteeDao;
 import ru.rsmu.tempoLW.dao.internal.TesteeDaoImpl;
@@ -35,6 +36,19 @@ public class Results {
 
     @Inject
     TesteeDao testeeDao;
+
+    @org.apache.tapestry5.ioc.annotations.Inject
+    private Messages messages;
+
+    public void onValidateFromSearchResultsForm () {
+        if ( casenumber != null && !casenumber.isEmpty() ) {
+            if ( testeeDao.findByCaseNumber( casenumber ) == null ) {
+                searchResultsForm.recordError( messages.get( "no-such-testee" ) );
+            }
+        } else {
+            searchResultsForm.recordError( messages.get( "search-form-empty" ) );
+        }
+    }
 
     public void onSuccessFromSearchResultsForm () {
         testee = testeeDao.findByCaseNumber( casenumber );
