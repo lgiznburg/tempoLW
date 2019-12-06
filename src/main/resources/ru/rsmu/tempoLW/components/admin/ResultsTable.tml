@@ -2,7 +2,10 @@
 <t:container xmlns="http://www.w3.org/1999/xhtml" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd" xmlns:p="tapestry:parameter">
     <div class="row" style="margin-top: 15px">
         <div class="col-sm-7">
-            <span style="font-weight: bold">${message:testee-name}</span><span style="color: #00565e; font-size: 16pt">${testee.getLastName()}</span><span style="font-weight: bold">${message:casenumber}</span><span style="color: #00565e; font-size: 16pt">${testee.getLastName()}</span>
+            <span style="font-weight: bold">${message:testee-name}</span><span style="color: #00565e; font-size: 16pt">${testee.getLastName()}</span>
+        </div>
+        <div class="col-sm-7">
+            <span style="font-weight: bold">${message:casenumber}: </span><span style="color: #00565e; font-size: 16pt">${testee.getCaseNumber()}</span>
         </div>
     </div>
     <div class="row" id="examsList">
