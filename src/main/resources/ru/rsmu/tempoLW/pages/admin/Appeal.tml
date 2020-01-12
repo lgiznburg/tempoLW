@@ -1,0 +1,54 @@
+<html t:type="layout" t:pageTitle="${message:appeal-pagetitle}"
+      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
+      xmlns:p="tapestry:parameter"><!-- Администрирование:Список предметов -->
+<body>
+
+<div class="row align-content-center"><h3>${message:appeal-pagetitle}</h3></div>
+
+<div class="row">
+    <div class="col-sm-5 col-sm-offset-1">${message:exam-header} <b>${exam.testingPlan.subject.title}</b></div>
+        <div class="col-sm-5">
+            ${message:examDate-label}: <b><t:output format="literal:dd MMMM yyyy" value="exam.examDate"/> <t:output format="literal: HH:mm:ss" value="examResult.startTime"/> - <t:output format="literal: HH:mm:ss" value="examResult.endTime"/></b>
+        </div>
+</div>
+<div class="row">
+    <div class="col-sm-5 col-sm-offset-1">${message:testee-name} <b>${testee.lastName}</b></div>
+        <div class="col-sm-5">${message:final-mark} <b>${examResult.markTotal}</b></div>
+</div>
+<br/>
+<div class="row">
+    <div class="col-sm-4">
+        <br/>
+        <table class="table table-hover text-lg">
+            <t:loop source="examResult.questionResults" value="questionResult">
+                <tr>
+
+                    <td>
+                        <t:pagelink page="admin/appeal" context="[exam,testee]" parameters="qustionParams">
+                            ${questionResult.viewNumber}. ${questionResult.question.questionInfo.name}
+                        </t:pagelink>
+                    </td>
+                    <td>${questionResult.mark} (${questionMax})</td>
+                </tr>
+            </t:loop>
+        </table>
+    </div>
+
+    <div class="col-sm-7 col-sm-offset-1">
+        <t:admin.appeal.resultview current="resultForView"/>
+    </div>
+</div>
+<div class="row">
+    <div class="form-group">
+        <div class="col-sm-4 col-sm-offset-4">
+            <t:pagelink page="admin/appealstatement" context="[exam,testee]" class="btn btn-success" aria-label="Print">
+                ${message:appeal-statement}
+            </t:pagelink>
+            <t:pagelink page="admin/exams" parameters="queryParams" class="btn btn-default">${message:back}</t:pagelink>
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>
