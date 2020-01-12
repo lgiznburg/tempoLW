@@ -1,0 +1,73 @@
+<html t:type="layout" t:pageTitle="${message:analytics-title}"
+      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
+      xmlns:p="tapestry:parameter">
+
+    <h2>${message:analytics-title}</h2>
+
+    <h4>${message:analytics-filter}</h4>
+    <div class="row">
+        <t:form t:id="filterForm" id="filterForm" class="form-inline">
+            <table class="table-responsive" style="width: auto">
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="form-group" style="margin-left: 15px; margin-right: 0">
+                                <t:label for="subject" style="margin-right: 10px">
+                                    ${message:analytics-subject}
+                                    <span style="color: darkred;" title="${message:necessary}">* </span>
+                                    <span>: </span>
+                                </t:label>
+                                <t:select class="form-control" model="subjectModel" value="subject" t:id="subject" validate="required" blankOption="ALWAYS" blankLabel="${message:analytics-choose}" zone="testingPlanZone"/>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group" style="margin-left: 15px; margin-right: 0">
+                                <t:zone t:id="testingPlanZone" id="testingPlanZone" style="display: inline">
+                                    <t:label for="plan" style="margin-right: 10px">
+                                        ${message:analytics-plan}
+                                        <span style="color: darkred;" title="${message:necessary}">* </span>
+                                        <span>:</span>
+                                    </t:label>
+                                    <t:select class="form-control" model="planModel" value="plan" t:id="plan" validate="required" blankOption="ALWAYS" blankLabel="${message:analytics-choose}" zone="examScheduleZone"/>
+                                </t:zone>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group" style="margin-left: 15px; margin-right: 0">
+                                <t:zone t:id="examScheduleZone" id="examScheduleZone" style="display: inline">
+                                    <t:label for="exam" style="margin-right: 10px">
+                                        ${message:analytics-exam}
+                                        <span>:</span>
+                                    </t:label>
+                                    <t:select class="form-control" model="examModel" value="exam" blankOption="ALWAYS" blankLabel="${message:analytics-choose}" t:id="exam"/>
+                                </t:zone>
+                            </div>
+                        </td>
+                        <td>
+                            <t:zone t:id="submitButtonZone" id="submitButtonZone" style="display: inline">
+                                <t:if test="sufficientFilter">
+                                    <div class="form-group" style="margin-left: 15px; margin-right: 0">
+                                        <t:submit value="${message:analytics-fill}" class="form-control btn btn-primary"/>
+                                    </div>
+                                </t:if>
+                            </t:zone>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </t:form>
+        <t:eventlink t:id="filter" class="btn btn-primary" plan="plan" exam="exam">${message:analytics-fill}</t:eventlink>
+    </div>
+
+    <div>
+        <!--<t:zone t:id="resultZone" id="resultZone" style="display: inline">
+            <t:if test="show">
+                SUCCESS
+            </t:if>
+        </t:zone>-->
+        <t:if test="show">
+            SUCCESS
+        </t:if>
+    </div>
+
+</html>

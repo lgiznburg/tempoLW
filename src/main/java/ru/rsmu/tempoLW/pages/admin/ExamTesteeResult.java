@@ -1,7 +1,11 @@
 package ru.rsmu.tempoLW.pages.admin;
 
+import com.rtfparserkit.parser.IRtfParser;
+import com.rtfparserkit.parser.IRtfSource;
+import com.rtfparserkit.parser.RtfStreamSource;
 import com.tutego.jrtf.*;
 import org.apache.commons.collections4.map.LinkedMap;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.ss.util.CellUtil;
@@ -12,19 +16,20 @@ import org.apache.tapestry5.StreamResponse;
 import org.apache.tapestry5.annotations.PageActivationContext;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.slf4j.Logger;
+import ru.rsmu.rtf.FieldModifier;
+import ru.rsmu.rtf.TableModifier;
+import ru.rsmu.rtf.model.RtfDocument;
+import ru.rsmu.rtf.parser.TemplateRtfListener;
+import ru.rsmu.rtf.parser.TemplateRtfParser;
 import ru.rsmu.tempoLW.consumabales.AttachmentExcel;
 import ru.rsmu.tempoLW.consumabales.AttachmentRtf;
 import ru.rsmu.tempoLW.consumabales.ExcelStyles;
 import ru.rsmu.tempoLW.dao.ExamDao;
 import ru.rsmu.tempoLW.consumabales.FileNameTransliterator;
-import ru.rsmu.tempoLW.entities.ExamResult;
-import ru.rsmu.tempoLW.entities.ExamSchedule;
-import ru.rsmu.tempoLW.entities.QuestionResult;
-import ru.rsmu.tempoLW.entities.Testee;
+import ru.rsmu.tempoLW.dao.RtfTemplateDao;
+import ru.rsmu.tempoLW.entities.*;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
+import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.LinkedList;
 import java.util.List;
@@ -48,6 +53,9 @@ public class ExamTesteeResult {
     private ExamDao examDao;
 
     @Inject
+    private RtfTemplateDao rtfTemplateDao;
+
+    @Inject
     private Locale currentLocale;
 
     @Inject
@@ -55,39 +63,32 @@ public class ExamTesteeResult {
 
     private SimpleDateFormat sdf = new SimpleDateFormat("dd_MM_yyyy");
 
-    public StreamResponse onActivate() {
+    public StreamResponse onActivate() throws IOException {
         if(rtf == null) { rtf = false; }
         if(rtf) {
+            DocumentTemplate template = rtfTemplateDao.findByType( DocumentTemplateType.EXAM_RESULT );
+            if ( template == null ) {
+                throw new RuntimeException("Rtf Template does not exist");
+            }
+
+            InputStream is = new ByteArrayInputStream( template.getRtfTemplate().getBytes() );
+            IRtfSource source = new RtfStreamSource(is);
+            IRtfParser parser = new TemplateRtfParser();
+            TemplateRtfListener listener = new TemplateRtfListener();
+            parser.parse(source, listener);
+
+            RtfDocument doc = listener.getDocument();
+
+            FieldModifier fm = new FieldModifier();
+            TableModifier tm = new TableModifier();
+
+            fm.put( "examName", StringUtils.join( exam.getTestingPlan().getSubject().getTitle(), " ( ",
+                    exam.getTestingPlan().getName(), " )" ) );
+            fm.put( "examDate", new SimpleDateFormat( "dd MMMM yyyy", currentLocale ).format( exam.getExamDate() ) );
+            fm.put( "caseNumber",  testee.getCaseNumber() );
+            fm.put( "testeeName", testee.getLastName() );
+
             String fileName = "unknown.rtf";
-            // prepare all paragraphs before creating RTF section
-            List<RtfPara> docContent = new LinkedList<>();
-            // document header
-            docContent.add(
-                    RtfPara.p(RtfText.bold(
-                            RtfText.textJoinWithSpace(true,
-                                    exam.getTestingPlan().getSubject().getTitle(), "(",
-                                    exam.getTestingPlan().getName(), ")"))
-                    ).alignCentered());
-            docContent.add(
-                    RtfPara.p(RtfText.bold(
-                            RtfText.textJoinWithSpace(true,
-                                    testee.getCaseNumber(), "/",
-                                    testee.getLastName()))
-                    ).alignCentered());
-            docContent.add(
-                    RtfPara.p(new SimpleDateFormat("dd MMMM yyyy", currentLocale).format(exam.getExamDate()))
-                            .alignRight()
-            );
-
-            docContent.add(RtfPara.p("")); //empty line
-            docContent.add(RtfPara.row("Вопрос", "Базовый балл", "Итоговая оценка")
-                    .bottomCellBorder()
-                    .leftCellBorder()
-                    .topCellBorder()
-                    .rightCellBorder()
-                    .cellSpace(0.4, RtfUnit.CM)
-            );
-
 
             if (exam != null && testee != null) {
                 //forming file name with transliteration
@@ -97,49 +98,33 @@ public class ExamTesteeResult {
                 fileName = testee.getCaseNumber() + "_" + examName + "_" + examDate + ".rtf";
                 ExamResult result = examDao.findExamResultForTestee(exam, testee);
                 int num = 1;
+                List<List<String>> resultsTable = new LinkedList<>();
                 if (result != null) {
+                    fm.put( "finalMark", String.valueOf(result.getMarkTotal()) );
                     for (QuestionResult questionResult : result.getQuestionResults()) {
-                        docContent.add(RtfPara.row(
-                                RtfText.textJoinWithSpace(true,
-                                        String.valueOf(num++), ".", questionResult.getQuestion().getQuestionInfo().getName()),
-                                RtfText.textJoinWithSpace(true,
-                                        String.valueOf(questionResult.getScore()), "( из", String.valueOf(questionResult.getQuestion().getQuestionInfo().getMaxScore()), ")"),
-                                String.valueOf(questionResult.getMark()))
-                                .bottomCellBorder()
-                                .leftCellBorder()
-                                .topCellBorder()
-                                .rightCellBorder()
-                                .cellSpace(0.4, RtfUnit.CM)
-                        );
+                        List<String> row = new LinkedList<>();
+                        row.add( String.valueOf(num++) );
+                        row.add( questionResult.getQuestion().getQuestionInfo().getName() );
+                        row.add( StringUtils.join(
+                                String.valueOf(questionResult.getMark()),
+                                " ( из ",
+                                String.valueOf( questionResult.getScore()*questionResult.getScoreCost() ),
+                                " )"
+                        ) );
+                        resultsTable.add( row );
                     }
-                    docContent.add(RtfPara.row("Результирующая оценка", "", String.valueOf(result.getMarkTotal()))
-                            .bottomCellBorder()
-                            .leftCellBorder()
-                            .topCellBorder()
-                            .rightCellBorder()
-                            .cellSpace(0.4, RtfUnit.CM)
-                    );
-
                 }
+                else {
+                    fm.put( "finalMark", "" );
+                }
+                tm.put( "T1", resultsTable );
             }
-            docContent.add(RtfPara.p("")); //empty line
 
-            docContent.add(RtfPara.p("С результатами вступительного испытания ознакомлен."));
-            docContent.add(RtfPara.p("Жалоб на самочувствие в процессе вступительного испытания не возникло."));
-            docContent.add(RtfPara.p("К процессу проведения вступительного испытания претензий не имею.", "", ""));
-            docContent.add(RtfPara.p(RtfText.textJoinWithSpace(true, "Абитуриент", "________________", "/", testee.getLastName(), "/")));
-
-            for (int i = 0; i <= 2; i++) {
-                docContent.add(RtfPara.p(RtfText.textJoinWithSpace(true, "Член экзаменационной комиссии:", "___________________", "/____________________________/")));
-            }
+            fm.modify( doc );
+            tm.modify( doc );
 
             ByteArrayOutputStream document = new ByteArrayOutputStream();
-
-            // create RTF file
-            Rtf.rtf()
-                    .header(RtfHeader.font(RtfHeaderFont.TIMES_ROMAN).charset(RtfHeaderFont.CharSet.CYRILLIC).at(0))
-                    .section(docContent)
-                    .out(new OutputStreamWriter(document));
+            doc.output( document );
 
             return new AttachmentRtf(document.toByteArray(), fileName);
         }

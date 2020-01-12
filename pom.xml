@@ -13,7 +13,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <logging.version>1.6.1</logging.version>
-        <tapestry-release-version>5.4.3</tapestry-release-version>
+        <tapestry-release-version>5.4.5</tapestry-release-version>
         <servlet-api-release-version>2.5</servlet-api-release-version>
         <testng-release-version>6.8.21</testng-release-version>
         <slf4j-release-version>1.7.19</slf4j-release-version>
@@ -210,7 +210,15 @@ of testing facilities designed for use with TestNG (http://testng.org/), so it's
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
             <version>3.6.3</version>
+
+            <exclusions>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-classic</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
+
 
         <dependency>
             <groupId>xml-apis</groupId>
@@ -223,7 +231,15 @@ of testing facilities designed for use with TestNG (http://testng.org/), so it's
             <artifactId>jrtf</artifactId>
             <version>0.7</version>
         </dependency>
-<!-- keep this comment here just to store a link to origin project.
+
+        <dependency>
+            <groupId>com.github.joniles</groupId>
+            <artifactId>rtfparserkit</artifactId>
+            <version>1.12.0</version>
+        </dependency>
+
+
+        <!-- keep this comment here just to store a link to origin project.
 Source code has been imported into our source code with small fixes
 Original project defines some incompatible dependency
 

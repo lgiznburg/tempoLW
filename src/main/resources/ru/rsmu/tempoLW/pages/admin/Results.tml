@@ -15,7 +15,7 @@
                 <div class="input-group">
                     <t:textfield value="casenumber" t:id="searchcasenumber" pattern="[0-9]{9}" class="form-control"/>
                     <span class="input-group-btn">
-                        <input type="submit" class="btn btn-primary" value="${message:find}"/>
+                        <t:submit type="submit" class="btn btn-primary" value="${message:find}"/>
                     </span>
                 </div>
             </div>

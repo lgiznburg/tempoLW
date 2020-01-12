@@ -1,21 +1,23 @@
 package ru.rsmu.tempoLW.dao;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.tapestry5.hibernate.HibernateTransactionAdvisor;
 import org.apache.tapestry5.ioc.MethodAdviceReceiver;
 import org.apache.tapestry5.ioc.OrderedConfiguration;
 import org.apache.tapestry5.ioc.ServiceBinder;
 import org.apache.tapestry5.ioc.annotations.Contribute;
 import org.apache.tapestry5.ioc.annotations.Match;
-import ru.rsmu.tempoLW.dao.internal.ExamDaoImpl;
-import ru.rsmu.tempoLW.dao.internal.QuestionDaoImpl;
-import ru.rsmu.tempoLW.dao.internal.TesteeDaoImpl;
-import ru.rsmu.tempoLW.dao.internal.UserDaoImpl;
+import ru.rsmu.tempoLW.dao.internal.*;
+import ru.rsmu.tempoLW.entities.DocumentTemplate;
+import ru.rsmu.tempoLW.entities.DocumentTemplateType;
 import ru.rsmu.tempoLW.entities.auth.User;
 import ru.rsmu.tempoLW.entities.auth.UserRole;
 import ru.rsmu.tempoLW.entities.auth.UserRoleName;
 import ru.rsmu.tempoLW.seedentity.hibernate.SeedEntity;
 import ru.rsmu.tempoLW.seedentity.hibernate.SeedEntityImpl;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.LinkedList;
 
 /**
@@ -28,6 +30,7 @@ public class HibernateModule {
         binder.bind( UserDao.class, UserDaoImpl.class );
         binder.bind( TesteeDao.class, TesteeDaoImpl.class );
         binder.bind( ExamDao.class, ExamDaoImpl.class );
+        binder.bind( RtfTemplateDao.class, RtfTemplateDaoImpl.class );
 
         //seed entity - initial DB population
         binder.bind(SeedEntity.class, SeedEntityImpl.class);
@@ -91,6 +94,31 @@ public class HibernateModule {
         me.getRoles().add( adminRole );
         configuration.add( "me", me );
 
+        User pps = new User();
+        pps.setUsername( "polyakov_ps@rsmu.ru" );
+        pps.setFirstName( "Павел" );
+        pps.setMiddleName( "Сергеевич" );
+        pps.setLastName( "Поляков" );
+        pps.setPassword( "25D3B13C5501D00F0E63E77CD8F6B4BB" );
+        pps.setRoles( new LinkedList<>() );
+        pps.getRoles().add( adminRole );
+        configuration.add( "pps", pps );
+
+        for ( DocumentTemplateType type : DocumentTemplateType.values() ) {
+            InputStream is = HibernateModule.class.getClassLoader().getResourceAsStream( "template/" + type.name().toLowerCase() + ".rtf" );
+            if ( is != null ) {
+                try {
+                    DocumentTemplate template = new DocumentTemplate();
+                    template.setFileName( type.name().toLowerCase() + ".rtf" );
+                    template.setTemplateType( type );
+                    template.setRtfTemplate( IOUtils.toString( is ) );
+                    template.setModified( false );
+                    configuration.add( type.name(), template );
+                } catch (IOException e) {
+                    // can't read from file? ignore it, just do not create object
+                }
+            }
+        }
 
     }
 }

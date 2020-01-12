@@ -3,9 +3,7 @@
 
 <div id="testeesList">
     <div class="row">
-        <div class="row">
-            <h4>${message:exam} ${exam.name}</h4>
-        </div>
+        <h4>${message:exam} ${exam.name}</h4>
 
         <t:grid t:id="testeesGrid" source="testees" row="testee"
                 exclude="id,firstName,middleName,login,password,expirationDate,credentialsExpired"
@@ -16,7 +14,7 @@
                 <t:if test="currentExamResult">
                     <t:if test="currentExamResult.finished">
                         <div class="row text-center">
-                            <span> <span style="font-weight: bold">${currentExamResult.markTotal}</span></span><!-- col-xs-5 text-right -->
+                            <span style="font-weight: bold">${currentExamResult.markTotal}</span><!-- col-xs-5 text-right -->
                         </div>
                         <p:else><span style="color: darkblue;">${message:exam-not-finished}</span></p:else>
                     </t:if>

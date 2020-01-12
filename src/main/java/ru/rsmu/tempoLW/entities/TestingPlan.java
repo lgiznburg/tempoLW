@@ -33,6 +33,9 @@ public class TestingPlan implements Serializable {
     @Column
     private boolean enabled;
 
+    @Column
+    private boolean displayed;
+
     public long getId() {
         return id;
     }
@@ -72,6 +75,10 @@ public class TestingPlan implements Serializable {
     public void setEnabled( boolean enabled ) {
         this.enabled = enabled;
     }
+
+    public boolean isDisplayed() { return displayed; }
+
+    public void setDisplayed(boolean displayed) { this.displayed = displayed; }
 
     @Override
     public boolean equals( Object o ) {
