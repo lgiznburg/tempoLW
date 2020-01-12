@@ -48,32 +48,5 @@ public class ResultTreeView {
 
     @Property
     private List<AnswerVariant> missedCorrectAnswers = new ArrayList<>();
-    /*
-    public List<AnswerVariant> chooseAnswersList(CorrespondenceVariant correspondenceVariant){
-        missedCorrectAnswers = new ArrayList<>();
-        List<AnswerVariant> chooseAnswers = new ArrayList<>();
-        List<AnswerVariant> correctChooseAnswers = new ArrayList<>();
-        List<ResultElement> resultElements = current.getElements();
-        for(ResultElement element : resultElements){
-            ResultCorrespondence correspondenceEl = (ResultCorrespondence) element;
-            if(correspondenceEl.getCorrespondenceVariant() == correspondenceVariant){
-                chooseAnswers.add(correspondenceEl.getAnswerVariant());
-                if (correspondenceEl.isCorrect()){
-                    correctChooseAnswers.add(correspondenceEl.getAnswerVariant());
-                }
-            }
-        }
-        if(correspondenceVariant.getCorrectAnswers().size() != correctChooseAnswers.size()){
-            for (AnswerVariant variant : correspondenceVariant.getCorrectAnswers()){
-                if(!correctChooseAnswers.contains(variant)){
-                    missedCorrectAnswers.add(variant);
-                }
-            }
-        }
-        return chooseAnswers;
-    }
 
-    @Property
-    private List<AnswerVariant> missedCorrectAnswers = new ArrayList<>();
-     */
 }
