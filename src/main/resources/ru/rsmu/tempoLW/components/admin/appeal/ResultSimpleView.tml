@@ -5,7 +5,6 @@
     <div>
         <h5>${message:selected-answers}</h5>
         <t:loop source="current.elements" value="el">
-            <!--<div> ${el.answerVariant.readableText} </div>-->
             <t:if test="el.answerVariant.correct">
                 <p class="bg-success">${el.answerVariant.readableText}</p>
 

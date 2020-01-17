@@ -10,10 +10,12 @@ import ru.rsmu.tempoLW.entities.ExamSchedule;
 import ru.rsmu.tempoLW.entities.QuestionResult;
 import ru.rsmu.tempoLW.entities.Testee;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
 // ann
+@Import( stylesheet = {"katex/katex.css"})
 public class Appeal {
     @PageActivationContext(index = 0)
     @Property
@@ -60,8 +62,10 @@ public class Appeal {
 
     public Object onActivate() {
         examResult = examDao.findExamResultForTestee(exam,testee);
+        examResult.getQuestionResults().sort( Comparator.comparingInt( QuestionResult::getOrderNumber ) );
         if (questionId == null){
             resultForView = examResult.getQuestionResults().get(0);
+            questionId = resultForView.getId();
         }
         else {
             for (QuestionResult qR : examResult.getQuestionResults()) {
@@ -77,5 +81,9 @@ public class Appeal {
     public void setupRender() {
         javaScriptSupport.require( "katex/katex" );
         javaScriptSupport.require( "katex/contrib/auto-render" ).invoke( "renderMathInElementOfClass" ).with( "container" );
+    }
+
+    public boolean isActiveRow() {
+        return questionResult.getId() == questionId;
     }
 }

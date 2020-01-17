@@ -1,6 +1,5 @@
 package ru.rsmu.tempoLW.pages.admin;
 
-import com.tutego.jrtf.*;
 import org.apache.commons.collections4.map.LinkedMap;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -12,19 +11,14 @@ import org.apache.tapestry5.annotations.PageActivationContext;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.slf4j.Logger;
 import ru.rsmu.tempoLW.consumabales.AttachmentExcel;
-import ru.rsmu.tempoLW.consumabales.AttachmentRtf;
 import ru.rsmu.tempoLW.consumabales.ExcelStyles;
 import ru.rsmu.tempoLW.consumabales.FileNameTransliterator;
 import ru.rsmu.tempoLW.dao.ExamDao;
-import ru.rsmu.tempoLW.dao.QuestionDao;
-import ru.rsmu.tempoLW.dao.internal.QuestionDaoImpl;
 import ru.rsmu.tempoLW.data.QuestionType;
 import ru.rsmu.tempoLW.entities.*;
-import ru.rsmu.tempoLW.pages.Index;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -140,6 +134,7 @@ public class AppealStatement {
 
             ExamResult result = examDao.findExamResultForTestee(exam, testee);
             if(result != null) {
+                result.getQuestionResults().sort( Comparator.comparingInt( QuestionResult::getOrderNumber ) );
                 for (QuestionResult questionResult : result.getQuestionResults()) {
                     row = sheet.createRow(rownum++);
                     cell = row.createCell(0);
@@ -194,22 +189,7 @@ public class AppealStatement {
                         }
 
 
-                        if(resultsSimple != null) {
-                            for (ResultSimple resultSimple : resultsSimple) {
-                                row = sheet.createRow(rownum++);
-                                Cell chosenTitleCell = row.createCell(0);
-                                chosenTitleCell.setCellStyle(markStyle);
-                                chosenTitleCell.setCellValue("Выбранный ответ:");
-                                CellUtil.setCellStyleProperty(chosenTitleCell, CellUtil.ALIGNMENT, HorizontalAlignment.RIGHT);
-                                CellUtil.setFont(chosenTitleCell, styles.getBoldFont());
-                                cell = row.createCell(1);
-                                cell.setCellStyle( styles.getBodyStyle());
-                                cell.setCellValue(resultSimple.isCorrect() ? "верно" : "неверно");
-                                cell = row.createCell(2);
-                                cell.setCellStyle( styles.getBodyStyle());
-                                cell.setCellValue(resultSimple.getAnswerVariant().getText());
-                            }
-                        } else {
+                        for (ResultSimple resultSimple : resultsSimple) {
                             row = sheet.createRow(rownum++);
                             Cell chosenTitleCell = row.createCell(0);
                             chosenTitleCell.setCellStyle(markStyle);
@@ -218,10 +198,10 @@ public class AppealStatement {
                             CellUtil.setFont(chosenTitleCell, styles.getBoldFont());
                             cell = row.createCell(1);
                             cell.setCellStyle( styles.getBodyStyle());
-                            cell.setCellValue("неверно");
+                            cell.setCellValue(resultSimple.isCorrect() ? "верно" : "неверно");
                             cell = row.createCell(2);
                             cell.setCellStyle( styles.getBodyStyle());
-                            cell.setCellValue("Не выбран");
+                            cell.setCellValue(resultSimple.getAnswerVariant().getText());
                         }
                     }
 
@@ -260,23 +240,7 @@ public class AppealStatement {
                         }
 
 
-                        if(resultsOpen != null) {
-                            for (ResultOpen resultOpen : resultsOpen) {
-                                row = sheet.createRow(rownum++);
-                                Cell chosenTitleCell = row.createCell(0);
-                                chosenTitleCell.setCellStyle(markStyle);
-                                chosenTitleCell.setCellValue("Введённый ответ:");
-                                CellUtil.setCellStyleProperty(chosenTitleCell, CellUtil.ALIGNMENT, HorizontalAlignment.RIGHT);
-                                CellUtil.setFont(chosenTitleCell, styles.getBoldFont());
-                                cell = row.createCell(1);
-                                cell.setCellStyle( styles.getBodyStyle());
-                                List<ResultElement> results = questionResult.getElements();
-                                cell.setCellValue(resultOpen.getQuestionResult().getQuestion().countErrors(results) == 0 ? "верно" : "неверно");
-                                cell = row.createCell(2);
-                                cell.setCellStyle( styles.getBodyStyle());
-                                cell.setCellValue(resultOpen.getValue());
-                            }
-                        } else {
+                        for (ResultOpen resultOpen : resultsOpen) {
                             row = sheet.createRow(rownum++);
                             Cell chosenTitleCell = row.createCell(0);
                             chosenTitleCell.setCellStyle(markStyle);
@@ -285,10 +249,11 @@ public class AppealStatement {
                             CellUtil.setFont(chosenTitleCell, styles.getBoldFont());
                             cell = row.createCell(1);
                             cell.setCellStyle( styles.getBodyStyle());
-                            cell.setCellValue("неверно");
+                            List<ResultElement> results = questionResult.getElements();
+                            cell.setCellValue(resultOpen.getQuestionResult().getQuestion().countErrors(results) == 0 ? "верно" : "неверно");
                             cell = row.createCell(2);
                             cell.setCellStyle( styles.getBodyStyle());
-                            cell.setCellValue("Не введён");
+                            cell.setCellValue(resultOpen.getValue());
                         }
                     }
 
@@ -308,54 +273,37 @@ public class AppealStatement {
                             }
                         }
 
-                        if (resultsCorrespondence != null) {
-                            for(CorrespondenceVariant var : allVariants) {
-                                //for (ResultCorrespondence correspondenceResult : resultsCorrespondence) {
-                                    List<AnswerVariant> correspondenceAnswers = var.getCorrectAnswers();
+                        for(CorrespondenceVariant var : allVariants) {
+                            //for (ResultCorrespondence correspondenceResult : resultsCorrespondence) {
+                                List<AnswerVariant> correspondenceAnswers = var.getCorrectAnswers();
 
-                                    row = sheet.createRow(rownum++);
-                                    Cell correctTitleCell = row.createCell(0);
-                                    correctTitleCell.setCellStyle(markStyle);
-                                    correctTitleCell.setCellValue("Вариант:");
-                                    CellUtil.setCellStyleProperty(correctTitleCell, CellUtil.ALIGNMENT, HorizontalAlignment.RIGHT);
-                                    CellUtil.setFont(correctTitleCell, styles.getBoldFont());
-                                    cell = row.createCell(2);
-                                    cell.setCellStyle( styles.getBodyStyle());
-                                    cell.setCellValue(var.getText());
+                                row = sheet.createRow(rownum++);
+                                Cell correctTitleCell = row.createCell(0);
+                                correctTitleCell.setCellStyle(markStyle);
+                                correctTitleCell.setCellValue("Вариант:");
+                                CellUtil.setCellStyleProperty(correctTitleCell, CellUtil.ALIGNMENT, HorizontalAlignment.RIGHT);
+                                CellUtil.setFont(correctTitleCell, styles.getBoldFont());
+                                cell = row.createCell(2);
+                                cell.setCellStyle( styles.getBodyStyle());
+                                cell.setCellValue(var.getText());
 
-                                    if(correspondenceAnswers != null) {
-                                        for (AnswerVariant answer : correspondenceAnswers) {
-                                            row = sheet.createRow(rownum++);
-                                            Cell correctCorrespondenceCell = row.createCell(0);
-                                            correctCorrespondenceCell.setCellStyle(markStyle);
-                                            correctCorrespondenceCell.setCellValue("Верный ответ:");
-                                            CellUtil.setCellStyleProperty(correctCorrespondenceCell, CellUtil.ALIGNMENT, HorizontalAlignment.RIGHT);
-                                            CellUtil.setFont(correctCorrespondenceCell, styles.getBoldFont());
-                                            cell = row.createCell(2);
-                                            cell.setCellStyle( styles.getBodyStyle());
-                                            cell.setCellValue(answer.getText());
-                                        }
+                                if(correspondenceAnswers != null) {
+                                    for (AnswerVariant answer : correspondenceAnswers) {
+                                        row = sheet.createRow(rownum++);
+                                        Cell correctCorrespondenceCell = row.createCell(0);
+                                        correctCorrespondenceCell.setCellStyle(markStyle);
+                                        correctCorrespondenceCell.setCellValue("Верный ответ:");
+                                        CellUtil.setCellStyleProperty(correctCorrespondenceCell, CellUtil.ALIGNMENT, HorizontalAlignment.RIGHT);
+                                        CellUtil.setFont(correctCorrespondenceCell, styles.getBoldFont());
+                                        cell = row.createCell(2);
+                                        cell.setCellStyle( styles.getBodyStyle());
+                                        cell.setCellValue(answer.getText());
                                     }
-                                    if(resultsCorrespondence != null) {
-                                        Boolean answered = false;
-                                        for ( ResultCorrespondence resultCorrespondence : resultsCorrespondence ) {
-                                            if( resultCorrespondence.getCorrespondenceVariant() == var ) {
-                                                row = sheet.createRow(rownum++);
-                                                Cell chosenTitleCell = row.createCell(0);
-                                                chosenTitleCell.setCellStyle(markStyle);
-                                                chosenTitleCell.setCellValue("Выбранный ответ:");
-                                                CellUtil.setCellStyleProperty(chosenTitleCell, CellUtil.ALIGNMENT, HorizontalAlignment.RIGHT);
-                                                CellUtil.setFont(chosenTitleCell, styles.getBoldFont());
-                                                cell = row.createCell(1);
-                                                cell.setCellStyle( styles.getBodyStyle());
-                                                cell.setCellValue(resultCorrespondence.isCorrect() ? "верно" : "неверно");
-                                                cell = row.createCell(2);
-                                                cell.setCellStyle( styles.getBodyStyle());
-                                                cell.setCellValue(resultCorrespondence.getAnswerVariant().getText());
-                                                answered = true;
-                                            }
-                                        }
-                                        if (!answered) {
+                                }
+                                if(resultsCorrespondence != null) {
+                                    Boolean answered = false;
+                                    for ( ResultCorrespondence resultCorrespondence : resultsCorrespondence ) {
+                                        if( resultCorrespondence.getCorrespondenceVariant() == var ) {
                                             row = sheet.createRow(rownum++);
                                             Cell chosenTitleCell = row.createCell(0);
                                             chosenTitleCell.setCellStyle(markStyle);
@@ -364,14 +312,29 @@ public class AppealStatement {
                                             CellUtil.setFont(chosenTitleCell, styles.getBoldFont());
                                             cell = row.createCell(1);
                                             cell.setCellStyle( styles.getBodyStyle());
-                                            cell.setCellValue("неверно");
+                                            cell.setCellValue(resultCorrespondence.isCorrect() ? "верно" : "неверно");
                                             cell = row.createCell(2);
                                             cell.setCellStyle( styles.getBodyStyle());
-                                            cell.setCellValue("Не выбран");
+                                            cell.setCellValue(resultCorrespondence.getAnswerVariant().getText());
+                                            answered = true;
                                         }
                                     }
-                                //}
-                            }
+                                    if (!answered) {
+                                        row = sheet.createRow(rownum++);
+                                        Cell chosenTitleCell = row.createCell(0);
+                                        chosenTitleCell.setCellStyle(markStyle);
+                                        chosenTitleCell.setCellValue("Выбранный ответ:");
+                                        CellUtil.setCellStyleProperty(chosenTitleCell, CellUtil.ALIGNMENT, HorizontalAlignment.RIGHT);
+                                        CellUtil.setFont(chosenTitleCell, styles.getBoldFont());
+                                        cell = row.createCell(1);
+                                        cell.setCellStyle( styles.getBodyStyle());
+                                        cell.setCellValue("неверно");
+                                        cell = row.createCell(2);
+                                        cell.setCellStyle( styles.getBodyStyle());
+                                        cell.setCellValue("Не выбран");
+                                    }
+                                }
+                            //}
                         }
                     }
 
@@ -480,26 +443,9 @@ public class AppealStatement {
                                         cell.setCellValue(answer.getText());
                                     }
                                 }
-                                if(resultsTree != null) {
-                                    Boolean answered = false;
-                                    for ( ResultTree resultTree : resultsTree ) {
-                                        if( resultTree.getCorrespondenceVariant() == var ) {
-                                            row = sheet.createRow(rownum++);
-                                            Cell chosenTitleCell = row.createCell(0);
-                                            chosenTitleCell.setCellStyle(markStyle);
-                                            chosenTitleCell.setCellValue("Выбранный ответ:");
-                                            CellUtil.setCellStyleProperty(chosenTitleCell, CellUtil.ALIGNMENT, HorizontalAlignment.RIGHT);
-                                            CellUtil.setFont(chosenTitleCell, styles.getBoldFont());
-                                            cell = row.createCell(1);
-                                            cell.setCellStyle( styles.getBodyStyle());
-                                            cell.setCellValue(resultTree.isCorrect() ? "верно" : "неверно");
-                                            cell = row.createCell(2);
-                                            cell.setCellStyle( styles.getBodyStyle());
-                                            cell.setCellValue(resultTree.getAnswerVariant().getText());
-                                            answered = true;
-                                        }
-                                    }
-                                    if (!answered) {
+                                boolean answered = false;
+                                for ( ResultTree resultTree : resultsTree ) {
+                                    if( resultTree.getCorrespondenceVariant() == var ) {
                                         row = sheet.createRow(rownum++);
                                         Cell chosenTitleCell = row.createCell(0);
                                         chosenTitleCell.setCellStyle(markStyle);
@@ -508,11 +454,26 @@ public class AppealStatement {
                                         CellUtil.setFont(chosenTitleCell, styles.getBoldFont());
                                         cell = row.createCell(1);
                                         cell.setCellStyle( styles.getBodyStyle());
-                                        cell.setCellValue("неверно");
+                                        cell.setCellValue(resultTree.isCorrect() ? "верно" : "неверно");
                                         cell = row.createCell(2);
                                         cell.setCellStyle( styles.getBodyStyle());
-                                        cell.setCellValue("Не выбран");
+                                        cell.setCellValue(resultTree.getAnswerVariant().getText());
+                                        answered = true;
                                     }
+                                }
+                                if (!answered) {
+                                    row = sheet.createRow(rownum++);
+                                    Cell chosenTitleCell = row.createCell(0);
+                                    chosenTitleCell.setCellStyle(markStyle);
+                                    chosenTitleCell.setCellValue("Выбранный ответ:");
+                                    CellUtil.setCellStyleProperty(chosenTitleCell, CellUtil.ALIGNMENT, HorizontalAlignment.RIGHT);
+                                    CellUtil.setFont(chosenTitleCell, styles.getBoldFont());
+                                    cell = row.createCell(1);
+                                    cell.setCellStyle( styles.getBodyStyle());
+                                    cell.setCellValue("неверно");
+                                    cell = row.createCell(2);
+                                    cell.setCellStyle( styles.getBodyStyle());
+                                    cell.setCellValue("Не выбран");
                                 }
                             }
                         }

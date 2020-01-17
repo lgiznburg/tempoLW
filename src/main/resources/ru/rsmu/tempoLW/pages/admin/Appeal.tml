@@ -1,6 +1,6 @@
 <html t:type="layout" t:pageTitle="${message:appeal-pagetitle}"
       xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
-      xmlns:p="tapestry:parameter"><!-- Администрирование:Список предметов -->
+      xmlns:p="tapestry:parameter">
 <body>
 
 <div class="row align-content-center"><h3>${message:appeal-pagetitle}</h3></div>
@@ -17,19 +17,26 @@
 </div>
 <br/>
 <div class="row">
-    <div class="col-sm-4">
+    <div class="col-sm-4" style="max-height: 500px; overflow-y: auto;">
         <br/>
         <table class="table table-hover text-lg">
             <t:loop source="examResult.questionResults" value="questionResult">
-                <tr>
-
-                    <td>
-                        <t:pagelink page="admin/appeal" context="[exam,testee]" parameters="qustionParams">
-                            ${questionResult.viewNumber}. ${questionResult.question.questionInfo.name}
-                        </t:pagelink>
-                    </td>
-                    <td>${questionResult.mark} (${questionMax})</td>
-                </tr>
+                <t:if test="activeRow">
+                    <tr class="info">
+                        <td>${questionResult.viewNumber}. ${questionResult.question.questionInfo.name}</td>
+                        <td nowrap="true">${questionResult.mark} (${questionMax})</td>
+                    </tr>
+                    <p:else>
+                        <tr>
+                            <td>
+                                <t:pagelink page="admin/appeal" context="[exam,testee]" parameters="qustionParams">
+                                    ${questionResult.viewNumber}. ${questionResult.question.questionInfo.name}
+                                </t:pagelink>
+                            </td>
+                            <td nowrap="true">${questionResult.mark} (${questionMax})</td>
+                        </tr>
+                    </p:else>
+                </t:if>
             </t:loop>
         </table>
     </div>

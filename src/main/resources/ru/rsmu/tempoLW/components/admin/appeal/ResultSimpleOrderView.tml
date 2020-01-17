@@ -3,19 +3,8 @@
              xmlns:p="tapestry:parameter" >
 
     <div>
-        <!--<h5>${message:given-answer}</h5>
-        <table>&lt;!&ndash;<table class="table table-hover text-lg">&ndash;&gt;
-            <t:loop source="current.elements" value="el">
-                <tr>
-                    <td>${el.answerVariant.readableText}</td>
-                    <td>${el.enteredOrder}</td>
-                    <td>${el.answerVariant.sequenceOrder}</td>
-                </tr>
-            </t:loop>
-        </table>-->
 
         <div>
-            <!--<table>-->
             <table class="table table-hover text-lg">
                 <tr>
                     <th>#</th>

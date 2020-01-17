@@ -90,6 +90,5 @@ public class ResultSimpleOrderView {
     public void myTest(){
         QuestionSimpleOrder cr = (QuestionSimpleOrder) current.getQuestion();
         cr.getAnswerVariants();
-        //current.
     }
 }

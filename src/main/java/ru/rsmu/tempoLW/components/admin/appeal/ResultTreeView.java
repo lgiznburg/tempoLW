@@ -16,6 +16,9 @@ public class ResultTreeView {
     private CorrespondenceVariant correspondenceVariant;
     @Property
     private AnswerVariant answerVariant;
+    @Property
+    private List<AnswerVariant> missedCorrectAnswers = new ArrayList<>();
+
 
     public List<CorrespondenceVariant> getQuestionList(){
         QuestionTree questionTree = (QuestionTree) current.getQuestion();
@@ -45,8 +48,5 @@ public class ResultTreeView {
         }
         return chooseAnswers;
     }
-
-    @Property
-    private List<AnswerVariant> missedCorrectAnswers = new ArrayList<>();
 
 }

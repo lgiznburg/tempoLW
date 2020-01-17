@@ -29,12 +29,4 @@
         </t:loop>
     </div>
 
-    <!--<t:if test="!answerIsCorrect()">
-        <div>
-            <h5>${message:correct-answer}</h5>
-            <t:loop source="correctAnswers" value="correctAnswer">
-                ${correctAnswer.readableText}
-            </t:loop>
-        </div>
-    </t:if>-->
 </t:container>
