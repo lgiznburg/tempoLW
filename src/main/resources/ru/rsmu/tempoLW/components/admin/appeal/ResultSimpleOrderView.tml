@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<t:container xmlns="http://www.w3.org/1999/xhtml" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
+             xmlns:p="tapestry:parameter" >
+
+    <div>
+
+        <div>
+            <table class="table table-hover text-lg">
+                <tr>
+                    <th>#</th>
+                    <th>${message:given-answer}</th>
+                    <th>${message:correct-answer}</th>
+                </tr>
+
+                <t:loop source="integerList" value="numEl">
+                    <tr>
+                        <td>${orderedAnswers.get(numEl).enteredOrder}</td>
+                        <t:if test="answerHasCorrectOrder(orderedAnswers.get(numEl))">
+                            <td>
+                                <p class="bg-success">${orderedAnswers.get(numEl).answerVariant.readableText}</p>
+                            </td>
+
+                            <p:else>
+                                <td><p class="bg-danger">${orderedAnswers.get(numEl).answerVariant.readableText}</p></td>
+                                <t:if test="isCorrectAnswerExist(numEl)">
+                                    <td><p>${orderedCorrectAnswers.get(numEl).readableText}</p></td>
+                                </t:if>
+                            </p:else>
+                        </t:if>
+                    </tr>
+                </t:loop>
+            </table>
+        </div>
+
+        <t:if test="!missedAnswers.empty">
+            <h5>${message:missed-correct-answers}</h5>
+            <table class="table table-hover text-lg">
+                <t:loop source="missedAnswers" value="answerVariant">
+                    <tr>
+                        <td>${answerVariant.sequenceOrder}</td>
+                        <td>${answerVariant.readableText}</td>
+                        <td></td>
+                    </tr>
+                </t:loop>
+            </table>
+        </t:if>
+    </div>
+
+</t:container>

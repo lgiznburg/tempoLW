@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<t:container xmlns="http://www.w3.org/1999/xhtml" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
+             xmlns:p="tapestry:parameter" >
+
+    <div>
+        <h5>${message:selected-answers}</h5>
+        <t:loop source="current.elements" value="el">
+            <t:if test="el.answerVariant.correct">
+                <p class="bg-success">${el.answerVariant.readableText}</p>
+
+                <p:else>
+                    <p class="bg-danger">${el.answerVariant.readableText}</p>
+                </p:else>
+            </t:if>
+        </t:loop>
+        <t:if test="!correctAnswerVariants.empty">
+            <div>
+                <h5>${message:missed-correct-answers}</h5>
+                <t:loop source="correctAnswerVariants" value="answerVariant">
+                    ${answerVariant.readableText}
+                </t:loop>
+            </div>
+        </t:if>
+    </div>
+
+</t:container>

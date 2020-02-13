@@ -35,8 +35,13 @@
                                     <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
                                 </t:pagelink>
                             </span>
-                            <span title="${message:appeal-statement} (.xlsx)"><!-- col-xs-7 -->
+                            <!--<span title="${message:appeal-statement} (.xlsx)">&lt;!&ndash; col-xs-7 &ndash;&gt;
                                 <t:pagelink page="admin/appealstatement" context="[exam,testee]" class="btn btn-danger btn-sm" aria-label="Print">
+                                    <span class="glyphicon glyphicon-font" aria-hidden="true"></span>
+                                </t:pagelink>
+                            </span>-->
+                            <span title="${message:appeal-statement}"><!-- col-xs-7 -->
+                                <t:pagelink page="admin/appeal" context="[exam,testee]" class="btn btn-danger btn-sm" aria-label="Print">
                                     <span class="glyphicon glyphicon-font" aria-hidden="true"></span>
                                 </t:pagelink>
                             </span>

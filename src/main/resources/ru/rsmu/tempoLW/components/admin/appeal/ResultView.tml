@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<t:container xmlns="http://www.w3.org/1999/xhtml" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
+             xmlns:p="tapestry:parameter" >
+
+    <div id="questionView" class="row">
+        <h3>${message:question-num} ${readableNumber}. ${current.question.questionInfo.name}</h3>
+        <blockquote>
+            <p class="text-lg">${current.question.text}</p>
+            <t:if test="current.question.image">
+                <img class="question-image" src="${imageLink}"/>
+            </t:if>
+        </blockquote>
+    </div>
+    <t:if test="questionSimple">
+        <t:admin.appeal.resultsimpleview current="current"/>
+    </t:if>
+    <t:if test="questionOpen">
+        <t:admin.appeal.resultopenview current="current"/>
+    </t:if>
+    <t:if test="questionCorrespondence">
+        <t:admin.appeal.resultcorrespondenceview current="current"/>
+    </t:if>
+    <t:if test="questionSimpleOrder">
+        <t:admin.appeal.resultsimpleorderview current="current"/>
+    </t:if>
+    <t:if test="questionTree">
+        <t:admin.appeal.resulttreeview current="current"/>
+    </t:if>
+
+</t:container>
