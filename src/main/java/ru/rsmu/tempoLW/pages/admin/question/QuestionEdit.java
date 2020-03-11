@@ -3,6 +3,7 @@ package ru.rsmu.tempoLW.pages.admin.question;
 import org.apache.commons.io.IOUtils;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.apache.tapestry5.Block;
 import org.apache.tapestry5.SelectModel;
 import org.apache.tapestry5.ValueEncoder;
 import org.apache.tapestry5.annotations.PageActivationContext;
@@ -51,6 +52,28 @@ public class QuestionEdit {
 
     @Inject
     private LinkSource linkSource;
+
+    @Inject
+    Block questionSimple, questionOpen, questionCorrespondence, questionSimpleOrder, questionTree;
+
+    public Block getQuestionBlock() {
+        if ( question instanceof QuestionSimple ) {
+            return questionSimple;
+        }
+        else if ( question instanceof QuestionOpen ) {
+            return questionOpen;
+        }
+        else if ( question instanceof QuestionCorrespondence ) {
+            return questionCorrespondence;
+        }
+        else if ( question instanceof QuestionSimpleOrder ) {
+            return questionSimpleOrder;
+        }
+        else if ( question instanceof QuestionTree ) {
+            return questionTree;
+        }
+        return null;
+    }
 
     public Object onActivate() {
         return prepare();

@@ -1,0 +1,40 @@
+<html t:type="layout" t:pageTitle="Администрирование:Просмотр вопроса"
+      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
+      xmlns:p="tapestry:parameter">
+<body>
+<div class="row question-filter">
+    <t:form t:id="questionSearch" class="form-inline">
+        <div class="form-group col-sm-4">
+            <t:label for="topic"/>:
+            <t:select t:id="topic" value="topic" model="topicModel" encoder="topicEncoder" class="form-control" />
+        </div>
+        <div class="form-group">
+            <t:label for="complexity"/>:
+            <t:select t:id="complexity" value="complexity" model="literal:1,2,3,4,5"  class="form-control"/>
+        </div>
+        <div class="form-group">
+            <t:label for="maxScore"/>:
+            <t:select t:id="maxScore" value="maxScore" model="literal:1,2,3,4,5" class="form-control"/>
+        </div>
+        <div class="form-group">
+            <t:label for="searchText"/>:
+            <t:textfield value="text" t:id="searchText" class="form-control"/>
+        </div>
+        <div class="form-group">
+            <input type="submit" class="btn btn-primary" value="${message:searсh}"/>
+        </div>
+    </t:form>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <t:grid source="questionDataSource" rowsPerPage="10" pagerPosition="bottom"
+        include="type" add="name,complexity,maxScore" row="question"/>
+        <p:nameCell>${question.questionInfo.name}</p:nameCell>
+        <p:nameComplexity>${question.questionInfo.complexity}</p:nameComplexity>
+        <p:nameMaxScore>${question.questionInfo.maxScore}</p:nameMaxScore>
+    </div>
+</div>
+
+</body>
+</html>

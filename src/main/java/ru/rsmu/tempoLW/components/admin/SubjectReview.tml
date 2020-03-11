@@ -54,7 +54,9 @@
                 <t:eventlink class="btn btn-primary" event="toUpload" context="subjectId">${message:review-upload-questions}</t:eventlink>
                 <t:pagelink class="btn btn-primary" page="admin/exportquestions" context="subject">${message:review-download-questions}</t:pagelink>
             </t:security.hasanyroles>
-            <t:pagelink page="admin/previewquestion" class="btn btn-primary" context="[subject,0]">${message:review-preview-questions}</t:pagelink>
+<!--            <t:pagelink page="admin/previewquestion" class="btn btn-primary" context="[subject,0]">${message:review-preview-questions}</t:pagelink>-->
+            <t:pagelink page="admin/question/questionlist" class="btn btn-primary" context="subject">${message:review-preview-questions}</t:pagelink>
+
             <!-- delete -->
         </div>
     </div>
