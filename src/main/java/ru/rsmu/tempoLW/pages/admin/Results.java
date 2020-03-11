@@ -8,12 +8,12 @@ import org.apache.tapestry5.annotations.InjectComponent;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.corelib.components.Form;
 import org.apache.tapestry5.ioc.Messages;
+import org.apache.tapestry5.ioc.annotations.Inject;
 import ru.rsmu.tempoLW.consumabales.CrudMode;
 import ru.rsmu.tempoLW.dao.TesteeDao;
 import ru.rsmu.tempoLW.dao.internal.TesteeDaoImpl;
 import ru.rsmu.tempoLW.entities.Testee;
 
-import javax.inject.Inject;
 
 @RequiresRoles(value = {"admin","subject_admin", "teacher"}, logical = Logical.OR )
 public class Results {
@@ -37,7 +37,7 @@ public class Results {
     @Inject
     TesteeDao testeeDao;
 
-    @org.apache.tapestry5.ioc.annotations.Inject
+    @Inject
     private Messages messages;
 
     public void onValidateFromSearchResultsForm () {
