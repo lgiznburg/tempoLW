@@ -1,31 +1,20 @@
 package ru.rsmu.tempoLW.pages;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.tapestry5.Field;
-import org.apache.tapestry5.SelectModel;
-import org.apache.tapestry5.ValueEncoder;
 import org.apache.tapestry5.annotations.InjectComponent;
-import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.corelib.components.Form;
 import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
-import org.apache.tapestry5.services.SelectModelFactory;
-import ru.rsmu.tempoLW.consumabales.CrudMode;
-import ru.rsmu.tempoLW.dao.QuestionDao;
 import ru.rsmu.tempoLW.dao.UserDao;
 import ru.rsmu.tempoLW.entities.ExamSubject;
-import ru.rsmu.tempoLW.entities.auth.SubjectManager;
 import ru.rsmu.tempoLW.entities.auth.User;
 import ru.rsmu.tempoLW.entities.auth.UserRole;
-import ru.rsmu.tempoLW.entities.auth.UserRoleName;
 import ru.rsmu.tempoLW.services.SecurityUserHelper;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequiresRoles(value = {"admin", "subject_admin", "teacher"}, logical = Logical.OR)
 public class UserPassword {

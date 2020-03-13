@@ -63,7 +63,8 @@
         <div class="form-group">
             <div class="col-sm-6 col-sm-offset-3">
                 <input type="submit" class="btn btn-primary" value="${message:save}"/>&nbsp;
-                <t:pagelink page="admin/previewquestion" context="[question.questionInfo.subject,question]" class="btn btn-default">${message:cancel}</t:pagelink>
+                <t:pagelink page="admin/question/questionview" context="question" class="btn btn-default">${message:viewQuestion}</t:pagelink>
+                <t:pagelink page="admin/question/questionlist" context="question.questionInfo.subject" class="btn btn-default">${message:cancel}</t:pagelink>
             </div>
         </div>
     </t:form>

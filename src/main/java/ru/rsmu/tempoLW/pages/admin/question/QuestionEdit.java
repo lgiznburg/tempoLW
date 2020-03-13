@@ -6,20 +6,19 @@ import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.tapestry5.Block;
 import org.apache.tapestry5.SelectModel;
 import org.apache.tapestry5.ValueEncoder;
+import org.apache.tapestry5.annotations.InjectPage;
 import org.apache.tapestry5.annotations.PageActivationContext;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.internal.services.LinkSource;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.SelectModelFactory;
+import org.apache.tapestry5.services.ValueEncoderSource;
 import org.apache.tapestry5.upload.services.UploadedFile;
 import ru.rsmu.tempoLW.dao.QuestionDao;
 import ru.rsmu.tempoLW.entities.*;
 import ru.rsmu.tempoLW.pages.QuestionImage;
-import ru.rsmu.tempoLW.pages.admin.PreviewQuestion;
 import ru.rsmu.tempoLW.pages.admin.Subjects;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.List;
 
@@ -30,11 +29,7 @@ import java.util.List;
 public class QuestionEdit {
     @Property
     @PageActivationContext
-    private Long questionId;
-
-    @Property
     private Question question;
-
 
     @Property
     private SelectModel topicModel;
@@ -52,6 +47,12 @@ public class QuestionEdit {
 
     @Inject
     private LinkSource linkSource;
+
+    @Inject
+    private ValueEncoderSource valueEncoderSource;
+
+    @InjectPage
+    private QuestionList questionList;
 
     @Inject
     Block questionSimple, questionOpen, questionCorrespondence, questionSimpleOrder, questionTree;
@@ -80,14 +81,11 @@ public class QuestionEdit {
     }
 
     private Object prepare() {
-        if ( questionId != null ) {
-            question = questionDao.find( Question.class, questionId );
-            if ( question != null ) {
-                topicList = questionDao.findTopicsOfSubject( question.getQuestionInfo().getSubject() );
-                topicModel = modelFactory.create( topicList, "title" );
+        if ( question != null ) {
+            topicList = questionDao.findTopicsOfSubject( question.getQuestionInfo().getSubject() );
+            topicModel = modelFactory.create( topicList, "title" );
 
-                return null;
-            }
+            return null;
         }
         return Subjects.class;
     }
@@ -109,7 +107,7 @@ public class QuestionEdit {
             question.setImage( image );
         }
         questionDao.save( question );
-        return linkSource.createPageRenderLink( "admin/" + PreviewQuestion.class.getSimpleName(), false, question.getQuestionInfo().getSubject().getId(), question.getId() );
+        return linkSource.createPageRenderLink( "admin/question" + QuestionView.class.getSimpleName(), false, question );
     }
 
     public Object onDeleteImage() {
@@ -123,42 +121,8 @@ public class QuestionEdit {
     }
 
     public ValueEncoder<SubTopic> getTopicEncoder() {
-        return new ValueEncoder<SubTopic>() {
-            @Override
-            public String toClient( SubTopic value ) {
-                return String.valueOf( value.getId() );
-            }
-
-            @Override
-            public SubTopic toValue( String clientValue ) {
-                long id = Long.parseLong( clientValue );
-                for ( SubTopic topic : topicList ) {
-                    if ( topic.getId() == id ) {
-                        return topic;
-                    }
-                }
-                return null;
-            }
-        };
+        return valueEncoderSource.getValueEncoder( SubTopic.class );
     }
-
-    public boolean isQuestionSimple() {
-        return question instanceof QuestionSimple;
-    }
-
-    public boolean isQuestionOpen() {
-        return question instanceof QuestionOpen;
-    }
-
-    public boolean isQuestionCorrespondence() {
-        return question instanceof QuestionCorrespondence;
-    }
-
-    public boolean isQuestionSimpleOrder() {
-        return question instanceof QuestionSimpleOrder;
-    }
-
-    public boolean isQuestionTree() { return  question instanceof QuestionTree; }
 
     public String getImageLink() {
         if ( question.getImage() != null ) {
@@ -166,4 +130,11 @@ public class QuestionEdit {
         }
         return "";
     }
+
+    public Object onToQuestionList() {
+        questionList.set( question.getQuestionInfo().getSubject() );
+        return questionList;
+    }
+
+
 }

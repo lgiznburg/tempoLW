@@ -8,16 +8,14 @@ import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.corelib.components.Form;
 import org.apache.tapestry5.internal.OptionModelImpl;
 import org.apache.tapestry5.ioc.annotations.Inject;
+import org.apache.tapestry5.services.ValueEncoderSource;
 import org.apache.tapestry5.util.AbstractSelectModel;
 import ru.rsmu.tempoLW.consumabales.CrudMode;
-import ru.rsmu.tempoLW.consumabales.FieldCopy;
 import ru.rsmu.tempoLW.dao.QuestionDao;
-import ru.rsmu.tempoLW.encoders.SubTopicEncoder;
 import ru.rsmu.tempoLW.entities.ExamSubject;
 import ru.rsmu.tempoLW.entities.SubTopic;
 import ru.rsmu.tempoLW.entities.TestingPlan;
 import ru.rsmu.tempoLW.entities.TestingPlanRule;
-import ru.rsmu.tempoLW.pages.admin.Subjects;
 
 import java.util.*;
 
@@ -45,6 +43,9 @@ public class TestingPlanCreate {
 
     @InjectPage
     private TestingPlanEdit testingPlanEditPage;
+
+    @Inject
+    private ValueEncoderSource valueEncoderSource;
 
     private Map<String,Long> topicCounts = new HashMap<>();
 
@@ -139,23 +140,6 @@ public class TestingPlanCreate {
     }
 
     public ValueEncoder<SubTopic> getTopicEncoder() {
-        return new ValueEncoder<SubTopic>() {
-            List<SubTopic> topics = questionDao.findTopicsOfSubject( subject );
-            @Override
-            public String toClient( SubTopic value ) {
-                return String.valueOf( value.getId() );
-            }
-
-            @Override
-            public SubTopic toValue( String clientValue ) {
-                Long id = Long.parseLong( clientValue );
-                for ( SubTopic topic : topics ) {
-                    if ( id == topic.getId() ) {
-                        return topic;
-                    }
-                }
-                return null;
-            }
-        };
+        return valueEncoderSource.getValueEncoder( SubTopic.class );
     }
 }

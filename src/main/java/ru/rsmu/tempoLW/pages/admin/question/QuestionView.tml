@@ -6,19 +6,24 @@
 
     <div class="row subquestion-nav">
         <div class="col-sm-4 text-left">
-                <t:eventlink event="prevQuestion" class="btn btn-default"><!--Previous question-->&larr;</t:eventlink>
+                <t:eventlink event="prevQuestion" class="btn btn-default">
+                    <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"/>
+                </t:eventlink>
         </div>
         <t:security.hasAnyRoles roles="admin,subject_admin">
             <div class="col-sm-4 text-center">
                 <t:pagelink page="admin/question/questionedit" context="question" class="btn btn-primary">${message:editQuestion}</t:pagelink>
+                <t:eventlink event="toQuestionList" class="btn btn-default">${message:cancel}</t:eventlink>
             </div>
         </t:security.hasAnyRoles>
         <div class="col-sm-4 text-right">
-                <t:eventlink event="nextQuestion" class="btn btn-default"><!--Next question-->&rarr;</t:eventlink>
+                <t:eventlink event="nextQuestion" class="btn btn-default">
+                    <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"/>
+                </t:eventlink>
         </div>
 
     </div>
-    <div class="row question-filter">
+    <!--<div class="row question-filter">
         <t:form t:id="questionSearch" class="form-inline">
             <div class="form-group col-sm-4">
                 <t:label for="topic"/>:
@@ -41,6 +46,6 @@
             </div>
         </t:form>
     </div>
-
+-->
 </body>
 </html>

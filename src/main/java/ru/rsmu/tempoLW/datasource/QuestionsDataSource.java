@@ -7,12 +7,15 @@ import org.apache.tapestry5.hibernate.HibernateGridDataSource;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
+import ru.rsmu.tempoLW.entities.ExamSubject;
 import ru.rsmu.tempoLW.entities.SubTopic;
 
 /**
  * @author leonid.
  */
 public class QuestionsDataSource extends HibernateGridDataSource {
+
+    private ExamSubject subject;
 
     private SubTopic topic;
 
@@ -22,8 +25,9 @@ public class QuestionsDataSource extends HibernateGridDataSource {
 
     private String text;
 
-    public QuestionsDataSource( Session session, Class entityType, SubTopic topic, Integer complexity, Integer maxScore, String text ) {
+    public QuestionsDataSource( Session session, Class entityType, ExamSubject subject, SubTopic topic, Integer complexity, Integer maxScore, String text ) {
         super( session, entityType );
+        this.subject = subject;
         this.topic = topic;
         this.complexity = complexity;
         this.maxScore = maxScore;
@@ -32,7 +36,8 @@ public class QuestionsDataSource extends HibernateGridDataSource {
 
     @Override
     protected void applyAdditionalConstraints( Criteria criteria ) {
-        criteria.createAlias( "questionInfo", "questionInfo" );
+        criteria.createAlias( "questionInfo", "questionInfo" )
+                .add( Restrictions.eq( "questionInfo.subject", subject ) );
         if ( topic != null ) {
             criteria.add( Restrictions.eq( "questionInfo.topic", topic ) );
         }

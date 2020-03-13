@@ -12,6 +12,7 @@ import org.apache.tapestry5.corelib.components.Form;
 import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.SelectModelFactory;
+import org.apache.tapestry5.services.ValueEncoderSource;
 import ru.rsmu.tempoLW.consumabales.CrudMode;
 import ru.rsmu.tempoLW.dao.QuestionDao;
 import ru.rsmu.tempoLW.dao.UserDao;
@@ -95,6 +96,8 @@ public class UserCrud {
     @Inject
     private Messages messages;
 
+    @Inject
+    private ValueEncoderSource valueEncoderSource;
 
     public void setupRender() {
         if ( mode == CrudMode.REVIEW ) {
@@ -235,43 +238,11 @@ public class UserCrud {
     }
 
     public ValueEncoder<UserRole> getRoleEncoder() {
-        return new ValueEncoder<UserRole>() {
-            @Override
-            public String toClient( UserRole value ) {
-                return String.valueOf( value.getId() );
-            }
-
-            @Override
-            public UserRole toValue( String clientValue ) {
-                long id = Long.parseLong( clientValue );
-                for ( UserRole role :roles ) {
-                    if ( role.getId() == id ) {
-                        return role;
-                    }
-                }
-                return null;
-            }
-        };
+        return valueEncoderSource.getValueEncoder( UserRole.class );
     }
 
     public ValueEncoder<ExamSubject> getSubjectEncoder() {
-        return new ValueEncoder<ExamSubject>() {
-            @Override
-            public String toClient( ExamSubject value ) {
-                return String.valueOf( value.getId() );
-            }
-
-            @Override
-            public ExamSubject toValue( String clientValue ) {
-                long id = Long.parseLong( clientValue );
-                for ( ExamSubject subject : subjects ) {
-                    if ( subject.getId() == id ) {
-                        return subject;
-                    }
-                }
-                return null;
-            }
-        };
+        return valueEncoderSource.getValueEncoder( ExamSubject.class );
     }
 
     public String getRoleNames() {
