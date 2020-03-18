@@ -19,6 +19,14 @@
                     <li class="list-group-item">
                         <span class="badge">${topicsCount}</span>
                         ${message:review-topics}
+                        <div style="padding-top: 1em;">
+                            <t:loop source="topics" value="topic">
+                                <div class="row">
+                                    <div class="col-sm-11">${topic.title}</div>
+                                    <div class="col-sm-1">${topic.questionsCount}</div>
+                                </div>
+                            </t:loop>
+                        </div>
                     </li>
                 </ul>
             </div>

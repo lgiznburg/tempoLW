@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<t:container xmlns="http://www.w3.org/1999/xhtml" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd" xmlns:p="tapestry:parameter">
-
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd" xmlns:p="tapestry:parameter">
+<t:content>
     <div id="subjectReview">
         <t:form t:id="subjectForm" class="form-horizontal" validate="subject">
             <div class="row">
@@ -18,7 +18,7 @@
             <div class="form-group">
                 <t:label for="title" class="col-sm-3"/>
                 <div class="col-sm-6">
-                    <t:textfield t:id="title" value="subject.title" />
+                    <t:textfield t:id="title" value="subject.title"/>
                 </div>
             </div>
             <div class="form-group">
@@ -28,13 +28,42 @@
                 </div>
             </div>
 
+            <h4 class="col-sm-offset-2">${message:review-topics}</h4>
+            <t:loop source="topics" value="topic" encoder="subTopicEncoder">
+                <div class="form-group">
+                    <div class="col-sm-6 col-sm-offset-2">
+                        <t:textfield value="topic.title"/>
+                    </div>
+                    <div class="col-sm-2">
+                        ( ${topic.questionsCount} )
+                    </div>
+                    <t:if test="topicDeletable">
+                        <div content="col-sm-2 text-center">
+                            <t:eventlink event="deleteTopic" context="topic" class="btn btn-default">
+                                <span class="glyphicon glyphicon-remove" aria-hidden="true"/>
+                            </t:eventlink>
+                        </div>
+                    </t:if>
+                </div>
+            </t:loop>
+            <div class="form-group">
+                <div class="col-sm-2 text-center">
+                    <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"/>
+                </div>
+                <div class="col-sm-6">
+                    <t:textfield value="additionalTopicName"/>
+                </div>
+            </div>
+
             <div class="form-group">
                 <div class="col-sm-4 col-sm-offset-4">
                     <t:submit value="${message:save}" class="btn btn-primary"/>
-                    <t:eventlink event="cancelEdit" context="subjectId" class="btn btn-default">${message:cancel}</t:eventlink>
+                    <t:eventlink event="cancelEdit" context="subjectId"
+                                 class="btn btn-default">${message:cancel}</t:eventlink>
                 </div>
             </div>
         </t:form>
 
     </div>
-</t:container>
+</t:content>
+</html>

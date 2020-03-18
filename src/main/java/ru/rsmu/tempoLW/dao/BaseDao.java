@@ -19,5 +19,6 @@ public interface BaseDao {
     <T, PK extends Serializable> T find(Class<T> type, PK id);
     <T> List<T> findAll( Class<T> type );
 
+    @CommitAfter
     <T> void delete( T entity );
 }

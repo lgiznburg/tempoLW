@@ -12,6 +12,7 @@ import org.apache.tapestry5.services.LocalizationSetter;
 import org.apache.tapestry5.util.AbstractSelectModel;
 import ru.rsmu.tempoLW.dao.QuestionDao;
 import ru.rsmu.tempoLW.entities.ExamSubject;
+import ru.rsmu.tempoLW.entities.SubTopic;
 import ru.rsmu.tempoLW.entities.TestingPlan;
 
 import java.util.ArrayList;
@@ -37,6 +38,12 @@ public class SubjectReview {
     @Property
     private TestingPlan plan;
 
+    @Property
+    private List<SubTopic> topics;
+
+    @Property
+    private SubTopic topic;
+
     @Inject
     private LocalizationSetter localizationSetter;
 
@@ -49,6 +56,7 @@ public class SubjectReview {
 
         if ( subject != null ) {
             plans = questionDao.findTestingPlan( subject );
+            topics = questionDao.findTopicsOfSubject( subject );
         }
     }
 

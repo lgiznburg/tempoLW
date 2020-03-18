@@ -158,6 +158,14 @@ public class QuestionDaoImpl extends BaseDaoImpl implements QuestionDao {
         return criteria.list();
     }
 
+
+    @Override
+    public <T> List<T> findResultsOfAnswer( Class<T> resultClass, AnswerVariant answerVariant ) {
+        Criteria criteria = session.createCriteria( resultClass )
+                .add( Restrictions.eq( "answerVariant", answerVariant ) );
+        return criteria.list();
+    }
+
     @Override
     public long findQuestionsCount( ExamSubject subject ) {
         Criteria criteria = session.createCriteria( Question.class )
