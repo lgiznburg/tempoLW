@@ -1,16 +1,51 @@
 <!DOCTYPE html>
-<t:container xmlns="http://www.w3.org/1999/xhtml" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd" xmlns:p="tapestry:parameter">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
+      xmlns:p="tapestry:parameter">
 
-    <h4 class="col-sm-offset-2">${message:answers}</h4>
-    <div class="row">
-        <div class="col-sm-6 col-sm-offset-2"><strong>${message:text}</strong></div>
-    </div>
-    <t:loop source="questionOpen.answerVariants" value="answerVariant" encoder="answerVariantEncoder">
+<t:content>
+    <t:form class="form-horizontal" t:id="questionForm" validate="question">
+
+        <t:admin.question.commonquestionedit question="question"/>
+
+        <h4 class="col-sm-offset-2">${message:answers}</h4>
+        <div class="row">
+            <div class="col-sm-6 col-sm-offset-2"><strong>${message:text}</strong></div>
+        </div>
+        <t:loop source="questionOpen.answerVariants" value="answerVariant" encoder="answerVariantEncoder">
+            <div class="form-group">
+                <div class="col-sm-6 col-sm-offset-2">
+                    <t:textfield value="answerVariant.text"/>
+                </div>
+                <t:if test="deleteAvailable">
+                    <div content="col-sm-2 text-center">
+                        <t:eventlink event="deleteAnswer" context="answerVariant" class="btn btn-default">
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"/>
+                        </t:eventlink>
+                    </div>
+                </t:if>
+            </div>
+        </t:loop>
+
         <div class="form-group">
-            <div class="col-sm-6 col-sm-offset-2">
-                <t:textfield value="answerVariant.text"/>
+            <div class="col-sm-2 text-center">
+                <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"/>
+            </div>
+            <div class="col-sm-6">
+                <t:textfield value="additionalVariantText"/>
             </div>
         </div>
-    </t:loop>
 
-</t:container>
+
+        <div class="form-group">
+            <div class="col-sm-6 col-sm-offset-3">
+                <t:submit t:id="apply" class="btn btn-primary" value="${message:apply}"/>
+                <t:submit class="btn btn-primary" value="${message:save}"/>&nbsp;
+                <t:pagelink page="admin/question/questionview" context="question" class="btn btn-default">${message:viewQuestion}</t:pagelink>
+                <t:pagelink page="admin/question/questionlist" context="question.questionInfo.subject" class="btn btn-default">${message:cancel}</t:pagelink>
+            </div>
+        </div>
+
+    </t:form>
+</t:content>
+
+</html>
