@@ -14,8 +14,8 @@ public interface QuestionDao extends BaseDao {
 
     List<TestingPlanRule> prepareTestingPlan( ExamSubject subject );
 
-    Question findNextQuestion( long id, ExamSubject subject );
-    Question findPrevQuestion( long id, ExamSubject subject );
+    Question findNextQuestion( Question question );
+    Question findPrevQuestion( Question question );
 
     List<Question> findRandomQuestions( TestingPlanRule rule );
 

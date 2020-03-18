@@ -53,26 +53,26 @@ public class QuestionDaoImpl extends BaseDaoImpl implements QuestionDao {
     }
 
     @Override
-    public Question findNextQuestion( long id, ExamSubject subject ) {
+    public Question findNextQuestion( Question question ) {
         Criteria criteria = session.createCriteria( Question.class )
                 .createAlias( "questionInfo", "questionInfo" )
-                .add( Restrictions.eq( "questionInfo.subject", subject ) )
+                .add( Restrictions.eq( "questionInfo.topic", question.getQuestionInfo().getTopic() ) )
                 .addOrder( Order.asc( "id" ) );
-        if ( id > 0 ) {
-            criteria.add( Restrictions.gt( "id", id ) );
+        if ( question != null && question.getId() > 0 ) {
+            criteria.add( Restrictions.gt( "id", question.getId() ) );
         }
         criteria.setMaxResults( 1 );
         return (Question) criteria.uniqueResult();
     }
 
     @Override
-    public Question findPrevQuestion( long id, ExamSubject subject ) {
-        if ( id <= 0 ) return null;
+    public Question findPrevQuestion( Question question ) {
+        if ( question == null ) return null;
         Criteria criteria = session.createCriteria( Question.class )
                 .createAlias( "questionInfo", "questionInfo" )
-                .add( Restrictions.eq( "questionInfo.subject", subject ) )
+                .add( Restrictions.eq( "questionInfo.topic", question.getQuestionInfo().getTopic() ) )
                 .addOrder( Order.desc( "id" ) )
-                .add( Restrictions.lt( "id", id ) )
+                .add( Restrictions.lt( "id", question.getId() ) )
                 .setMaxResults( 1 );
         return (Question) criteria.uniqueResult();
     }

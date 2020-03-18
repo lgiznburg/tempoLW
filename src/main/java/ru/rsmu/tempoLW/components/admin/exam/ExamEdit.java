@@ -8,6 +8,7 @@ import org.apache.tapestry5.corelib.components.Form;
 import org.apache.tapestry5.internal.OptionModelImpl;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.SelectModelFactory;
+import org.apache.tapestry5.services.ValueEncoderSource;
 import org.apache.tapestry5.util.AbstractSelectModel;
 import ru.rsmu.tempoLW.dao.ExamDao;
 import ru.rsmu.tempoLW.dao.QuestionDao;
@@ -59,6 +60,9 @@ public class ExamEdit {
 
     @Inject
     private SecurityUserHelper securityUserHelper;
+
+    @Inject
+    private ValueEncoderSource valueEncoderSource;
 
     public void onPrepareForRender() {
         if ( examForm.isValid() ) {
@@ -129,18 +133,7 @@ public class ExamEdit {
     }
 
     public ValueEncoder<TestingPlan> getTestingPlanEncoder() {
-        return new ValueEncoder<TestingPlan>() {
-            @Override
-            public String toClient( TestingPlan plan ) {
-                return String.valueOf( plan.getId() );
-            }
-
-            @Override
-            public TestingPlan toValue( String clientValue ) {
-                Long id = Long.parseLong( clientValue );
-                return examDao.find( TestingPlan.class, id );
-            }
-        };
+        return valueEncoderSource.getValueEncoder( TestingPlan.class );
     }
 
     public DateFormat getCorrectDateFormat() {

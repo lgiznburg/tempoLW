@@ -4,7 +4,10 @@ import org.apache.tapestry5.OptionGroupModel;
 import org.apache.tapestry5.OptionModel;
 import org.apache.tapestry5.SelectModel;
 import org.apache.tapestry5.ValueEncoder;
-import org.apache.tapestry5.annotations.*;
+import org.apache.tapestry5.annotations.Import;
+import org.apache.tapestry5.annotations.InjectComponent;
+import org.apache.tapestry5.annotations.PageActivationContext;
+import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.corelib.components.Form;
 import org.apache.tapestry5.internal.OptionModelImpl;
 import org.apache.tapestry5.ioc.annotations.Inject;
@@ -14,7 +17,6 @@ import ru.rsmu.tempoLW.dao.QuestionDao;
 import ru.rsmu.tempoLW.entities.SubTopic;
 import ru.rsmu.tempoLW.entities.TestingPlan;
 import ru.rsmu.tempoLW.entities.TestingPlanRule;
-import ru.rsmu.tempoLW.pages.admin.Subjects;
 
 import java.util.*;
 
@@ -69,7 +71,7 @@ public class TestingPlanEdit {
         for (TestingPlanRule existedRule : testingPlan.getRules() ) {
             for ( SubTopic topic : existedRule.getTopics() ) {
                 String key = createCountKey( existedRule, topic );
-                topicCounts.put( key, -1l );  // dummy value
+                topicCounts.put( key, -1L );  // dummy value
             }
         }
         List<TestingPlanRule> rules = questionDao.prepareTestingPlan( testingPlan.getSubject() );
@@ -167,7 +169,7 @@ public class TestingPlanEdit {
         }
     }
 
-    public Map getLinkParams() {
+    public Map<String,Object> getLinkParams() {
         Map<String,Object> params = new HashMap<>();
         params.put( "mode", CrudMode.REVIEW );
         params.put( "subjectId", testingPlan.getSubject().getId() );
@@ -183,7 +185,7 @@ public class TestingPlanEdit {
 
             @Override
             public List<OptionModel> getOptions() {
-                List<OptionModel> options = new ArrayList<OptionModel>();
+                List<OptionModel> options = new ArrayList<>();
                 for ( SubTopic topic : rule.getTopics() ) {
                     Long quantity = topicCounts.get( createCountKey( rule, topic ) );
                     options.add( new OptionModelImpl( String.format( "%s (%d)", topic.getTitle(), quantity != null? quantity:0 ), topic ) );
@@ -203,7 +205,7 @@ public class TestingPlanEdit {
 
             @Override
             public SubTopic toValue( String clientValue ) {
-                Long id = Long.parseLong( clientValue );
+                long id = Long.parseLong( clientValue );
                 for ( SubTopic topic : topics ) {
                     if ( id == topic.getId() ) {
                         return topic;

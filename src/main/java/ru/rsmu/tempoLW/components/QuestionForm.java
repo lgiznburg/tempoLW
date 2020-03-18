@@ -1,5 +1,6 @@
 package ru.rsmu.tempoLW.components;
 
+import org.apache.tapestry5.Block;
 import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.internal.services.LinkSource;
@@ -19,24 +20,27 @@ public class QuestionForm {
     @Inject
     private LinkSource linkSource;
 
-    public boolean isQuestionSimple() {
-        return current.getQuestion() instanceof QuestionSimple;
-    }
+    @Inject
+    Block questionSimple, questionOpen, questionCorrespondence, questionSimpleOrder, questionTree;
 
-    public boolean isQuestionOpen() {
-        return current.getQuestion() instanceof QuestionOpen;
-    }
-
-    public boolean isQuestionCorrespondence() {
-        return current.getQuestion() instanceof QuestionCorrespondence;
-    }
-
-    public boolean isQuestionSimpleOrder() {
-        return current.getQuestion() instanceof QuestionSimpleOrder;
-    }
-
-    public boolean isQuestionTree() {
-        return current.getQuestion() instanceof QuestionTree;
+    public Block getQuestionBlock() {
+        Question question = current.getQuestion();
+        if ( question instanceof QuestionSimple ) {
+            return questionSimple;
+        }
+        else if ( question instanceof QuestionOpen ) {
+            return questionOpen;
+        }
+        else if ( question instanceof QuestionCorrespondence ) {
+            return questionCorrespondence;
+        }
+        else if ( question instanceof QuestionSimpleOrder ) {
+            return questionSimpleOrder;
+        }
+        else if ( question instanceof QuestionTree ) {
+            return questionTree;
+        }
+        return null;
     }
 
     public int getReadableNumber() {
