@@ -75,17 +75,23 @@ public class ExamLoginRecords {
             }
         } );
         for ( ExamToTestee examToTestee : exam.getExamToTestees() ) {
-            // create new password for each testee
-            String password = RandomStringUtils.randomAlphanumeric( 8 )
-                    .replace( 'l', 'k' )
-                    .replace( 'I', 'N' )
-                    .replace( '1', '7' ) //exclude symbols which can be miss read
-                .toLowerCase();
-            examToTestee.setPassword( userDao.encrypt( password ) );
-            Calendar expDate = Calendar.getInstance();
-            expDate.setTime( exam.getExamDate() );
-            expDate.add( Calendar.DAY_OF_YEAR, 1 );
-            //examToTestee.setExpirationDate( expDate.getTime() );
+            // create new password for each testee if that testee doesn't have one already - only for PKLW test modification
+            Testee testee = examToTestee.getTestee();
+            String password;
+            if ( testee.getPassword() != null && !testee.getPassword().equals("") ) {
+                password = testee.getPassword();
+                examToTestee.setPassword(userDao.encrypt(password));
+            } else {
+                password = RandomStringUtils.randomAlphanumeric(8)
+                        .replace('l', 'k')
+                        .replace('I', 'N')
+                        .replace('1', '7') //exclude symbols which can be miss read
+                        .toLowerCase();
+                examToTestee.setPassword(userDao.encrypt(password));
+
+                testee.setPassword( password );
+                testeeDao.save( testee );
+            }
 
             // password ouput
             //"Номер дела", "ФИО", "ФИО", "Логин", "Пароль"
@@ -97,6 +103,7 @@ public class ExamLoginRecords {
             row.add( password );
             table.add( row );
             testeeDao.save( examToTestee );
+
         }
 
         TableModifier tm = new TableModifier();

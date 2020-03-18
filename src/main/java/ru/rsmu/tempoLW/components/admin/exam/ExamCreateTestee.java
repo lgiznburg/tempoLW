@@ -94,7 +94,10 @@ public class ExamCreateTestee {
     }
 
     boolean onValidateFromAddTesteeForm() {
-        if ( this.caseNumber != null && !this.lastName.isEmpty() && !this.firstName.isEmpty() && !this.middleName.isEmpty() ) {
+        if ( this.caseNumber != null
+                && this.lastName != null && !this.lastName.isEmpty()
+                && this.firstName != null && !this.firstName.isEmpty()
+                && this.middleName != null && !this.middleName.isEmpty() ) {
 
             Testee existedOne = testeeDao.findByCaseNumber( caseNumber );
             if ( existedOne != null ) {
