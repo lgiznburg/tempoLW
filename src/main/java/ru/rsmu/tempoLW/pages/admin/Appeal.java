@@ -1,10 +1,15 @@
 package ru.rsmu.tempoLW.pages.admin;
 
 import org.apache.tapestry5.annotations.*;
+import org.apache.tapestry5.corelib.components.Zone;
+import org.apache.tapestry5.grid.GridDataSource;
 import org.apache.tapestry5.ioc.annotations.Inject;
+import org.apache.tapestry5.services.Request;
+import org.apache.tapestry5.services.ajax.AjaxResponseRenderer;
 import org.apache.tapestry5.services.javascript.JavaScriptSupport;
 import ru.rsmu.tempoLW.consumabales.CrudMode;
 import ru.rsmu.tempoLW.dao.ExamDao;
+import ru.rsmu.tempoLW.datasource.ExamResultDataSource;
 import ru.rsmu.tempoLW.entities.ExamResult;
 import ru.rsmu.tempoLW.entities.ExamSchedule;
 import ru.rsmu.tempoLW.entities.QuestionResult;
@@ -31,17 +36,28 @@ public class Appeal {
     @Property
     private ExamResult examResult;
 
+    // for interaction through question result list
     @Property
     private QuestionResult questionResult;
 
-    @ActivationRequestParameter
-    private Long questionId = null;
-
+    @PageActivationContext(index = 2)
     @Property
     private QuestionResult resultForView;
 
     @Environmental
     private JavaScriptSupport javaScriptSupport;
+
+    @Inject
+    private Request request;
+
+    @Inject
+    private AjaxResponseRenderer ajaxResponseRenderer;
+
+    @InjectComponent
+    private Zone questionListZone;
+
+    @InjectComponent
+    private Zone resultViewZone;
 
     public int getQuestionMax(){
         return questionResult.getQuestion().getQuestionInfo().getMaxScore()*questionResult.getScoreCost();
@@ -60,22 +76,12 @@ public class Appeal {
         return queryParams;
     }
 
-    public Object onActivate() {
+    public void onActivate() {
         examResult = examDao.findExamResultForTestee(exam,testee);
         examResult.getQuestionResults().sort( Comparator.comparingInt( QuestionResult::getOrderNumber ) );
-        if (questionId == null){
+        if (resultForView == null){
             resultForView = examResult.getQuestionResults().get(0);
-            questionId = resultForView.getId();
         }
-        else {
-            for (QuestionResult qR : examResult.getQuestionResults()) {
-                if (questionId == qR.getId()) {
-                    resultForView = qR;
-                    break;
-                }
-            }
-        }
-        return null;
     }
 
     public void setupRender() {
@@ -83,7 +89,22 @@ public class Appeal {
         javaScriptSupport.require( "katex/contrib/auto-render" ).invoke( "renderMathInElementOfClass" ).with( "container" );
     }
 
-    public boolean isActiveRow() {
-        return questionResult.getId() == questionId;
+    public GridDataSource getResultsDataSource() {
+        return new ExamResultDataSource( examResult.getQuestionResults() );
     }
+
+    public boolean isActiveRow() {
+        return questionResult.getId() == resultForView.getId();
+    }
+
+    public void onQuestionSelect( QuestionResult result ) {
+        if ( examResult.getQuestionResults().contains( result ) ) {
+            resultForView = result;
+        }
+        if ( request.isXHR() ) {
+            ajaxResponseRenderer.addRender( resultViewZone );
+            ajaxResponseRenderer.addRender( questionListZone );
+        }
+    }
+
 }

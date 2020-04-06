@@ -17,7 +17,7 @@
             <div>
                 <h5>${message:missed-correct-answers}</h5>
                 <t:loop source="correctAnswerVariants" value="answerVariant">
-                    ${answerVariant.readableText}
+                    <p>${answerVariant.readableText}</p>
                 </t:loop>
             </div>
         </t:if>
