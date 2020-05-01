@@ -4,6 +4,7 @@ import org.apache.tapestry5.SelectModel;
 import org.apache.tapestry5.ValueEncoder;
 import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.annotations.Property;
+import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.SelectModelFactory;
 import ru.rsmu.tempoLW.dao.QuestionDao;
@@ -32,11 +33,16 @@ public class QuestionSimpleForm {
     @Property
     private boolean plural = false;
 
+    private int count=0;
+
     @Inject
     private SelectModelFactory modelFactory;
 
     @Inject
     private QuestionDao questionDao;
+
+    @Inject
+    private Messages messages;
 
 
     public void setupRender() {
@@ -56,16 +62,15 @@ public class QuestionSimpleForm {
         questionDao.refresh( questionResult.getQuestion() );
         Collections.shuffle( ((QuestionSimple)questionResult.getQuestion()).getAnswerVariants() );
         answerModel = modelFactory.create( ((QuestionSimple)questionResult.getQuestion()).getAnswerVariants(), "text" );
-        int count = 0;
         for ( AnswerVariant variant : ((QuestionSimple)questionResult.getQuestion()).getAnswerVariants() ) {
             if ( variant.isCorrect() ) {
                 count++;
             }
-            if ( count > 1 ) {
-                plural = true;
-                break;
-            }
         }
+        if ( count > 1 ) {
+            plural = true;
+        }
+
     }
 
     public void onSuccess() {
@@ -121,5 +126,17 @@ public class QuestionSimpleForm {
             }
             return null;
         }
+    }
+
+    public String getMessageWithHint() {
+        if ( questionResult.getQuestion().getQuestionInfo().getSubject().isShowAnswersQuantity() ) {
+            if ( count < 5 ) {
+                return messages.format( "SimpleAnswers-label-hint-2-4", count );
+            }
+            else {
+                return messages.format( "SimpleAnswers-label-hint-ge5", count );
+            }
+        }
+        return messages.get( "SimpleAnswers-label" );
     }
 }

@@ -26,6 +26,12 @@ public class ExamSubject implements Serializable {
     @Validate( "required" )
     private String locale;
 
+    /**
+     * Show number of correct answers
+     */
+    @Column(name = "show_answers_quantity")
+    private boolean showAnswersQuantity;
+
     public long getId() {
         return id;
     }
@@ -48,6 +54,14 @@ public class ExamSubject implements Serializable {
 
     public void setLocale( String locale ) {
         this.locale = locale;
+    }
+
+    public boolean isShowAnswersQuantity() {
+        return showAnswersQuantity;
+    }
+
+    public void setShowAnswersQuantity( boolean showAnswersQuantity ) {
+        this.showAnswersQuantity = showAnswersQuantity;
     }
 
     @Override

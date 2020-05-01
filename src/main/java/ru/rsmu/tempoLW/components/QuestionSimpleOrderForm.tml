@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<t:container xmlns="http://www.w3.org/1999/xhtml" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd" xmlns:p="tapestry:parameter">
-
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd" xmlns:p="tapestry:parameter">
+<t:content>
     <t:form t:id="questionSimpleOrderForm" validate="questionResult" class="form-horizontal">
 
         <div class="form-group">
-            <div class="col-sm-4"><label class="control-label">${message:SimpleOrderAnswer-label}</label></div>
+            <div class="col-sm-4"><label class="control-label">${messageWithHint}</label></div>
             <div class="col-sm-8">
                 <div style="display: flex;">
                     <div class="qso-elements-group">
@@ -27,4 +27,5 @@
         </div>
 
     </t:form>
-</t:container>
+</t:content>
+</html>

@@ -7,6 +7,7 @@ import org.apache.tapestry5.ValueEncoder;
 import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.internal.OptionModelImpl;
+import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.SelectModelFactory;
 import org.apache.tapestry5.util.AbstractSelectModel;
@@ -35,12 +36,16 @@ public class QuestionSimpleOrderForm {
     @Property
     private SelectModel sequenceModel;
 
+    private int count=0;
+
     @Inject
     private SelectModelFactory modelFactory;
 
     @Inject
     private QuestionDao questionDao;
 
+    @Inject
+    private Messages messages;
 
     public void setupRender() {
         prepare();
@@ -68,6 +73,9 @@ public class QuestionSimpleOrderForm {
                 }
             }
             resultElements.add( element );
+            if ( variant.getSequenceOrder() > 0 ) {
+                count++;
+            }
         }
         Collections.shuffle( resultElements );
 
@@ -144,5 +152,17 @@ public class QuestionSimpleOrderForm {
                 return null;
             }
         };
+    }
+
+    public String getMessageWithHint() {
+        if ( questionResult.getQuestion().getQuestionInfo().getSubject().isShowAnswersQuantity() ) {
+            if ( count < 5 ) {
+                return messages.format( "SimpleOrderAnswer-label-hint-lt5", count );
+            }
+            else {
+                return messages.format( "SimpleOrderAnswer-label-hint-ge5", count );
+            }
+        }
+        return messages.get( "SimpleOrderAnswer-label" );
     }
 }
