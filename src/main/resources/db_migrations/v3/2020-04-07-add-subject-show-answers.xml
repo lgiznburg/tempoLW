@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                   http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet id="2020-04-07-add-show-answers-flag" author="leonid">
+        <addColumn tableName="test_subject">
+            <column name="show_answers_quantity" type="BIT" defaultValueBoolean="false"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="2020-04-07-set-show-answers-default" author="leonid">
+        <update tableName="test_subject">
+            <column name="show_answers_quantity" valueBoolean="false"/>
+        </update>
+    </changeSet>
+</databaseChangeLog>
