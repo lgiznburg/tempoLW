@@ -4,9 +4,11 @@ import org.apache.tapestry5.SelectModel;
 import org.apache.tapestry5.ValueEncoder;
 import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.annotations.Property;
+import org.apache.tapestry5.annotations.SessionState;
 import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.SelectModelFactory;
+import org.apache.tapestry5.services.ValueEncoderSource;
 import ru.rsmu.tempoLW.dao.QuestionDao;
 import ru.rsmu.tempoLW.entities.*;
 
@@ -20,9 +22,14 @@ import java.util.stream.Collectors;
  * @author leonid.
  */
 public class QuestionSimpleForm {
-    @Parameter(required = true)
     @Property
     private QuestionResult questionResult;
+
+    /**
+     * Current exam - stored in the session, used to extract current question from
+     */
+    @SessionState
+    private ExamResult examResult;
 
     @Property
     private List<AnswerVariant> selectedAnswers;
@@ -33,6 +40,7 @@ public class QuestionSimpleForm {
     @Property
     private boolean plural = false;
 
+    // correct answers counter
     private int count=0;
 
     @Inject
@@ -44,6 +52,8 @@ public class QuestionSimpleForm {
     @Inject
     private Messages messages;
 
+    @Inject
+    private ValueEncoderSource valueEncoderSource;
 
     public void setupRender() {
         prepare();
@@ -54,6 +64,8 @@ public class QuestionSimpleForm {
     }
 
     private void prepare() {
+        questionResult = examResult.getCurrentQuestion();
+
         selectedAnswers = new LinkedList<>();
         if ( questionResult.getElements() != null && questionResult.getElements().size() > 0 ) {
             selectedAnswers.addAll( questionResult.getElements().stream().map( element -> ((ResultSimple) element).getAnswerVariant() ).collect( Collectors.toList() ) );
@@ -74,6 +86,10 @@ public class QuestionSimpleForm {
     }
 
     public void onSuccess() {
+        // find correct current question. NB: should it be checked for type?
+        questionResult = examResult.getCurrentQuestion();
+
+
         // create elements if not exist
         if ( questionResult.getElements() == null ) {
             questionResult.setElements( new LinkedList<>() );
@@ -102,11 +118,12 @@ public class QuestionSimpleForm {
             }
         }
 
-        //TODO save result and log
+        // submit event bubbles up to page level, save result and log there
     }
 
     public ValueEncoder<AnswerVariant> getAnswerEncoder() {
-        return new LocalAnswerVariantEncoder();
+        //return new LocalAnswerVariantEncoder();
+        return valueEncoderSource.getValueEncoder( AnswerVariant.class );
     }
 
     public class LocalAnswerVariantEncoder implements ValueEncoder<AnswerVariant> {

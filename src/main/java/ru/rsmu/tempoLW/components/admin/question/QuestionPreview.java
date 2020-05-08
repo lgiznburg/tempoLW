@@ -1,5 +1,6 @@
-package ru.rsmu.tempoLW.components;
+package ru.rsmu.tempoLW.components.admin.question;
 
+import org.apache.tapestry5.Block;
 import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.internal.services.LinkSource;
 import org.apache.tapestry5.ioc.annotations.Inject;
@@ -24,6 +25,9 @@ public class QuestionPreview {
 
     @Inject
     private LinkSource linkSource;
+
+    @Inject
+    private Block questionSimple, questionSimpleOrder, questionOpen, questionCorrespondence, questionTree;
 
     public Question getQuestion() {
         return question;
@@ -102,6 +106,28 @@ public class QuestionPreview {
         return question instanceof QuestionTree;
     }
 
+    /**
+     * Switch block according to question type
+     * @return Block to preview question of its type
+     */
+    public Block getQuestionBlock() {
+        if ( question instanceof QuestionSimple ) {
+            return questionSimple;
+        }
+        else if ( question instanceof QuestionSimpleOrder) {
+            return questionSimpleOrder;
+        }
+        else if ( question instanceof QuestionOpen) {
+            return questionOpen;
+        }
+        else if ( question instanceof QuestionCorrespondence) {
+            return questionCorrespondence;
+        }
+        else if ( question instanceof QuestionTree) {
+            return questionTree;
+        }
+        return null;
+    }
 
     public String getImageLink() {
         if ( question.getImage() != null ) {

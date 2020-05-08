@@ -4,9 +4,11 @@ import org.apache.tapestry5.SelectModel;
 import org.apache.tapestry5.ValueEncoder;
 import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.annotations.Property;
+import org.apache.tapestry5.annotations.SessionState;
 import org.apache.tapestry5.internal.services.LinkSource;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.SelectModelFactory;
+import org.apache.tapestry5.services.ValueEncoderSource;
 import ru.rsmu.tempoLW.dao.QuestionDao;
 import ru.rsmu.tempoLW.entities.*;
 import ru.rsmu.tempoLW.pages.QuestionImage;
@@ -18,9 +20,14 @@ import java.util.stream.Collectors;
  * @author leonid.
  */
 public class QuestionCorrespondenceForm {
-    @Parameter(required = true)
     @Property
     private QuestionResult questionResult;
+
+    /**
+     * Current exam - stored in the session, used to extract current question from
+     */
+    @SessionState
+    private ExamResult examResult;
 
     @Property
     private List<CorrespondenceRow> rows;
@@ -40,6 +47,9 @@ public class QuestionCorrespondenceForm {
     @Inject
     private LinkSource linkSource;
 
+    @Inject
+    private ValueEncoderSource valueEncoderSource;
+
 
     public void setupRender() {
         prepare();
@@ -51,6 +61,8 @@ public class QuestionCorrespondenceForm {
 
 
     private void prepare() {
+        questionResult = examResult.getCurrentQuestion();
+
         rows = new LinkedList<>();
         QuestionCorrespondence question = (QuestionCorrespondence) questionResult.getQuestion();
         // Lazy init
@@ -79,6 +91,9 @@ public class QuestionCorrespondenceForm {
     }
 
     public void onSuccess() {
+        // find correct current question. NB: should it be checked for type?
+        questionResult = examResult.getCurrentQuestion();
+
         if ( questionResult.getElements() == null ) {
             questionResult.setElements( new LinkedList<>() );
         }
@@ -159,7 +174,8 @@ public class QuestionCorrespondenceForm {
     }
 
     public ValueEncoder<AnswerVariant> getAnswerEncoder() {
-        return new ValueEncoder<AnswerVariant>() {
+        return valueEncoderSource.getValueEncoder( AnswerVariant.class );
+        /*return new ValueEncoder<AnswerVariant>() {
             @Override
             public String toClient( AnswerVariant value ) {
                 return String.valueOf( value.getId() );
@@ -175,7 +191,7 @@ public class QuestionCorrespondenceForm {
                 }
                 return null;
             }
-        };
+        };*/
     }
 
     public ValueEncoder<CorrespondenceRow> getRowEncoder() {

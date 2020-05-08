@@ -22,29 +22,43 @@
     </t:if>
 </div>
 
-<t:questionform current="current"/>
+<t:zone t:id="questionFormZone" id="questionFormZone">
 
-<div class="row subquestion-nav">
-    <ul class="pager">
-        <li class="previous">
-            <t:if test="prevExist">
-                <t:eventlink event="prevQuestion"><span aria-hidden="true">&larr;</span> ${message:prev-question}</t:eventlink>
-                <p:else>
-                    <a name="prev"><span aria-hidden="true">&larr;</span> ${message:prev-question}</a>
-                </p:else>
-            </t:if>
-        </li>
-        <li>
-            <t:pagelink page="testfinal">${message:to-questions-list}</t:pagelink>
-        </li>
-        <li class="next">
-            <t:if test="nextExist">
-                <t:eventlink event="nextQuestion">${message:next-question} <span aria-hidden="true">&rarr;</span></t:eventlink>
-                <p:else>
-                    <a name="next">${message:next-question} <span aria-hidden="true">&rarr;</span></a>
-                </p:else>
-            </t:if>
-        </li>
-    </ul>
-</div>
+    <t:delegate to="mainBlock"/>
+
+</t:zone>
+
+<t:block t:id="questionBlock">
+    <t:questionform current="current"/>
+    <div class="row subquestion-nav">
+        <ul class="pager">
+            <li class="previous">
+                <t:if test="prevExist">
+                    <t:eventlink event="prevQuestion" async="true"><span aria-hidden="true">&larr;</span> ${message:prev-question}</t:eventlink>
+                    <p:else>
+                        <a name="prev"><span aria-hidden="true">&larr;</span> ${message:prev-question}</a>
+                    </p:else>
+                </t:if>
+            </li>
+            <li>
+                <!--<t:pagelink page="testfinal">${message:to-questions-list}</t:pagelink>-->
+                <t:eventlink event="toQuestionList" async="true">${message:to-questions-list}</t:eventlink>
+            </li>
+            <li class="next">
+                <t:if test="nextExist">
+                    <t:eventlink event="nextQuestion" async="true" >${message:next-question} <span aria-hidden="true">&rarr;</span></t:eventlink>
+                    <p:else>
+                        <a name="next">${message:next-question} <span aria-hidden="true">&rarr;</span></a>
+                    </p:else>
+                </t:if>
+            </li>
+        </ul>
+    </div>
+
+</t:block>
+
+<t:block t:id="questionListBlock">
+    <t:questiontable/>
+</t:block>
+
 </html>

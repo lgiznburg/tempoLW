@@ -76,7 +76,13 @@
 </div>
 
 <div class="row">
-
+    <div class="col-sm-11 col-sm-offset-1">
+        <p class="text-muted">
+            <small>Copyright <span class="glyphicon glyphicon-copyright-mark" aria-hidden="true"></span>
+                &nbsp;&nbsp;&nbsp; РНИМУ им.Н.И.Пирогова
+                &nbsp;&nbsp;&nbsp; 2019-${thisYear}</small>
+        </p>
+    </div>
 </div>
 </body>
 </html>

@@ -1,8 +1,13 @@
 package ru.rsmu.tempoLW.pages;
 
 import org.apache.tapestry5.Asset;
+import org.apache.tapestry5.Block;
 import org.apache.tapestry5.annotations.*;
+import org.apache.tapestry5.corelib.components.Zone;
 import org.apache.tapestry5.ioc.annotations.Inject;
+import org.apache.tapestry5.services.Request;
+import org.apache.tapestry5.services.ajax.AjaxResponseRenderer;
+import org.apache.tapestry5.services.ajax.JavaScriptCallback;
 import org.apache.tapestry5.services.javascript.JavaScriptSupport;
 import org.hibernate.Hibernate;
 import org.hibernate.LazyInitializationException;
@@ -22,13 +27,23 @@ import java.util.List;
 @Import( stylesheet = {"katex/katex.css"})
 public class TestWizard {
 
-    @Property
-    @PageActivationContext
-    private int questionNumber;
+    //@Property
+    //private int questionNumber;
 
     @Property
     @SessionState
     private ExamResult examResult;
+
+    /**
+     * Current question in the test.
+     */
+    @Property
+    private QuestionResult current;
+
+    /**
+     * What to show on the page - question or result table (final results)
+      */
+    private ShowMode showMode = ShowMode.SHOW_QUESTION;
 
     @Inject
     private QuestionDao questionDao;
@@ -39,8 +54,23 @@ public class TestWizard {
     @Inject
     private SecurityUserHelper securityUserHelper;
 
-    @Property
-    private QuestionResult current;
+    /**
+     * Switch blocks on the page
+     */
+    @Inject
+    private Block questionBlock, questionListBlock;
+
+    /**
+     * Request for handling AJAX async requests
+     */
+    @Inject
+    private Request request;
+
+    @InjectComponent
+    private Zone questionFormZone;
+
+    @Inject
+    private AjaxResponseRenderer ajaxResponseRenderer;
 
     @Environmental
     private JavaScriptSupport javaScriptSupport;
@@ -52,36 +82,39 @@ public class TestWizard {
     }
 
     public Object onActivate() {
-        if ( examResult == null || examResult.getQuestionResults() == null ) {
-            return Index.class;  // no exam
-        }
-        Testee testee = securityUserHelper.getCurrentTestee();
-        if ( testee != null && (examResult.getTestee() == null || examResult.getTestee().getId() != testee.getId()) ) {
-            return Index.class;  // exam and testee do not match
-        }
-        if ( examResult.isFinished() ) {  // protect from changing results after exam finish
-            return TestFinal.class;
-        }
-        if ( examResult.getId() > 0 ) {
-            //proof lazy init exception
-            if ( !Hibernate.isInitialized( examResult.getQuestionResults() ) ) {
-                examDao.refresh( examResult );
+        if ( !request.isXHR() ) {   // work with normal call ( not AJAX)
+            if ( examResult == null || examResult.getQuestionResults() == null ) {
+                return Index.class;  // no exam
             }
-        }
-        if ( examResult.getStartTime() == null ) {
-            //just started
-            examResult.setStartTime( new Date() );
+            Testee testee = securityUserHelper.getCurrentTestee();
+            if ( testee != null && (examResult.getTestee() == null || examResult.getTestee().getId() != testee.getId()) ) {
+                return Index.class;  // exam and testee do not match
+            }
+            if ( examResult.isFinished() ) {  // protect from changing results after exam finish
+                //return TestFinal.class;
+                showMode =ShowMode.SHOW_TABLE;
+            }
             if ( examResult.getId() > 0 ) {
-                examDao.save( examResult );
+                //proof lazy init exception
+                if ( !Hibernate.isInitialized( examResult.getQuestionResults() ) ) {
+                    examDao.refresh( examResult );
+                }
+            }
+            if ( examResult.getStartTime() == null ) {
+                //just started
+                examResult.setStartTime( new Date() );
+                if ( examResult.getId() > 0 ) {
+                    examDao.save( examResult );
+                }
             }
         }
+        setupCurrentQuestion();
 
-        if ( questionNumber < 0 ||
-                questionNumber >= examResult.getQuestionResults().size() ) {
-            // check out of bounds
-            questionNumber = 0;
-        }
-        current = examResult.getQuestionResults().get( questionNumber );
+        return null;
+    }
+
+    private void setupCurrentQuestion() {
+        current = examResult.getCurrentQuestion();
         if ( current.getElements() == null ) {
             current.setElements( new LinkedList<>() );
         }
@@ -95,7 +128,7 @@ public class TestWizard {
                 !Hibernate.isInitialized( ((QuestionTree)question).getCorrespondenceVariants() ) ) {
             examDao.refresh( question );
         }
-        return null;
+
     }
 
     public Object onSuccess() {
@@ -110,44 +143,105 @@ public class TestWizard {
             examDao.save( examResult );
         }
 
-        if ( examResult.getQuestionResults().size() -1 == questionNumber || examResult.isFinished()) {
-            return TestFinal.class;
+        if ( examResult.getQuestionResults().size() -1 == examResult.getCurrentQuestionNumber()
+                || examResult.isFinished()) {
+            if ( request.isXHR() ) {
+                onToQuestionList();
+                return null;
+            }
+            else {
+                return TestFinal.class;
+            }
         }
         return onNextQuestion();
     }
 
-    public Object onNextQuestion() {
+    public boolean onNextQuestion() {
         if ( examResult.isExamMode() && getEstimatedEndTime().before( new Date() ) ) {
             // check time - if testee used "Next/Prev question" button
             examResult.setEndTime( new Date() );
             examDao.save( examResult );
-            return TestFinal.class;
+            showMode = ShowMode.SHOW_TABLE;
         }
-        if ( examResult.getQuestionResults().size()-1 > questionNumber ) {
-            questionNumber++;
+        else if ( examResult.getQuestionResults().size()-1 > examResult.getCurrentQuestionNumber() ) {
+            examResult.setCurrentQuestionNumber( examResult.getCurrentQuestionNumber() + 1 );
+            setupCurrentQuestion();
         }
-        return this;
+        if ( request.isXHR() ) {
+            ajaxRendererSetup();
+        }
+        return true; // finish handling this event
     }
 
-    public Object onPrevQuestion() {
+    public boolean onPrevQuestion() {
         if ( examResult.isExamMode() && getEstimatedEndTime().before( new Date() ) ) {
             // check time - if testee used "Next/Prev question" button
             examResult.setEndTime( new Date() );
             examDao.save( examResult );
-            return TestFinal.class;
+            showMode = ShowMode.SHOW_TABLE;
         }
-        if ( questionNumber > 0 ) {
-            questionNumber--;
+        else if ( examResult.getCurrentQuestionNumber() > 0 ) {
+            examResult.setCurrentQuestionNumber( examResult.getCurrentQuestionNumber() - 1 );
+            setupCurrentQuestion();
         }
-        return this;
+        if ( request.isXHR() ) {
+            ajaxRendererSetup();
+        }
+        return true;
+    }
+
+    public void onToQuestionList() {
+        showMode = ShowMode.SHOW_TABLE;
+        if ( request.isXHR() ) {
+            ajaxResponseRenderer.addRender( questionFormZone );
+        }
+    }
+
+    public void onKeepThisQuestion( int questionNumber ) {
+        if ( examResult.isExamMode() && getEstimatedEndTime().before( new Date() ) ) {
+            // check time - if testee used "Next/Prev question" button
+            examResult.setEndTime( new Date() );
+            examDao.save( examResult );
+            showMode = ShowMode.SHOW_TABLE;
+        }
+        examResult.setCurrentQuestionNumber( questionNumber );
+        setupCurrentQuestion();
+        if ( request.isXHR() ) {
+            ajaxRendererSetup();
+        }
+    }
+
+    public void onFinishTest() {
+        examResult.setEndTime( new Date() );
+        //save only existed result
+        if ( examResult.getId() > 0 ) {
+            examDao.save( examResult );
+        }
+        showMode = ShowMode.SHOW_TABLE;
+        if ( request.isXHR() ) {
+            ajaxResponseRenderer.addRender( questionFormZone );
+        }
+    }
+
+
+    private void ajaxRendererSetup() {
+        ajaxResponseRenderer
+                .addCallback( new JavaScriptCallback() {
+                    @Override
+                    public void run( JavaScriptSupport javascriptSupport ) {
+                        javascriptSupport.require( "katex/contrib/auto-render" ).invoke( "renderMathInElementOfClass" ).with( "container" );
+
+                    }
+                } )
+                .addRender( questionFormZone );
     }
 
     public boolean isNextExist() {
-        return questionNumber < (examResult.getQuestionResults().size() - 1);
+        return examResult.getCurrentQuestionNumber() < (examResult.getQuestionResults().size() - 1);
     }
 
     public boolean isPrevExist() {
-        return questionNumber > 0;
+        return examResult.getCurrentQuestionNumber() > 0;
     }
 
     /*public void setQuestionNumber( int questionNumber ) {
@@ -166,5 +260,18 @@ public class TestWizard {
             }
         }
         return calendar.getTime();
+    }
+
+    public enum ShowMode {
+        SHOW_QUESTION,
+        SHOW_TABLE,
+        START_TEST
+    }
+
+    public Block getMainBlock() {
+        if ( showMode == ShowMode.SHOW_TABLE || examResult.isFinished() ) {
+            return questionListBlock;
+        }
+        return questionBlock;
     }
 }

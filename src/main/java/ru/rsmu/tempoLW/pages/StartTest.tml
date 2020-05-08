@@ -11,6 +11,6 @@
 </div>
 
 <div class="row subquestion-nav">
-    <div class="col-sm-8 col-sm-offset-2"><t:pagelink page="testwizard" context="0" class="btn btn-primary">${message:start-test}</t:pagelink> </div>
+    <div class="col-sm-8 col-sm-offset-2"><t:pagelink page="testwizard" class="btn btn-primary">${message:start-test}</t:pagelink> </div>
 </div>
 </html>

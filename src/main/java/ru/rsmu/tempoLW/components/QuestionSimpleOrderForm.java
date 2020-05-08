@@ -6,10 +6,12 @@ import org.apache.tapestry5.SelectModel;
 import org.apache.tapestry5.ValueEncoder;
 import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.annotations.Property;
+import org.apache.tapestry5.annotations.SessionState;
 import org.apache.tapestry5.internal.OptionModelImpl;
 import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.SelectModelFactory;
+import org.apache.tapestry5.services.ValueEncoderSource;
 import org.apache.tapestry5.util.AbstractSelectModel;
 import ru.rsmu.tempoLW.dao.QuestionDao;
 import ru.rsmu.tempoLW.entities.*;
@@ -23,9 +25,14 @@ import java.util.List;
  * @author leonid.
  */
 public class QuestionSimpleOrderForm {
-    @Parameter(required = true)
     @Property
     private QuestionResult questionResult;
+
+    /**
+     * Current exam - stored in the session, used to extract current question from
+     */
+    @SessionState
+    private ExamResult examResult;
 
     @Property
     private List<ResultSimpleOrder> resultElements;
@@ -47,6 +54,9 @@ public class QuestionSimpleOrderForm {
     @Inject
     private Messages messages;
 
+    @Inject
+    private ValueEncoderSource valueEncoderSource;
+
     public void setupRender() {
         prepare();
     }
@@ -57,6 +67,8 @@ public class QuestionSimpleOrderForm {
 
 
     private void prepare() {
+        questionResult = examResult.getCurrentQuestion();
+
         // Lazy init
         questionDao.refresh( questionResult.getQuestion() );
         // create results for displaying on the form
@@ -98,6 +110,9 @@ public class QuestionSimpleOrderForm {
     }
 
     public void onSuccess() {
+        // find correct current question. NB: should it be checked for type?
+        questionResult = examResult.getCurrentQuestion();
+
         // create elements if not exist
         if ( questionResult.getElements() == null ) {
             questionResult.setElements( new LinkedList<>() );

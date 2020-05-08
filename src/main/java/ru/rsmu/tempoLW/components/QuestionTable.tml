@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
+      xmlns:p="tapestry:parameter" >
+<t:content>
+    <div class="text-lg" id="questionView">
+        <table class="table table-hover text-lg">
+            <tr>
+                <th>${message:question-column}</th>
+                <t:if test="examResult.finished">
+                    <th>${message:score-column}</th>
+                    <th>${message:mark-column}</th>
+                    <p:else>
+                        <th>${message:answered-column}</th>
+                    </p:else>
+                </t:if>
+            </tr>
+            <t:loop source="examResult.questionResults" value="questionResult">
+                <tr>
+                    <t:if test="examResult.finished" >
+                        <td>${message:question-num} ${questionResult.viewNumber}. ${questionResult.question.questionInfo.name}</td>
+                        <td>${questionResult.score} (${questionResult.question.questionInfo.maxScore})</td>
+                        <td>${questionResult.mark}</td>
+
+                        <p:else>
+                            <td>
+                                <t:eventlink event="keepThisQuestion" context="questionResult.orderNumber" async="true">${message:question-num} ${questionResult.viewNumber}. ${questionResult.question.questionInfo.name}</t:eventlink>
+                            </td>
+                            <td>
+                                <t:if test="questionResult.answered">
+                                    <span class="glyphicon glyphicon-ok"> </span>
+                                    <!--<p:else>
+                                        <span class="glyphicon glyphicon-minus"></span>
+                                    </p:else>-->
+                                </t:if>
+                            </td>
+                        </p:else>
+                    </t:if>
+                </tr>
+            </t:loop>
+            <t:if test="examResult.finished">
+                <tr class="info">
+                    <td>${message:final-mark}</td>
+                    <td>&nbsp;</td>
+                    <td>${examResult.markTotal}</td>
+                </tr>
+            </t:if>
+        </table>
+    </div>
+
+    <div class="row subquestion-nav">
+        <div class="col-sm-4 col-sm-offset-2">
+            <t:if test="examResult.finished">
+                <t:eventlink event="goBack" class="btn btn-default">${message:go-home}</t:eventlink>
+                <p:else>
+                    <t:eventlink event="finishTest" t:id="finish" class="btn btn-primary" async="true">${message:test-finish}</t:eventlink>
+                </p:else>
+            </t:if>
+        </div>
+    </div>
+
+</t:content>
+</html>

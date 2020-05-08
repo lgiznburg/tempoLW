@@ -1,15 +1,15 @@
 package ru.rsmu.tempoLW.components;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.tapestry5.ComponentResources;
 import org.apache.tapestry5.PersistenceConstants;
 import org.apache.tapestry5.SelectModel;
 import org.apache.tapestry5.ValueEncoder;
-import org.apache.tapestry5.annotations.Parameter;
-import org.apache.tapestry5.annotations.Persist;
-import org.apache.tapestry5.annotations.Property;
+import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.internal.services.LinkSource;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.SelectModelFactory;
+import org.apache.tapestry5.services.ValueEncoderSource;
 import ru.rsmu.tempoLW.dao.QuestionDao;
 import ru.rsmu.tempoLW.entities.*;
 import ru.rsmu.tempoLW.pages.QuestionImage;
@@ -19,11 +19,24 @@ import java.util.stream.Collectors;
 
 /**
  * @author leonid.
+ *
+ *  This component will trigger the following events on its container :
+ *  {@link QuestionTreeForm#KEEP_THIS_QUESTION}(Int questionNumber)
  */
+// @Events is applied to a component solely to document what events it may
+// trigger. It is not checked at runtime.
+@Events( {QuestionTreeForm.KEEP_THIS_QUESTION} )
 public class QuestionTreeForm {
-    @Parameter(required = true)
+    public static final String KEEP_THIS_QUESTION = "keepThisQuestion";
+
     @Property
     private QuestionResult questionResult;
+
+    /**
+     * Current exam - stored in the session, used to extract current question from
+     */
+    @SessionState
+    private ExamResult examResult;
 
     @Property
     @Persist(PersistenceConstants.SESSION)
@@ -54,6 +67,12 @@ public class QuestionTreeForm {
     @Inject
     private LinkSource linkSource;
 
+    @Inject
+    private ComponentResources componentResources;
+
+    @Inject
+    private ValueEncoderSource valueEncoderSource;
+
     public void setupRender() {
         prepare();
     }
@@ -64,6 +83,8 @@ public class QuestionTreeForm {
 
 
     private void prepare() {
+        questionResult = examResult.getCurrentQuestion();
+
         QuestionTree question = (QuestionTree) questionResult.getQuestion();
         // Lazy init
         questionDao.refresh( question );
@@ -123,20 +144,24 @@ public class QuestionTreeForm {
             }
         }
 
-        //TODO save result and log
+        // submit event bubbles up to page level, save result and log there
 
         // go to next step
         internalStep++;
         if ( internalStep >= ((QuestionTree) questionResult.getQuestion()).getCorrespondenceVariants().size() ) {
             internalStep = 0;
+            // this tree is finished
             return false;
         }
+        // this tree is unfinished, trigger another event to keep question number unchanged
+        componentResources.triggerEvent( KEEP_THIS_QUESTION, new Object[] {examResult.getCurrentQuestionNumber()}, null );
         return true;
-        // if next step we do not pass control to up level.
+        // we do not pass control to up level.
     }
 
     public ValueEncoder<AnswerVariant> getAnswerEncoder() {
-        return new ValueEncoder<AnswerVariant>() {
+        return valueEncoderSource.getValueEncoder( AnswerVariant.class );
+        /*return new ValueEncoder<AnswerVariant>() {
             @Override
             public String toClient( AnswerVariant value ) {
                 return String.valueOf( value.getId() );
@@ -152,7 +177,7 @@ public class QuestionTreeForm {
                 }
                 return null;
             }
-        };
+        };*/
     }
 
     public List<String> getPreviousAnswers() {
@@ -198,8 +223,11 @@ public class QuestionTreeForm {
         return ((QuestionTree) questionResult.getQuestion()).getCorrespondenceVariants().size() - 1 > internalStep;
     }
 
-    public void onOneStepBack() {
+    public boolean onOneStepBack() {
         if ( internalStep > 0 ) internalStep--;
+        // just trigger another event to keep question number unchanged
+        componentResources.triggerEvent( KEEP_THIS_QUESTION, new Object[] {examResult.getCurrentQuestionNumber()}, null );
+        return true; // do't pass control to up level
     }
 
     public String getCorrespondeceImageLink() {
