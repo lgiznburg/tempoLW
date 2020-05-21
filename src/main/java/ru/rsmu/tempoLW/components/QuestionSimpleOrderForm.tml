@@ -12,6 +12,7 @@
                             <div class="qso-element-div">
                                 <span class="qso-element-text">${resultElement.answerVariant.text}</span>
                                 <t:select value="resultElement.enteredOrder" model="sequenceModel"
+                                          blankLabel="${message:incorrect_answer}"
                                           class="qso-element-select"/>
                             </div>
                         </t:loop>

@@ -221,7 +221,7 @@ define( ["jquery", "katex/katex"], function( $, katex ) {
 
   var renderMathInElementOfClass = function( className ) {
     $("."+className).each( function() { renderMathInElement( this ) } );
-  }
+  };
 
   return {
     renderMathInElement: renderMathInElement,

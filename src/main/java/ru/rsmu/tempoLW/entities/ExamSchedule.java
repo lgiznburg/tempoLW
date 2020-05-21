@@ -49,6 +49,9 @@ public class ExamSchedule implements Serializable {
     @Column(name = "duration_minutes")
     private int durationMinutes;
 
+    @Column(name = "use_proctoring")
+    private boolean useProctoring;
+
     public long getId() {
         return id;
     }
@@ -121,6 +124,14 @@ public class ExamSchedule implements Serializable {
 
     public void setDurationMinutes( int durationMinutes ) {
         this.durationMinutes = durationMinutes;
+    }
+
+    public boolean isUseProctoring() {
+        return useProctoring;
+    }
+
+    public void setUseProctoring( boolean useProctoring ) {
+        this.useProctoring = useProctoring;
     }
 
     @Override

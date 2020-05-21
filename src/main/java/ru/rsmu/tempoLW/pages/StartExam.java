@@ -59,7 +59,8 @@ public class StartExam {
                 return null;
             }
             else {
-                return TestFinal.class;  // test has been already created
+                //return TestFinal.class;  // test has been already created
+                return TestWizard.class;
             }
         }
         examResult = new ExamBuilder( questionDao ).buildTestVariant( exam.getTestingPlan() );

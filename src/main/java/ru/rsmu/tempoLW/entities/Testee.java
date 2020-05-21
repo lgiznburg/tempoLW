@@ -38,6 +38,9 @@ public class Testee implements Serializable {
     @Column
     private String lastName;
 
+    @Column
+    private String email;
+
     @Column(name = "expiration_date")
     @Temporal( TemporalType.DATE )
     private Date expirationDate;
@@ -104,6 +107,14 @@ public class Testee implements Serializable {
 
     public void setExpirationDate( Date expirationDate ) {
         this.expirationDate = expirationDate;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail( String email ) {
+        this.email = email;
     }
 
     @Override

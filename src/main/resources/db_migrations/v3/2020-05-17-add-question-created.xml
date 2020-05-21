@@ -6,9 +6,15 @@
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
                    http://www.liquibase.org/xml/ns/dbchangelog
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
-
-    <include file="2020-04-07-add-subject-show-answers.xml" relativeToChangelogFile="true"/>
-    <include file="2020-05-08-add-system-property.xml" relativeToChangelogFile="true"/>
-    <include file="2020-05-17-add-question-created.xml" relativeToChangelogFile="true"/>
+    <changeSet id="2020-05-17-add-question-created" author="leonid">
+        <addColumn tableName="question">
+            <column name="created_date" type="date" />
+        </addColumn>
+    </changeSet>
+    <changeSet id="2020-05-17-populate-question-created" author="leonid">
+        <update tableName="question">
+            <column name="created_date" valueDate="2019-05-01"/>
+        </update>
+    </changeSet>
 
 </databaseChangeLog>

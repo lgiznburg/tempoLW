@@ -43,7 +43,8 @@ public class StartTest {
     public Object onActivate() {
         if ( examResult != null && !examResult.isFinished() &&
                 examResult.getQuestionResults() != null ) {
-            return TestFinal.class;  // test has been already created and not finished
+            //return TestFinal.class;  // test has been already created and not finished
+            return TestWizard.class;
         }
         examResult = new ExamBuilder( questionDao ).buildTestVariant( testingPlan );
         examResult.setStartTime( new Date() );  //set now

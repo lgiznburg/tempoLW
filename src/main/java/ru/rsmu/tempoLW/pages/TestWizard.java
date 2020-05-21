@@ -1,6 +1,5 @@
 package ru.rsmu.tempoLW.pages;
 
-import org.apache.tapestry5.Asset;
 import org.apache.tapestry5.Block;
 import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.corelib.components.Zone;
@@ -10,16 +9,16 @@ import org.apache.tapestry5.services.ajax.AjaxResponseRenderer;
 import org.apache.tapestry5.services.ajax.JavaScriptCallback;
 import org.apache.tapestry5.services.javascript.JavaScriptSupport;
 import org.hibernate.Hibernate;
-import org.hibernate.LazyInitializationException;
 import ru.rsmu.tempoLW.dao.ExamDao;
 import ru.rsmu.tempoLW.dao.QuestionDao;
+import ru.rsmu.tempoLW.dao.SystemPropertyDao;
 import ru.rsmu.tempoLW.entities.*;
+import ru.rsmu.tempoLW.entities.system.StoredPropertyName;
 import ru.rsmu.tempoLW.services.SecurityUserHelper;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
-import java.util.List;
 
 /**
  * @author leonid.
@@ -52,13 +51,16 @@ public class TestWizard {
     private ExamDao examDao;
 
     @Inject
+    private SystemPropertyDao propertyService;
+
+    @Inject
     private SecurityUserHelper securityUserHelper;
 
     /**
      * Switch blocks on the page
      */
     @Inject
-    private Block questionBlock, questionListBlock;
+    private Block questionBlock, questionListBlock, startProctoring;
 
     /**
      * Request for handling AJAX async requests
@@ -67,7 +69,7 @@ public class TestWizard {
     private Request request;
 
     @InjectComponent
-    private Zone questionFormZone;
+    private Zone questionFormZone, examTimingZone;
 
     @Inject
     private AjaxResponseRenderer ajaxResponseRenderer;
@@ -79,6 +81,23 @@ public class TestWizard {
 
         javaScriptSupport.require( "katex/katex" );
         javaScriptSupport.require( "katex/contrib/auto-render" ).invoke( "renderMathInElementOfClass" ).with( "container" );
+
+        if ( examResult.getExam() != null && examResult.getExam().isUseProctoring() ) {
+            String proctoringJS = propertyService.getProperty( StoredPropertyName.PROCTORING_JS_URL );
+            String proctoringServer = propertyService.getProperty( StoredPropertyName.PROCTORING_SERVER_ADDRESS );
+//            javaScriptSupport.importJavaScriptLibrary( proctoringJS );
+            /*javaScriptSupport.addModuleConfigurationCallback(
+                    new ModuleConfigurationCallback() {
+                        @Override
+                        public JSONObject configure( JSONObject configuration ) {
+                            JSONObject paths = new JSONObject().put( "proctorEdu", proctoringJS );
+                            configuration.put( "paths", paths );
+                            return configuration;
+                        }
+                    }
+            );*/
+            javaScriptSupport.require( "proctoring" ).invoke( "startSession" ).with( proctoringServer );
+        }
     }
 
     public Object onActivate() {
@@ -92,7 +111,7 @@ public class TestWizard {
             }
             if ( examResult.isFinished() ) {  // protect from changing results after exam finish
                 //return TestFinal.class;
-                showMode =ShowMode.SHOW_TABLE;
+                showMode = ShowMode.SHOW_TABLE;
             }
             if ( examResult.getId() > 0 ) {
                 //proof lazy init exception
@@ -102,9 +121,14 @@ public class TestWizard {
             }
             if ( examResult.getStartTime() == null ) {
                 //just started
-                examResult.setStartTime( new Date() );
-                if ( examResult.getId() > 0 ) {
-                    examDao.save( examResult );
+                if ( examResult.getExam() != null && examResult.getExam().isUseProctoring() ) {
+                    showMode = ShowMode.START_TEST;  // start test after proctoring init
+                }
+                else {
+                    examResult.setStartTime( new Date() );
+                    if ( examResult.getId() > 0 ) {
+                        examDao.save( examResult );
+                    }
                 }
             }
         }
@@ -197,6 +221,18 @@ public class TestWizard {
         }
     }
 
+    public void onStartTimer() {
+        examResult.setStartTime( new Date() );
+        if ( examResult.getId() > 0 ) {
+            examDao.save( examResult );
+        }
+        setupCurrentQuestion();
+        if ( request.isXHR() ) {
+            ajaxResponseRenderer.addRender( examTimingZone );
+            ajaxRendererSetup();
+        }
+    }
+
     public void onKeepThisQuestion( int questionNumber ) {
         if ( examResult.isExamMode() && getEstimatedEndTime().before( new Date() ) ) {
             // check time - if testee used "Next/Prev question" button
@@ -220,9 +256,19 @@ public class TestWizard {
         showMode = ShowMode.SHOW_TABLE;
         if ( request.isXHR() ) {
             ajaxResponseRenderer.addRender( questionFormZone );
+            ajaxResponseRenderer.addRender( examTimingZone );
+            if ( examResult.getExam() != null && examResult.getExam().isUseProctoring() ) {
+                ajaxResponseRenderer
+                        .addCallback( new JavaScriptCallback() {
+                            @Override
+                            public void run( JavaScriptSupport javascriptSupport ) {
+                                javascriptSupport.require( "proctoring" ).invoke( "finishSession" );
+
+                            }
+                        } );  // call proctoring close session
+            }
         }
     }
-
 
     private void ajaxRendererSetup() {
         ajaxResponseRenderer
@@ -243,10 +289,6 @@ public class TestWizard {
     public boolean isPrevExist() {
         return examResult.getCurrentQuestionNumber() > 0;
     }
-
-    /*public void setQuestionNumber( int questionNumber ) {
-        this.questionNumber = questionNumber;
-    }*/
 
     public Date getEstimatedEndTime() {
         Calendar calendar = Calendar.getInstance();
@@ -272,6 +314,18 @@ public class TestWizard {
         if ( showMode == ShowMode.SHOW_TABLE || examResult.isFinished() ) {
             return questionListBlock;
         }
+        else if (showMode == ShowMode.START_TEST ) {
+            return startProctoring;
+        }
         return questionBlock;
+    }
+
+    public String getProctoringJS() {
+        String proctoringJS = propertyService.getProperty( StoredPropertyName.PROCTORING_JS_URL );
+        return proctoringJS + ".js";
+    }
+
+    public boolean getUseProctoring() {
+        return examResult != null && examResult.getExam() != null && examResult.getExam().isUseProctoring();
     }
 }

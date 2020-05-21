@@ -6,6 +6,7 @@ import ru.rsmu.tempoLW.data.QuestionType;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -41,6 +42,10 @@ public abstract class Question implements Serializable {
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "uploaded_image_id")
     private UploadedImage image;
+
+    @Column(name = "created_date")
+    @Temporal( TemporalType.DATE )
+    private Date createdDate;
 
     public long getId() {
         return id;
@@ -87,6 +92,14 @@ public abstract class Question implements Serializable {
 
     public void setImage( UploadedImage image ) {
         this.image = image;
+    }
+
+    public Date getCreatedDate() {
+        return createdDate;
+    }
+
+    public void setCreatedDate( Date createdDate ) {
+        this.createdDate = createdDate;
     }
 
     abstract public int countErrors( List<ResultElement> elements );
