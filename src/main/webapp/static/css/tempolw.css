@@ -75,13 +75,6 @@ button.bg-dark:focus {
     color: #fff;
 }
 
-.navbar-brand span {
-    font-family: Palatino, serif;
-    font-weight: bold;
-    letter-spacing: 1px;
-    font-size: 150%;
-}
-
 #logoImage {
     width: 44px;
     height: 44px;
@@ -228,4 +221,22 @@ h1, h2, h3, h4 {
 .side-margin-fix {
     margin-left: 0px !important;
     margin-right: 0px !important;
+}
+
+/* fixes for navbar */
+.navbar-brand:hover {
+    color: #fff !important;
+}
+
+.navbar-brand {
+    font-family: Palatino, serif;
+    font-weight: bold;
+    letter-spacing: 1px;
+    font-size: 150%;
+}
+
+@media (max-width: 500px) {
+    .navbar-brand {
+        font-size: 100% !important;
+    }
 }

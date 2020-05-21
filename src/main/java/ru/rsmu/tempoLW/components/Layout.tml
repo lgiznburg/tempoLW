@@ -16,11 +16,11 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <t:pagelink page="index" style="padding-top:3px" class="navbar-brand">
+            <t:pagelink page="index" style="padding: 3px 5px" class="navbar-brand">
                 <img title="${message:navbar.logotitle}" src="${context:static/img/px.png}" id="logoImage"/>
             </t:pagelink>
-            <t:pagelink page="index" class="navbar-brand">
-                <span>${message:navbar.university}</span>
+            <t:pagelink page="index">
+                <strong class="navbar-brand">${message:navbar.university}</strong>
             </t:pagelink>
         </div>
 
