@@ -14,6 +14,7 @@ import org.apache.tapestry5.util.AbstractSelectModel;
 import ru.rsmu.tempoLW.dao.QuestionDao;
 import ru.rsmu.tempoLW.entities.ExamSubject;
 import ru.rsmu.tempoLW.entities.SubTopic;
+import ru.rsmu.tempoLW.entities.SubjectType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,6 +76,7 @@ public class SubjectEdit {
         }
         if ( subject == null ) {
             subject = new ExamSubject();
+            subject.setType( SubjectType.UNDEFINED );
         }
         else {
             topics = questionDao.findTopicsOfSubject( subject );

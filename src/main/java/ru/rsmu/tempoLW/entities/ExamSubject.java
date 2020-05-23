@@ -32,6 +32,13 @@ public class ExamSubject implements Serializable {
     @Column(name = "show_answers_quantity")
     private boolean showAnswersQuantity;
 
+    /**
+     * Type of subject to make group on Home page
+     */
+    @Column(name = "subject_type")
+    @Enumerated(EnumType.STRING)
+    private SubjectType type;
+
     public long getId() {
         return id;
     }
@@ -62,6 +69,14 @@ public class ExamSubject implements Serializable {
 
     public void setShowAnswersQuantity( boolean showAnswersQuantity ) {
         this.showAnswersQuantity = showAnswersQuantity;
+    }
+
+    public SubjectType getType() {
+        return type;
+    }
+
+    public void setType( SubjectType type ) {
+        this.type = type;
     }
 
     @Override

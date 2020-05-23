@@ -13,6 +13,10 @@
                         ${message:subject-basic-language}
                     </li>
                     <li class="list-group-item">
+                        <span class="badge">${subjectLevel}</span>
+                        ${message:subject-type}
+                    </li>
+                    <li class="list-group-item">
                         <span class="badge">
                             <t:if test="subject.showAnswersQuantity">
                                 <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>

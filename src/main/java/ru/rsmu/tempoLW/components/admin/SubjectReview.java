@@ -7,6 +7,7 @@ import org.apache.tapestry5.SelectModel;
 import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.internal.OptionModelImpl;
+import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.LocalizationSetter;
 import org.apache.tapestry5.util.AbstractSelectModel;
@@ -51,6 +52,9 @@ public class SubjectReview {
     @Inject
     private QuestionDao questionDao;
 
+    @Inject
+    private Messages messages;
+
     public void setupRender() {
         subject = subjectId != null ? questionDao.find( ExamSubject.class, subjectId ) : null;
 
@@ -81,5 +85,9 @@ public class SubjectReview {
             }
         }
         return "";
+    }
+
+    public String getSubjectLevel() {
+        return messages.get( subject.getType().name() );
     }
 }

@@ -10,7 +10,7 @@ define( ["jquery"/*, "proctorEdu"*/], function ($/*, pE*/) {
         // инициализация сессии прокторинга
         // в поле token можно указать строку, функцию или промис
         supervisor.init({
-            /*// указать провайдер авторизации, по умолчанию 'jwt'
+            // указать провайдер авторизации, по умолчанию 'jwt'
             provider: 'jwt',
             // получить строку с токеном JWT от вашего сервера
             // на стороне вашего сервера должен быть реализован соответствующий API
@@ -18,12 +18,12 @@ define( ["jquery"/*, "proctorEdu"*/], function ($/*, pE*/) {
                 .then(function(response) {
                     if (response.ok) return response.text();
                     else throw Error('Failed to get JWT');
-                })*/
-            provider: 'plain',
+                })
+            /*provider: 'plain',
             id: '123456_RSMU_123456',
             subject: document.title,
             username: '123456RSMU_test',
-            nickname: 'my nick name'
+            nickname: 'my nick name'*/
         }).then(function() {
             // запустить сессию прокторинга сразу после инициализации
             return supervisor.start();
