@@ -8,8 +8,9 @@ public enum StoredPropertyName {
     EMAIL_FROM_SIGNATURE("Email","Название обратного адреса для email", "Приемная комиссия РНИМУ им.Пирогова", StoredPropertyType.STRING),
     PROCTORING_JS_URL("Proctoring", "Адрес JS библиотеки прокторинга", "https://demo.proctoring.online/sdk/supervisor", StoredPropertyType.STRING),
     PROCTORING_SERVER_ADDRESS("Proctoring", "Адрес сервера прокторинга", "https://demo.proctoring.online", StoredPropertyType.STRING),
-    PROCTORING_SECRET_KEY("Proctoring", "Секретный ключ доступа", "secret", StoredPropertyType.STRING)
-    ;
+    PROCTORING_SECRET_KEY("Proctoring", "Секретный ключ доступа", "secret", StoredPropertyType.STRING),
+    PROCTORING_PROVIDER("Proctoring", "Способ передачи ключа сессии (JWT или plain)", "JWT", StoredPropertyType.STRING)
+            ;
 
     private String groupName;
     private String title;

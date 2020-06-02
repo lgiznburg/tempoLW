@@ -21,4 +21,8 @@ public interface ExamDao extends BaseDao {
     List<ExamResult> findResultsForTestee( Testee testee );
 
     List<ExamResult> findExamResultsForSubject( ExamSubject subject );
+
+    ProctoringReport findProctoringReport( String id );
+
+    List<ProctoringReport> findProctoringForExam( ExamSchedule exam );
 }

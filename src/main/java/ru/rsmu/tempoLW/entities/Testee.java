@@ -1,5 +1,8 @@
 package ru.rsmu.tempoLW.entities;
 
+import org.apache.commons.lang.text.StrBuilder;
+import org.apache.commons.lang3.StringUtils;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -138,5 +141,17 @@ public class Testee implements Serializable {
     @Transient
     public boolean isCredentialsExpired() {
         return expirationDate == null || expirationDate.before( new Date() );
+    }
+
+    @Transient
+    public String getFullName() {
+        StrBuilder builder = new StrBuilder( lastName );
+        if ( StringUtils.isNotBlank( firstName ) ) {
+            builder.append( " " ).append( firstName );
+        }
+        if ( StringUtils.isNotBlank( middleName ) ) {
+            builder.append( " " ).append( middleName );
+        }
+        return builder.toString();
     }
 }

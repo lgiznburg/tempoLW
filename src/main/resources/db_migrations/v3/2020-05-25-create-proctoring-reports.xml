@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                   http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+    <changeSet id="2020-05-25-create-proctoring-reports" author="leonid">
+        <createTable tableName="proctoring_reports">
+            <column autoIncrement="true" name="id" type="${id.type}">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="session_id" type="${string.type}">
+                <constraints unique="true"/>
+            </column>
+            <column name="status" type="${string.type}"/>
+            <column name="duration" type="INT"/>
+            <column name="started_at" type="datetime"/>
+            <column name="stopped_at" type="datetime"/>
+            <column name="score" type="INT"/>
+            <column name="metrics" type="${text.type}"/>
+            <column name="proctor" type="${string.type}"/>
+            <column name="comment" type="${text.type}"/>
+            <column name="link" type="${string.type}"/>
+            <column name="exam_result_id" type="${id.type}"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="2020-05-25-proctoring-report-constraints" author="leonid">
+        <addForeignKeyConstraint baseTableName="proctoring_reports" baseColumnNames="exam_result_id"
+                                 constraintName="fk_proctoring_report_exam_results"
+                                 referencedTableName="test_result" referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>

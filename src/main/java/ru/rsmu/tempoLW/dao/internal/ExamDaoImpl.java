@@ -81,4 +81,20 @@ public class ExamDaoImpl extends BaseDaoImpl implements ExamDao {
                 .add( Restrictions.eq( "testingPlan.subject", subject ) );
         return criteria.list();
     }
+
+    @Override
+    public ProctoringReport findProctoringReport( String sessionId ) {
+        Criteria criteria = session.createCriteria( ProctoringReport.class )
+                .add( Restrictions.eq( "sessionId", sessionId ) )
+                .setMaxResults( 1 );
+        return ((ProctoringReport) criteria.uniqueResult());
+    }
+
+    @Override
+    public List<ProctoringReport> findProctoringForExam( ExamSchedule exam ) {
+        Criteria criteria = session.createCriteria( ProctoringReport.class )
+                .createAlias( "examResult", "examResult" )
+                .add( Restrictions.eq( "examResult.exam", exam ) );
+        return criteria.list();
+    }
 }

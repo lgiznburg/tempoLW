@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<t:container xmlns="http://www.w3.org/1999/xhtml" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd" xmlns:p="tapestry:parameter">
-
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd" xmlns:p="tapestry:parameter">
+<t:content>
 <div id="testeesList">
     <div class="row">
         <h4>${message:exam} ${exam.name}</h4>
@@ -10,12 +10,16 @@
                 add="testResult,printStatement" class="table table-bordered table-hover"
                 rowsPerPage="50" pagerPosition="bottom"
                 empty="block:emptyTestees">
+            <p:lastNameCell>
+                ${testeeFullName}
+            </p:lastNameCell>
             <p:testResultCell>
                 <t:if test="currentExamResult">
                     <t:if test="currentExamResult.finished">
-                        <div class="row text-center">
-                            <span style="font-weight: bold">${currentExamResult.markTotal}</span><!-- col-xs-5 text-right -->
-                        </div>
+                        <p class="text-center">
+                            <strong>${currentExamResult.markTotal}</strong><!-- col-xs-5 text-right -->
+                            <t:if test="proctoringExist"><t:delegate to="block:proctoringBlock"/></t:if>
+                        </p>
                         <p:else><span style="color: darkblue;">${message:exam-not-finished}</span></p:else>
                     </t:if>
                     <p:else><span style="color: darkred;">${message:exam-not-started}</span></p:else>
@@ -24,7 +28,7 @@
             <p:printStatementCell>
                 <t:if test="currentExamResult">
                     <t:if test="currentExamResult.finished">
-                        <div class="row" style="margin-left: 0px"> <!-- text-center -->
+                        <p style="margin-left: 0px"> <!-- text-center -->
                             <span title="${message:exam-statement} (.rtf)"><!-- col-xs-7 -->
                                 <t:pagelink page="admin/examtesteeresult" context="[exam,testee,rtf]" class="btn btn-info btn-sm" aria-label="Print">
                                     <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
@@ -45,9 +49,9 @@
                                     <span class="glyphicon glyphicon-font" aria-hidden="true"></span>
                                 </t:pagelink>
                             </span>
-                        </div>
+                        </p>
                         <p:else>
-                            <div class="row" style="margin-left: 0px">
+                            <p style="margin-left: 0px">
                                 <span title="${message:exam-not-finished-statement} (.rtf)" class="text-center"><!-- col-xs-7 -->
                                     <t:pagelink page="admin/examtesteeresult" context="[exam,testee]" class="btn btn-info btn-sm disabled" aria-label="Print">
                                         <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
@@ -63,11 +67,11 @@
                                         <span class="glyphicon glyphicon-font" aria-hidden="true"></span>
                                     </t:pagelink>
                                 </span>
-                            </div>
+                            </p>
                         </p:else>
                     </t:if>
                     <p:else>
-                        <div class="row" style="margin-left: 0px">
+                        <p style="margin-left: 0px">
                             <span title="${message:exam-not-started-statement} (.rtf)" class="text-center"><!-- col-xs-3 -->
                                 <t:pagelink page="admin/examtesteeresult" context="[exam,testee,true]" class="btn btn-info btn-sm disabled" aria-label="Print">
                                     <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
@@ -88,7 +92,7 @@
                                     <span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
                                 </t:pagelink>
                             </span>
-                        </div>
+                        </p>
                     </p:else>
                 </t:if>
             </p:printStatementCell>
@@ -112,4 +116,17 @@
 
     </div>
 </div>
-</t:container>
+
+    <t:block t:id="proctoringBlock" id="proctoringBlock">
+        <span>( ${proctoringReport.score} )</span>
+        <a href="#proctoringReport${proctoringReport.id}" data-toggle="collapse"
+           aria-expanded="false" aria-controls="proctoringReport${proctoringReport.id}">
+            <span class="glyphicon glyphicon-eye-open" aria-hidden="true"></span>
+        </a>
+        <div class="collapse" id="proctoringReport${proctoringReport.id}">
+            ${proctoringReport.status}, ${proctoringReport.metrics}, ${proctoringReport.comment}<br/>
+            <a href="${proctoringReport.link}" target="blank">${proctoringReport.link}</a>
+        </div>
+    </t:block>
+</t:content>
+</html>

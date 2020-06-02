@@ -19,11 +19,11 @@ define( ["jquery"/*, "proctorEdu"*/], function ($/*, pE*/) {
                     if (response.ok) return response.text();
                     else throw Error('Failed to get JWT');
                 })
-            /*provider: 'plain',
-            id: '123456_RSMU_123456',
-            subject: document.title,
-            username: '123456RSMU_test',
-            nickname: 'my nick name'*/
+            // provider: 'plain',
+            // id: '123456_RSMU_123456',
+            // subject: document.title,
+            // username: '123456RSMU_test',
+            // nickname: 'my nick name'
         }).then(function() {
             // запустить сессию прокторинга сразу после инициализации
             return supervisor.start();
