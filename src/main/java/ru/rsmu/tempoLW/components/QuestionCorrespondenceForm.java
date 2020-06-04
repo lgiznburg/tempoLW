@@ -107,11 +107,11 @@ public class QuestionCorrespondenceForm {
             CorrespondenceRow checkRow = rowMap.get( element.getCorrespondenceVariant().getId() );
             if ( checkRow != null ) { // just in case
                 if ( !checkRow.getSelectedAnswers().contains( element.getAnswerVariant() ) ) {
+                    elementIt.remove();
                     if ( element.getId() != 0 ) {
                         // delete element from DB if exists.
                         questionDao.delete( element );
                     }
-                    elementIt.remove();
                 }
             }
         }

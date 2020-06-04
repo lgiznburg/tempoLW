@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
  *
  *  This component will trigger the following events on its container :
  *  {@link QuestionTreeForm#KEEP_THIS_QUESTION}(Int questionNumber)
+ *  This means the question is not completed, next answer should be given
  */
 // @Events is applied to a component solely to document what events it may
 // trigger. It is not checked at runtime.
@@ -111,7 +112,6 @@ public class QuestionTreeForm {
                 }
             }
         }
-
     }
 
     public boolean onSuccess() {
@@ -126,11 +126,11 @@ public class QuestionTreeForm {
         for ( Iterator<ResultElement> elementIt = questionResult.getElements().iterator(); elementIt.hasNext(); ) {
             ResultElement element = elementIt.next();
             if ( ((ResultTree)element).getCorrespondenceVariant() == currentVariant && !selectedAnswers.contains( ((ResultTree)element).getAnswerVariant() ) ) {
+                elementIt.remove();
                 if ( element.getId() != 0 ) {
                     // delete element from DB if exists.
                     questionDao.delete( element );
                 }
-                elementIt.remove();
             }
         }
         // add checked answer to result list

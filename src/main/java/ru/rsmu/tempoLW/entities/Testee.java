@@ -145,7 +145,7 @@ public class Testee implements Serializable {
 
     @Transient
     public String getFullName() {
-        StrBuilder builder = new StrBuilder( lastName );
+        StringBuilder builder = new StringBuilder( lastName );
         if ( StringUtils.isNotBlank( firstName ) ) {
             builder.append( " " ).append( firstName );
         }

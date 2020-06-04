@@ -142,6 +142,10 @@ public class TestWizard {
         if ( current.getElements() == null ) {
             current.setElements( new LinkedList<>() );
         }
+        if ( current.getId() > 0 && !Hibernate.isInitialized( current.getElements() ) ) {
+            // lazy init
+            examDao.refresh( current );
+        }
         // lazy init for Correspondence and Tree questions
         Question question = current.getQuestion();
         if ( question instanceof QuestionCorrespondence &&
@@ -158,6 +162,7 @@ public class TestWizard {
     public Object onSuccess() {
         current.checkCorrectness();
         current.setUpdated( new Date() );
+        current.setAnsweredCount( current.getElements().size() );
 
         //save only existed result
         if ( examResult.getId() > 0 ) {

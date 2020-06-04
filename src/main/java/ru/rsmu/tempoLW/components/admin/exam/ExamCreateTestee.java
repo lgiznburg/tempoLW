@@ -41,11 +41,15 @@ public class ExamCreateTestee {
     private String caseNumber;
 
     @Property
+    private String email;
+
+    @Property
     private ExamSchedule exam;
 
     @InjectComponent
     private Form addTesteeForm;
 
+/*
     @InjectComponent
     private TextField lastname;
 
@@ -57,6 +61,10 @@ public class ExamCreateTestee {
 
     @InjectComponent
     private TextField casenumber;
+
+    @InjectComponent
+    private TextField emailField;
+*/
 
     @Inject
     private ExamDao examDao;
@@ -104,6 +112,7 @@ public class ExamCreateTestee {
                 testee.setCaseNumber(caseNumber);
                 testee.setLastName(lastName + " " + firstName + " " + middleName);
                 testee.setLogin(new TesteeLoader(testeeDao).createLogin( caseNumber ) );
+                testee.setEmail( email );
             }
 
             if ( isTesteeInExam() ) {

@@ -1,5 +1,6 @@
 package ru.rsmu.tempoLW.components;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.annotations.SessionState;
@@ -7,6 +8,7 @@ import org.apache.tapestry5.ioc.annotations.Inject;
 import ru.rsmu.tempoLW.dao.QuestionDao;
 import ru.rsmu.tempoLW.entities.ExamResult;
 import ru.rsmu.tempoLW.entities.QuestionResult;
+import ru.rsmu.tempoLW.entities.ResultElement;
 import ru.rsmu.tempoLW.entities.ResultOpen;
 
 import java.util.LinkedList;
@@ -58,7 +60,17 @@ public class QuestionOpenForm {
         if ( questionResult.getElements() == null ) {
             questionResult.setElements( new LinkedList<>() );
         }
-        if ( questionResult.getElements().size() == 0 ) {
+        if ( StringUtils.isBlank( resultOpen.getValue() ) ) {  // empty value => no answer
+            if ( questionResult.getElements().size() > 0 ) {
+                // could be only 1 answer
+                ResultElement existed = questionResult.getElements().get( 0 );
+                questionResult.getElements().remove( 0 );
+                if ( existed.getId() > 0 ) {
+                    questionDao.delete( existed );
+                }
+            }
+        }
+        else if ( questionResult.getElements().size() == 0 ) {
             questionResult.getElements().add( resultOpen );
         }
     }

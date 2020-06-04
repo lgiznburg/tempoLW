@@ -2,6 +2,7 @@ package ru.rsmu.tempoLW.dao.internal;
 
 import org.apache.tapestry5.hibernate.annotations.CommitAfter;
 import org.hibernate.Hibernate;
+import org.hibernate.NonUniqueObjectException;
 import org.hibernate.Session;
 import ru.rsmu.tempoLW.dao.BaseDao;
 
@@ -18,7 +19,11 @@ public class BaseDaoImpl implements BaseDao {
     protected Session session;
 
     public <T> T save(T entity) {
-        session.saveOrUpdate( entity );
+        try {
+            session.saveOrUpdate( entity );
+        } catch (NonUniqueObjectException e) {
+            session.merge( entity );
+        }
         return entity;
     }
 

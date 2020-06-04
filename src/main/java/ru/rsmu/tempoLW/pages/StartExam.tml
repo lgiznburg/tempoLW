@@ -13,15 +13,39 @@
         <div class="col-sm-8 col-sm-offset-2 text-lg">${message:exam-finished-info}</div>
     </div>
     <p:else>
-        <div class="row" id="questionView">
-            <div class="col-sm-8 col-sm-offset-2 text-lg">${startExamMessage}</div>
-        </div>
-
-        <div class="row subquestion-nav">
-            <div class="col-sm-8 col-sm-offset-2">
-                <t:pagelink page="testwizard" context="0" class="btn btn-primary">${message:start-exam}</t:pagelink>
-            </div>
-        </div>
+        <t:if test="exam.useProctoring">
+            <t:delegate to="block:proctoringBlock"/>
+            <p:else>
+                <t:delegate to="block:startExamBlock"/>
+            </p:else>
+        </t:if>
     </p:else>
 </t:if>
+
+<t:block t:id="startExamBlock">
+    <div class="row" id="examGreetings">
+        <div class="col-sm-8 col-sm-offset-2 text-lg">${startExamMessage}</div>
+    </div>
+
+    <div class="row subquestion-nav">
+        <div class="col-sm-8 col-sm-offset-2">
+            <t:pagelink page="testwizard" context="0" class="btn btn-primary">${message:start-exam}</t:pagelink>
+        </div>
+    </div>
+
+</t:block>
+
+<t:block t:id="proctoringBlock">
+    <div class="row" id="proctoringGreetings">
+        <div class="col-sm-8 col-sm-offset-2 text-lg">${startExamMessage}</div>
+    </div>
+
+    <div class="row subquestion-nav">
+        <div class="col-sm-8 col-sm-offset-2">
+            <t:pagelink page="testwizard" context="0" class="btn btn-primary">${message:start-exam}</t:pagelink>
+        </div>
+    </div>
+
+</t:block>
+
 </html>

@@ -9,7 +9,7 @@ public enum StoredPropertyName {
     PROCTORING_JS_URL("Proctoring", "Адрес JS библиотеки прокторинга", "https://demo.proctoring.online/sdk/supervisor", StoredPropertyType.STRING),
     PROCTORING_SERVER_ADDRESS("Proctoring", "Адрес сервера прокторинга", "https://demo.proctoring.online", StoredPropertyType.STRING),
     PROCTORING_SECRET_KEY("Proctoring", "Секретный ключ доступа", "secret", StoredPropertyType.STRING),
-    PROCTORING_PROVIDER("Proctoring", "Способ передачи ключа сессии (JWT или plain)", "JWT", StoredPropertyType.STRING)
+    PROCTORING_API_KEY("Proctoring", "API ключ для передачи результатов", "secret", StoredPropertyType.STRING)
             ;
 
     private String groupName;

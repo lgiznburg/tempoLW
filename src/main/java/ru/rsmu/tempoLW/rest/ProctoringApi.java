@@ -34,7 +34,7 @@ public class ProctoringApi {
             // create new report
             report = new ProctoringReport( apiReport );
             // find and set examResult
-            String[] parts = apiReport.getId().split( "\\." );
+            String[] parts = apiReport.getId().split( "-" );
             if ( parts.length >= 3 ) { // correct size == 3
                 String testeeCaseNumber = parts[1];
                 Long examId = Long.getLong( parts[2] );

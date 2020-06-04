@@ -101,7 +101,7 @@ public class QuestionSimpleOrderForm {
             public List<OptionModel> getOptions() {
                 List<OptionModel> options = new ArrayList<OptionModel>();
                 for ( int i = 0; i <= question.getAnswerVariants().size(); i++ ) {
-                    options.add(new OptionModelImpl( i==0?"":String.valueOf( i ), i ));
+                    options.add(new OptionModelImpl( i==0? "—":String.valueOf( i ), i )); //messages.get( "incorrect_answer" )
                 }
                 return options;
             }
@@ -131,8 +131,11 @@ public class QuestionSimpleOrderForm {
             }
             else { // answer was selected as incorrect
                 if ( existed != null ) {
-                    //todo remove from DB (use DAO)
+                    // remove from DB (use DAO)
                     questionResult.getElements().remove( existed );
+                    if ( existed.getId() > 0 ) {
+                        questionDao.delete( existed );
+                    }
                 }
             }
         }

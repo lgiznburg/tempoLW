@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -63,8 +64,6 @@ public class Token {
             return new HttpError( HttpServletResponse.SC_NOT_FOUND, "No testee nor exam found" );
         }
 
-        String provider = systemPropertyService.getProperty( StoredPropertyName.PROCTORING_PROVIDER ).toLowerCase();
-
         String secretString = systemPropertyService.getProperty( StoredPropertyName.PROCTORING_SECRET_KEY );
         Algorithm algorithmHS = Algorithm.HMAC256( secretString );
 
@@ -99,15 +98,21 @@ public class Token {
     private JWTCreator.Builder buildPayload( Testee testee ) {
         ExamSchedule exam = examResult.getExam();
 
-        String sessionId = String.format( "%s.%s.%d", testee.getLogin(),
+        String sessionId = String.format( "%s-%s-%d", testee.getLogin(),
                 testee.getCaseNumber(),
                 exam.getId() );
         sessionId = sessionId.replaceAll( " ", "" );
 
         Map<String,Object> payload = new HashMap<>();
 
+        Calendar expiration = Calendar.getInstance();
+        if ( examResult.getStartTime() != null ) {
+            expiration.setTime( examResult.getStartTime() ); // in case of restart
+        }
+        expiration.add( Calendar.HOUR, exam.getDurationHours() );
+        expiration.add( Calendar.MINUTE, exam.getDurationMinutes() + 20 ); //extra 20 min
         JWTCreator.Builder jwtBuilder = JWT.create()
-                .withClaim( "exp", 4*60*60 )  // 4 hours in seconds
+                .withExpiresAt( expiration.getTime() )
                 .withClaim( "username", testee.getCaseNumber() )
                 //.withClaim( "role", "student" )
                 .withClaim( "nickname", testee.getLastName() )

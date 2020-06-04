@@ -101,11 +101,11 @@ public class QuestionSimpleForm {
         for ( Iterator<ResultElement> elementIt = questionResult.getElements().iterator(); elementIt.hasNext(); ) {
             ResultElement element = elementIt.next();
             if ( !selectedAnswers.contains( ((ResultSimple)element).getAnswerVariant() ) ) {
+                elementIt.remove();
                 if ( element.getId() != 0 ) {
                     // delete element from DB if exists.
                     questionDao.delete( element );
                 }
-                elementIt.remove();
             }
         }
         // add checked answer to result list
