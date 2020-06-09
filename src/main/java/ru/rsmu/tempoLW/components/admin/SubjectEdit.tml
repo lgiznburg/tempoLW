@@ -39,6 +39,41 @@
                     <t:select t:id="subjectLevelType" value="subject.type" blankOption="NEVER"/>
                 </div>
             </div>
+            <div class="form-group">
+                <t:label for="useCalculator" class="col-sm-3">${message:subject-use-calculator}</t:label>
+                <div class="col-sm-6">
+                    <t:checkbox t:id="useCalculator" value="subject.useCalculator"/>
+                </div>
+            </div>
+
+            <h4 class="col-sm-offset-2">${message:reference-materials}</h4>
+            <t:loop source="subject.referenceMaterials" value="referenceMaterial">
+                <div class="form-group">
+                    <div class="col-sm-6 col-sm-offset-2">
+                        <t:textfield value="referenceMaterial.title"/>
+                    </div>
+                    <div class="col-sm-2">
+
+                    </div>
+                    <div content="col-sm-2 text-center">
+                        <t:eventlink event="deleteReference" context="referenceMaterial" class="btn btn-default">
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"/>
+                        </t:eventlink>
+                    </div>
+                </div>
+            </t:loop>
+            <div class="form-group">
+                <div class="col-sm-2 text-center">
+                    <span class="glyphicon glyphicon-plus-sign" aria-hidden="true"/>
+                </div>
+                <div class="col-sm-5">
+                    <t:textfield value="materialsTitle"/>
+                </div>
+                <div class="col-sm-5">
+                    <t:upload value="imageFile"/>
+                </div>
+            </div>
+
 
             <h4 class="col-sm-offset-2">${message:review-topics}</h4>
             <t:loop source="topics" value="topic" encoder="subTopicEncoder">

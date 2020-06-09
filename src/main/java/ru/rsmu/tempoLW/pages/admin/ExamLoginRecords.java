@@ -21,6 +21,8 @@ import ru.rsmu.tempoLW.dao.TesteeDao;
 import ru.rsmu.tempoLW.dao.UserDao;
 import ru.rsmu.tempoLW.consumabales.FileNameTransliterator;
 import ru.rsmu.tempoLW.entities.*;
+import ru.rsmu.tempoLW.services.EmailService;
+import ru.rsmu.tempoLW.services.EmailType;
 
 import java.io.*;
 import java.text.SimpleDateFormat;
@@ -46,6 +48,9 @@ public class ExamLoginRecords {
     @Inject
     private RtfTemplateDao rtfTemplateDao;
 
+    @Inject
+    private EmailService emailService;
+
     public StreamResponse onActivate() throws IOException {
 
         DocumentTemplate template = rtfTemplateDao.findByType( DocumentTemplateType.LOGINS );
@@ -66,6 +71,10 @@ public class ExamLoginRecords {
         fm.put( "examName", StringUtils.join( exam.getTestingPlan().getSubject().getTitle(), " ( ",
                 exam.getTestingPlan().getName(), " )" ) );
         fm.put( "examDate", new SimpleDateFormat( "dd MMMM yyyy", currentLocale ).format( exam.getExamDate() ) );
+        String examDate = new SimpleDateFormat( "dd MMMM yyyy", Locale.forLanguageTag( exam.getTestingPlan().getSubject().getLocale() ) )
+                .format( exam.getExamDate() );
+        String examDuration = formatDuration( exam );
+        EmailType emailType = EmailType.findForLocale( EmailType.EXAM_PASSWORD_SHORT_NAME, exam.getTestingPlan().getSubject().getLocale() );
 
         List<List<String>> table = new ArrayList<>();
         exam.getExamToTestees().sort( new Comparator<ExamToTestee>() {
@@ -97,6 +106,21 @@ public class ExamLoginRecords {
             row.add( password );
             table.add( row );
             testeeDao.save( examToTestee );
+
+            if ( exam.isUseProctoring() && StringUtils.isNotBlank( examToTestee.getTestee().getEmail() ) ) {
+                // need to send email to testee
+                Map<String,Object> model = new HashMap<>();
+
+                model.put( "fullName", examToTestee.getTestee().getFullName() );
+                model.put( "examName", exam.getTestingPlan().getSubject().getTitle() );
+                model.put( "examDate", examDate );
+                model.put( "serverAddress", "https://tempolw.rsmu.ru" );
+                model.put( "examDuration", examDuration );
+                model.put( "testeeLogin", examToTestee.getTestee().getLogin() );
+                model.put( "testeePassword", password );
+
+                emailService.sendEmail( examToTestee.getTestee(), emailType, model );
+            }
         }
 
         TableModifier tm = new TableModifier();
@@ -113,8 +137,46 @@ public class ExamLoginRecords {
         examName = examName.replaceAll("\\s", "_");
         examName = FileNameTransliterator.transliterateRuEn(examName);
         SimpleDateFormat sdf = new SimpleDateFormat("dd_MM_yyyy");
-        String examDate = sdf.format(exam.getExamDate());
+        String dateForFilename = sdf.format(exam.getExamDate());
 
-        return new AttachmentRtf(  document.toByteArray(), "exam_" + examName + "_" + examDate + "_" + "logins.rtf" );
+        return new AttachmentRtf(  document.toByteArray(), "exam_" + examName + "_" + dateForFilename + "_" + "logins.rtf" );
+    }
+
+    private String formatDuration( ExamSchedule exam ) {
+        StringBuilder builder = new StringBuilder();
+        if ( exam.getTestingPlan().getSubject().getLocale().equals( "ru" ) ) {
+            if ( exam.getDurationHours() > 0 ) {
+                builder.append( exam.getDurationHours() );
+                if ( exam.getDurationHours() == 1 ) {
+                    builder.append( " час" );
+                }
+                else if ( exam.getDurationHours() < 5 ) {
+                    builder.append( " часа" );
+                }
+                else {
+                    builder.append( " часов" );
+                }
+            }
+            if ( exam.getDurationMinutes() > 0 ) {
+                if ( builder.length() > 0 ) builder.append( " " );
+                builder.append( exam.getDurationMinutes() )
+                        .append( " минут" );
+            }
+        }
+        else if ( exam.getTestingPlan().getSubject().getLocale().equals( "en" ) ){
+            if ( exam.getDurationHours() > 0 ) {
+                builder.append( exam.getDurationHours() );
+                builder.append( " hour" );
+                if ( exam.getDurationHours() > 1 ) {
+                    builder.append( "s" );
+                }
+            }
+            if ( exam.getDurationMinutes() > 0 ) {
+                if ( builder.length() > 0 ) builder.append( " " );
+                builder.append( exam.getDurationMinutes() )
+                        .append( " minutes" );
+            }
+        }
+        return builder.toString();
     }
 }

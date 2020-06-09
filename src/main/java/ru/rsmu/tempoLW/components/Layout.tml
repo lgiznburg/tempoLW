@@ -42,6 +42,7 @@
                                 </t:security.hasAnyRoles>
                                 <t:security.hasRole role="admin">
                                     <li><t:pagelink page="admin/users">${message:navbar.admin.users}</t:pagelink></li>
+                                    <li><t:pagelink page="admin/loademails">${message:navbar.admin.load-emails}</t:pagelink></li>
                                     <li><t:pagelink page="admin/templates/rtftemplates">${message:rtf-template-short}</t:pagelink></li>
                                     <li><t:pagelink page="admin/systemproperties">${message:navbar.admin.system-properties}</t:pagelink></li>
                                     <li role="separator" class="divider"></li>

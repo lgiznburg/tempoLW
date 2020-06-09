@@ -12,7 +12,7 @@ define( ["jquery"], function ($) {
         $("#totalRuleMark" + suffix).val( cost * score * count );
 
         countTotal();
-    })
+    });
 
     $("input[id^=questionCountField]").on( "change", function ()  {
         var idRe = /questionCountField(.*)/;
@@ -24,7 +24,7 @@ define( ["jquery"], function ($) {
         $("#totalRuleMark" + suffix).val( mark * count );
 
         countTotal()
-    } )
+    } );
 
     function countTotal() {
         var total = 0;
@@ -36,7 +36,7 @@ define( ["jquery"], function ($) {
             var maxMark = $(this).val();
             var quant = $("#questionCountField" + suffix).val();
             total += maxMark * quant;
-        })
+        });
         $("#examMaxResult").val( total );
     }
 

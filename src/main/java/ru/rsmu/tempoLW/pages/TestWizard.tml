@@ -74,4 +74,10 @@
         <t:eventlink event="startTimer" async="true" class="btn btn-primary">${message:start-exam}</t:eventlink>
     </div>
 </t:block>
+
+<t:block t:id="needToReload">
+    <h2>${message:unexpected-error}</h2>
+    <p>${message:unexpected-error-explain}</p>
+    <t:pagelink page="index" >${message:navbar.logotitle}</t:pagelink>
+</t:block>
 </html>

@@ -41,7 +41,9 @@ public class QuestionTable {
     public void setupRender() {
         int finalMark = 0;
         for ( QuestionResult questionResult : examResult.getQuestionResults() ) {
-            examDao.refresh( questionResult );
+            if ( questionResult.getId() > 0 ) {
+                examDao.refresh( questionResult );
+            }
             finalMark += questionResult.getMark();
         }
         examResult.setMarkTotal( finalMark );

@@ -1,5 +1,6 @@
 package ru.rsmu.tempoLW.components.admin;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tapestry5.*;
 import org.apache.tapestry5.annotations.InjectComponent;
@@ -10,12 +11,12 @@ import org.apache.tapestry5.internal.OptionModelImpl;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.LocalizationSetter;
 import org.apache.tapestry5.services.ValueEncoderSource;
+import org.apache.tapestry5.upload.services.UploadedFile;
 import org.apache.tapestry5.util.AbstractSelectModel;
 import ru.rsmu.tempoLW.dao.QuestionDao;
-import ru.rsmu.tempoLW.entities.ExamSubject;
-import ru.rsmu.tempoLW.entities.SubTopic;
-import ru.rsmu.tempoLW.entities.SubjectType;
+import ru.rsmu.tempoLW.entities.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -38,8 +39,26 @@ public class SubjectEdit {
     @Property
     private List<SubTopic> topics;
 
+    /**
+     * for iteration through topics list
+     */
     @Property
     private SubTopic topic;
+
+    /**
+     * object for iteration through subject.referenceMaterials
+     */
+    @Property
+    private SubjectReferenceMaterial referenceMaterial;
+
+    /**
+     * for upload additional materials
+     */
+    @Property
+    private UploadedFile imageFile;
+
+    @Property
+    private String materialsTitle;
 
     @Inject
     private QuestionDao questionDao;
@@ -99,8 +118,17 @@ public class SubjectEdit {
         }
     }
 
+    public void onDeleteReference( SubjectReferenceMaterial referenceMaterial ) {
+        //subject.getReferenceMaterials().remove( referenceMaterial );
+        //UploadedImage image = referenceMaterial.getImage();
+        //referenceMaterial.setImage( null );
+        ///questionDao.delete( image );
+        questionDao.delete( referenceMaterial );
+    }
+
     public boolean onSuccess() {
         boolean stayHere = false;
+        // check and add new topic
         if ( StringUtils.isNotBlank( additionalTopicName ) ) {
             SubTopic topic = new SubTopic();
             topic.setSubject( subject );
@@ -108,6 +136,29 @@ public class SubjectEdit {
             questionDao.save( topic );
             stayHere =  true;
         }
+
+        //check and add new reference material
+        UploadedImage image = null;
+        try {
+            if ( imageFile != null && imageFile.getContentType().matches( "image.*" )
+                    && StringUtils.isNotBlank( materialsTitle )
+            ) {
+                image = new UploadedImage();
+                image.setContentType( imageFile.getContentType() );
+                image.setSourceName( imageFile.getFileName() );
+                image.setPicture( IOUtils.toByteArray( imageFile.getStream() ) );
+                questionDao.save( image );
+                SubjectReferenceMaterial referenceMaterial = new SubjectReferenceMaterial();
+                referenceMaterial.setImage( image );
+                referenceMaterial.setTitle( materialsTitle );
+                referenceMaterial.setSubject( subject );
+                questionDao.save( referenceMaterial );
+                stayHere = true;
+            }
+        } catch (IOException e) {
+            //
+        }
+
         String event = subject.getId() != 0 ? "subjectUpdated" : "subjectCreated";
         questionDao.save( subject );
         if ( !stayHere ) {

@@ -28,6 +28,31 @@
                         ${message:subject-show-answers-quantity}
                     </li>
                     <li class="list-group-item">
+                        <span class="badge">
+                            <t:if test="subject.useCalculator">
+                                <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>
+                                <p:else>
+                                    <span class="glyphicon glyphicon-minus" aria-hidden="true"></span>
+                                </p:else>
+                            </t:if>
+                        </span>
+                        ${message:subject-use-calculator}
+                    </li>
+                    <t:if test="referenceMaterialsPresent">
+                        <li class="list-group-item">
+                            ${message:reference-materials}
+                            <div style="padding-top: 1em;">
+                                <t:loop source="subject.referenceMaterials" value="referenceMaterial">
+                                    <div class="row">
+                                        <div class="col-sm-11">${referenceMaterial.title}</div>
+                                        <!--                                    <div class="col-sm-1">${topic.questionsCount}</div>-->
+                                    </div>
+                                </t:loop>
+                            </div>
+                        </li>
+                    </t:if>
+
+                    <li class="list-group-item">
                         <span class="badge">${questionsCount}</span>
                         ${message:review-total-questions}
                     </li>

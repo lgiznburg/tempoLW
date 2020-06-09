@@ -93,12 +93,14 @@ public class AppModule {
     }
     * */
 
+    @SuppressWarnings( "all" )  //what is the name of warning to hide "binding is unnecassary"
     public static void bind(ServiceBinder binder) {
         binder.bind(AuthorizingRealm.class, UserDetailsRealm.class).withId(UserDetailsRealm.class.getSimpleName());
         binder.bind( AuthorizingRealm.class, TesteeRealm.class ).withId( TesteeRealm.class.getSimpleName() );
 
         binder.bind( SecurityUserHelper.class );
 
+        binder.bind( EmailService.class, EmailServiceImpl.class );
     }
 
     public static void contributeSecurityConfiguration(OrderedConfiguration<SecurityFilterChain> configuration,

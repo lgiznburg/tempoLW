@@ -132,6 +132,10 @@ public class TestWizard {
                 }
             }
         }
+        if ( request.isXHR() && ( examResult == null || examResult.getQuestionResults() == null ) ) {
+            showMode = ShowMode.NEED_TO_RELOAD;
+            return null;
+        }
         setupCurrentQuestion();
 
         return null;
@@ -312,7 +316,8 @@ public class TestWizard {
     public enum ShowMode {
         SHOW_QUESTION,
         SHOW_TABLE,
-        START_TEST
+        START_TEST,
+        NEED_TO_RELOAD
     }
 
     public Block getMainBlock() {
@@ -321,6 +326,9 @@ public class TestWizard {
         }
         else if (showMode == ShowMode.START_TEST ) {
             return startProctoring;
+        }
+        else if ( showMode == ShowMode.NEED_TO_RELOAD ) {
+
         }
         return questionBlock;
     }
