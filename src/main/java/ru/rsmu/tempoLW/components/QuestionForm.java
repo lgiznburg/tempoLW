@@ -19,12 +19,6 @@ public class QuestionForm {
     @Property
     private QuestionResult current;
 
-    /**
-     * for interaction through subject.referenceMaterials
-     */
-    @Property
-    private SubjectReferenceMaterial referenceMaterial;
-
     @Inject
     private QuestionDao questionDao;
 
@@ -65,12 +59,6 @@ public class QuestionForm {
         return "";
     }
 
-    public String getReferenceImageLink() {
-        if ( referenceMaterial != null ) {
-            return linkSource.createPageRenderLink( QuestionImage.class.getSimpleName(), false, referenceMaterial.getImage().getId() ).toURI();
-        }
-        return "";
-    }
 
     public boolean isReferencesOrCalculatorPresent() {
         ExamSubject subject = current.getQuestion().getQuestionInfo().getSubject();

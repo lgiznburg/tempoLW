@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
+      xmlns:p="tapestry:parameter" >
+<t:content>
+
+    <div id="parent-accordion" style="padding-top: 2em;">
+        <div id="references" class="row form-group">
+            <t:loop source="subject.referenceMaterials" value="referenceMaterial">
+                <!--                <div class="col-sm-auto">-->
+                <button class="btn btn-default" type="button" data-toggle="collapse"
+                        data-target="#reference${referenceMaterial.id}" aria-expanded="false"
+                        aria-controls="reference${referenceMaterial.id}" data-parent="#parent-accordion">
+                    ${referenceMaterial.title}
+                </button>
+                <!--                </div>-->
+            </t:loop>
+            <t:if test="subject.useCalculator">
+                <!--                <div class="col-sm-auto">-->
+                <button class="btn btn-default" type="button" data-toggle="collapse"
+                        data-target="#calculator" aria-expanded="false"
+                        aria-controls="calculator" data-parent="#parent-accordion">
+                    Calculator
+                </button>
+                <!--                </div>-->
+            </t:if>
+        </div>
+        <t:loop source="subject.referenceMaterials" value="referenceMaterial">
+            <div class="row collapse" id="reference${referenceMaterial.id}">
+                <div class="col-sm-11 col-sm-offset-1"><img class="question-image img-responsive" src="${referenceImageLink}"/></div>
+            </div>
+        </t:loop>
+        <t:if test="subject.useCalculator">
+            <div class="row collapse" id="calculator">
+                <div class="col-sm-11 col-sm-offset-1">
+                    <t:calculator/>
+                </div>
+            </div>
+        </t:if>
+    </div>
+
+
+</t:content>
+</html>

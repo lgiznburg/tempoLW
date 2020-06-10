@@ -132,10 +132,7 @@ public class TestWizard {
                 }
             }
         }
-        if ( request.isXHR() && ( examResult == null || examResult.getQuestionResults() == null ) ) {
-            showMode = ShowMode.NEED_TO_RELOAD;
-            return null;
-        }
+        if ( !checkSessionIntegrity() ) return null;
         setupCurrentQuestion();
 
         return null;
@@ -190,6 +187,8 @@ public class TestWizard {
     }
 
     public boolean onNextQuestion() {
+        if ( !checkSessionIntegrity() ) return true;
+
         if ( examResult.isExamMode() && getEstimatedEndTime().before( new Date() ) ) {
             // check time - if testee used "Next/Prev question" button
             examResult.setEndTime( new Date() );
@@ -207,6 +206,8 @@ public class TestWizard {
     }
 
     public boolean onPrevQuestion() {
+        if ( !checkSessionIntegrity() ) return true;
+
         if ( examResult.isExamMode() && getEstimatedEndTime().before( new Date() ) ) {
             // check time - if testee used "Next/Prev question" button
             examResult.setEndTime( new Date() );
@@ -224,6 +225,8 @@ public class TestWizard {
     }
 
     public void onToQuestionList() {
+        if ( !checkSessionIntegrity() ) return;
+
         showMode = ShowMode.SHOW_TABLE;
         if ( request.isXHR() ) {
             ajaxResponseRenderer.addRender( questionFormZone );
@@ -231,6 +234,8 @@ public class TestWizard {
     }
 
     public void onStartTimer() {
+        if ( !checkSessionIntegrity() ) return;
+
         examResult.setStartTime( new Date() );
         if ( examResult.getId() > 0 ) {
             examDao.save( examResult );
@@ -243,6 +248,8 @@ public class TestWizard {
     }
 
     public void onKeepThisQuestion( int questionNumber ) {
+        if ( !checkSessionIntegrity() ) return;
+
         if ( examResult.isExamMode() && getEstimatedEndTime().before( new Date() ) ) {
             // check time - if testee used "Next/Prev question" button
             examResult.setEndTime( new Date() );
@@ -257,6 +264,8 @@ public class TestWizard {
     }
 
     public void onFinishTest() {
+        if ( !checkSessionIntegrity() ) return;
+
         examResult.setEndTime( new Date() );
         //save only existed result
         if ( examResult.getId() > 0 ) {
@@ -311,6 +320,18 @@ public class TestWizard {
             }
         }
         return calendar.getTime();
+    }
+
+    /**
+     * If session expire examResult becomes empty. So we need to show friendly message instead of NPE exception
+     * @return true if everything is OK, false if examResult is empty
+     */
+    private boolean checkSessionIntegrity() {
+        if ( request.isXHR() && ( examResult == null || examResult.getQuestionResults() == null ) ) {
+            showMode = ShowMode.NEED_TO_RELOAD;
+            return false;
+        }
+        return true;
     }
 
     public enum ShowMode {

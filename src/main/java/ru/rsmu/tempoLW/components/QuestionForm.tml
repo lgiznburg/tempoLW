@@ -14,40 +14,7 @@
     <t:delegate to="questionBlock"/>
 
     <t:if test="referencesOrCalculatorPresent">
-        <div id="parent-accordion">
-        <div id="references" class="row form-group">
-            <t:loop source="subject.referenceMaterials" value="referenceMaterial">
-<!--                <div class="col-sm-auto">-->
-                    <button class="btn btn-default" type="button" data-toggle="collapse"
-                            data-target="#reference${referenceMaterial.id}" aria-expanded="false"
-                            aria-controls="reference${referenceMaterial.id}" data-parent="#parent-accordion">
-                        ${referenceMaterial.title}
-                    </button>
-<!--                </div>-->
-            </t:loop>
-            <t:if test="subject.useCalculator">
-<!--                <div class="col-sm-auto">-->
-                    <button class="btn btn-default" type="button" data-toggle="collapse"
-                            data-target="#calculator" aria-expanded="false"
-                            aria-controls="calculator" data-parent="#parent-accordion">
-                        Calculator
-                    </button>
-<!--                </div>-->
-            </t:if>
-        </div>
-        <t:loop source="subject.referenceMaterials" value="referenceMaterial">
-            <div class="row collapse" id="reference${referenceMaterial.id}">
-                <div class="col-sm-11 col-sm-offset-1"><img class="question-image img-responsive" src="${referenceImageLink}"/></div>
-            </div>
-        </t:loop>
-        <t:if test="subject.useCalculator">
-            <div class="row collapse" id="calculator">
-                <div class="col-sm-11 col-sm-offset-1">
-                    <t:calculator/>
-                </div>
-            </div>
-        </t:if>
-        </div>
+        <t:referencematerials subject="subject"/>
     </t:if>
 
     <t:block t:id="questionSimple">
