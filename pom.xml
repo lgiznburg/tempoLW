@@ -13,13 +13,13 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <logging.version>1.6.1</logging.version>
-        <tapestry-release-version>5.4.5</tapestry-release-version>
+        <tapestry-release-version>5.5.0</tapestry-release-version>
         <servlet-api-release-version>2.5</servlet-api-release-version>
         <testng-release-version>6.8.21</testng-release-version>
         <slf4j-release-version>1.7.19</slf4j-release-version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-        <hibernate.version>4.2.2.Final</hibernate.version>
+        <hibernate.version>5.1.0.Final</hibernate.version>
         <mysql.version>8.0.15</mysql.version>
         <spring-release-version>2.0.8</spring-release-version>
 
@@ -108,18 +108,30 @@
             <groupId>org.apache.tapestry</groupId>
             <artifactId>tapestry-hibernate</artifactId>
             <version>${tapestry-release-version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>dom4j</groupId>
+                    <artifactId>dom4j</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>dom4j</groupId>
+            <artifactId>dom4j</artifactId>
+            <version>1.6</version>
         </dependency>
 
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-c3p0</artifactId>
-            <version>4.3.10.Final</version>
+            <version>5.1.0.Final</version>
         </dependency>
 
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>4.0.2.GA</version>  <!-- 5.0.1.Final -->
+            <version>5.1.0.Final</version>  <!-- 5.0.1.Final 4.0.2.GA -->
             <type>jar</type>
         </dependency>
 
