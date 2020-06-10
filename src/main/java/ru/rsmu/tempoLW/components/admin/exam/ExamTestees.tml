@@ -6,13 +6,14 @@
         <h4>${message:exam} ${exam.name}</h4>
 
         <t:grid t:id="testeesGrid" source="testees" row="testee"
-                exclude="id,firstName,middleName,login,password,expirationDate,credentialsExpired"
+                exclude="id,lastName,firstName,middleName,login,password,email,expirationDate,credentialsExpired"
                 add="testResult,printStatement" class="table table-bordered table-hover"
+                reorder="caseNumber,fullName,testResult,printStatement"
                 rowsPerPage="50" pagerPosition="bottom"
                 empty="block:emptyTestees">
-            <p:lastNameCell>
+            <!--<p:lastNameCell>
                 ${testeeFullName}
-            </p:lastNameCell>
+            </p:lastNameCell>-->
             <p:testResultCell>
                 <t:if test="currentExamResult">
                     <t:if test="currentExamResult.finished">

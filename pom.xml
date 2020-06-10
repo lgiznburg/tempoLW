@@ -23,14 +23,6 @@
         <mysql.version>8.0.15</mysql.version>
         <spring-release-version>2.0.8</spring-release-version>
 
-        <!--// emails properties  -->
-        <emailService.hostName>127.0.0.1</emailService.hostName>
-        <emailService.hostLogin>login</emailService.hostLogin>
-        <emailService.hostPassword>password</emailService.hostPassword>
-        <emailService.hostPort>0</emailService.hostPort>
-        <emailService.hostSslPort></emailService.hostSslPort>
-        <emailService.useSsl>false</emailService.useSsl>
-        <emailService.useTls>false</emailService.useTls>
     </properties>
 
     <repositories>
@@ -394,9 +386,7 @@ Original project defines some incompatible dependency
                 <hibernate.default_schema>dbo</hibernate.default_schema>
                 <hibernate.connection.username>tandem</hibernate.connection.username>
                 <hibernate.connection.password>123Tandem456</hibernate.connection.password>
-                <emailService.hostName>172.18.1.105</emailService.hostName>
-                <emailService.hostLogin>login</emailService.hostLogin>
-                <emailService.hostPassword>password</emailService.hostPassword>
+<!--                <emailService.hostName>172.18.1.105</emailService.hostName>-->
             </properties>
         </profile>
         <profile>
@@ -409,9 +399,7 @@ Original project defines some incompatible dependency
                 <hibernate.default_schema>dbo</hibernate.default_schema>
                 <hibernate.connection.username>tandem</hibernate.connection.username>
                 <hibernate.connection.password>123Tandem456</hibernate.connection.password>
-                <emailService.hostName>172.18.1.105</emailService.hostName>
-                <emailService.hostLogin>login</emailService.hostLogin>
-                <emailService.hostPassword>password</emailService.hostPassword>
+<!--                <emailService.hostName>172.18.1.105</emailService.hostName>-->
             </properties>
         </profile>
         <profile>
@@ -426,9 +414,6 @@ Original project defines some incompatible dependency
                 <hibernate.default_schema>dbo</hibernate.default_schema>
                 <hibernate.connection.username>tandem</hibernate.connection.username>
                 <hibernate.connection.password>123Tandem456</hibernate.connection.password>
-                <emailService.hostName>172.18.1.105</emailService.hostName>
-                <emailService.hostLogin>login</emailService.hostLogin>
-                <emailService.hostPassword>password</emailService.hostPassword>
             </properties>
         </profile>
 

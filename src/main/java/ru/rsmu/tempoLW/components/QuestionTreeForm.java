@@ -8,6 +8,7 @@ import org.apache.tapestry5.ValueEncoder;
 import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.internal.services.LinkSource;
 import org.apache.tapestry5.ioc.annotations.Inject;
+import org.apache.tapestry5.services.Request;
 import org.apache.tapestry5.services.SelectModelFactory;
 import org.apache.tapestry5.services.ValueEncoderSource;
 import ru.rsmu.tempoLW.dao.QuestionDao;
@@ -74,14 +75,17 @@ public class QuestionTreeForm {
     @Inject
     private ValueEncoderSource valueEncoderSource;
 
+    @Inject
+    private Request request;
+
     public void setupRender() {
         prepare();
     }
 
     public void onPrepareForSubmit() {
+        if ( !checkSessionIntegrity() ) return;
         prepare();
     }
-
 
     private void prepare() {
         questionResult = examResult.getCurrentQuestion();
@@ -115,6 +119,7 @@ public class QuestionTreeForm {
     }
 
     public boolean onSuccess() {
+        if ( !checkSessionIntegrity() ) return false;
         // create elements if not exist
         if ( questionResult.getElements() == null ) {
             questionResult.setElements( new LinkedList<>() );
@@ -235,5 +240,16 @@ public class QuestionTreeForm {
             return linkSource.createPageRenderLink( QuestionImage.class.getSimpleName(), false, currentVariant.getImage().getId() ).toURI();
         }
         return "";
+    }
+
+    /**
+     * If session expire examResult becomes empty. So we need to show friendly message instead of NPE exception
+     * @return true if everything is OK, false if examResult is empty
+     */
+    private boolean checkSessionIntegrity() {
+        if ( request.isXHR() && ( examResult == null || examResult.getQuestionResults() == null ) ) {
+            return false;
+        }
+        return true;
     }
 }

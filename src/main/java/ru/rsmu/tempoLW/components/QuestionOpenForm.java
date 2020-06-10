@@ -5,6 +5,7 @@ import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.annotations.SessionState;
 import org.apache.tapestry5.ioc.annotations.Inject;
+import org.apache.tapestry5.services.Request;
 import ru.rsmu.tempoLW.dao.QuestionDao;
 import ru.rsmu.tempoLW.entities.ExamResult;
 import ru.rsmu.tempoLW.entities.QuestionResult;
@@ -32,11 +33,15 @@ public class QuestionOpenForm {
     @Inject
     private QuestionDao questionDao;
 
+    @Inject
+    private Request request;
+
     public void onPrepareForRender() {
         prepare();
     }
 
     public void onPrepareForSubmit() {
+        if ( !checkSessionIntegrity() ) return;
         prepare();
     }
 
@@ -53,6 +58,7 @@ public class QuestionOpenForm {
     }
 
     public void onSuccess() {
+        if ( !checkSessionIntegrity() ) return;
         // find correct current question. NB: should it be checked for type?
         questionResult = examResult.getCurrentQuestion();
 
@@ -73,5 +79,16 @@ public class QuestionOpenForm {
         else if ( questionResult.getElements().size() == 0 ) {
             questionResult.getElements().add( resultOpen );
         }
+    }
+
+    /**
+     * If session expire examResult becomes empty. So we need to show friendly message instead of NPE exception
+     * @return true if everything is OK, false if examResult is empty
+     */
+    private boolean checkSessionIntegrity() {
+        if ( request.isXHR() && ( examResult == null || examResult.getQuestionResults() == null ) ) {
+            return false;
+        }
+        return true;
     }
 }

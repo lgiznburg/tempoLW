@@ -31,24 +31,6 @@ public class EmailServiceImpl implements EmailService {
 
         private static final Logger log = LoggerFactory.getLogger( EmailService.class );
 
-        // parameters for using with commons email
-
-//        @Value("${emailService.hostName:127.0.0.1}")
-        private String hostName;
-//        @Value("${emailService.hostLogin:login}")
-        private String hostLogin;
-//        @Value("${emailService.hostPassword:password}")
-        private String hostPassword;
-//        @Value("${emailService.hostPort:0}")
-        private int hostPort = 0;
-//        @Value("${emailService.hostSslPort:}")
-        private String hostSslPort = "";
-//        @Value("${emailService.useSsl:false}")
-        private boolean useSsl = false;
-//        @Value("${emailService.useTls:false}")
-        private boolean useTls = false;
-
-
         private boolean debug = false;
 
         private VelocityEngine velocityEngine;
@@ -67,23 +49,6 @@ public class EmailServiceImpl implements EmailService {
             log.error( "Can't open velocity.properties file", e );
         }
 
-        try {
-            Properties prop = new Properties();
-
-            InputStream propFile = getClass().getResourceAsStream( "/email_service.properties" );
-            prop.load( propFile );
-
-            hostName = StringUtils.isNotBlank( prop.getProperty( "hostName" ) ) ? prop.getProperty( "hostName" ) : "127.0.0.1" ;
-            hostLogin = StringUtils.isNotBlank( prop.getProperty( "hostLogin" ) ) ? prop.getProperty( "hostLogin" ) : "login";
-            hostPassword = StringUtils.isNotBlank( prop.getProperty( "hostPassword" ) ) ? prop.getProperty( "hostPassword" ) : "password";
-            hostPort = StringUtils.isNotBlank( prop.getProperty( "hostPort" ) ) ? Integer.parseInt( prop.getProperty( "hostPort" ) ) : 0;
-            hostSslPort  = StringUtils.isNotBlank( prop.getProperty( "hostSslPort" ) ) ? prop.getProperty( "hostSslPort" ) : "";
-            useSsl = StringUtils.isNotBlank( prop.getProperty( "useSsl" ) ) && Boolean.parseBoolean( prop.getProperty( "useSsl" ) );
-            useTls = StringUtils.isNotBlank( prop.getProperty( "useTls" ) ) && Boolean.parseBoolean( prop.getProperty( "useTls" ) );
-
-        } catch (IOException e) {
-            log.error( "Can't open email_service.properties file", e );
-        }
     }
 
     public void sendEmail( Testee user, EmailType emailType, Map<String,Object> model ) {
@@ -112,17 +77,19 @@ public class EmailServiceImpl implements EmailService {
 
         private HtmlEmail createHtmlEmail( EmailType emailType, Map<String,Object> model) throws EmailException {
             final HtmlEmail htmlEmail = new HtmlEmail();
-            htmlEmail.setHostName(hostName);
+            htmlEmail.setHostName( systemPropertyDao.getProperty( StoredPropertyName.SENDMAIL_HOST ) );
+            String hostLogin = systemPropertyDao.getProperty( StoredPropertyName.SENDMAIL_LOGIN);
+            String hostPassword = systemPropertyDao.getProperty( StoredPropertyName.SENDMAIL_PASSWORD);
             if ( StringUtils.isNotBlank( hostLogin ) && StringUtils.isNotBlank(hostPassword)) {
                 htmlEmail.setAuthentication(hostLogin, hostPassword);
             }
 
-            if (hostPort > 0)
-                htmlEmail.setSmtpPort(hostPort);
+            if (systemPropertyDao.getPropertyAsInt( StoredPropertyName.SENDMAIL_PORT ) > 0 )
+                htmlEmail.setSmtpPort( systemPropertyDao.getPropertyAsInt( StoredPropertyName.SENDMAIL_PORT ) );
 
-            htmlEmail.setStartTLSEnabled( useTls );
-            htmlEmail.setSSLOnConnect( useSsl );
-            htmlEmail.setSslSmtpPort( hostSslPort );
+            htmlEmail.setStartTLSEnabled( systemPropertyDao.getPropertyAsInt( StoredPropertyName.SENDMAIL_USE_TLS ) > 0 );
+            htmlEmail.setSSLOnConnect( systemPropertyDao.getPropertyAsInt( StoredPropertyName.SENDMAIL_USE_SSL ) > 0 );
+            htmlEmail.setSslSmtpPort( systemPropertyDao.getProperty( StoredPropertyName.SENDMAIL_SSL_PORT) );
 
             htmlEmail.setFrom( systemPropertyDao.getProperty( StoredPropertyName.EMAIL_FROM_ADDRESS ),
                     systemPropertyDao.getProperty( StoredPropertyName.EMAIL_FROM_SIGNATURE ),

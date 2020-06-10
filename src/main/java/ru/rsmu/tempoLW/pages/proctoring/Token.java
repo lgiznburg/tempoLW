@@ -119,10 +119,12 @@ public class Token {
                 .withClaim( "id", sessionId )      // proctoring session
                 .withClaim( "subject", exam.getName() + " - " + exam.getTestingPlan().getSubject().getTitle() ); // session name
 
-        String schema = request.isSecure() ? "https://" : "http://";
-        String server = request.getServerName();
-        String callbackUri = schema + server + contextPath + "/rest/proctoring/result";
-        //jwtBuilder.withClaim( "api", callbackUri );   // callback address
+        if ( systemPropertyService.getPropertyAsInt( StoredPropertyName.PROCTORING_CALLBACK_ALLOWED ) > 0 ) {
+            String schema = request.isSecure() ? "https://" : "http://";
+            String server = request.getServerName();
+            String callbackUri = schema + server + contextPath + "/rest/proctoring/result";
+            jwtBuilder.withClaim( "api", callbackUri );   // callback address
+        }
 
         return jwtBuilder;
     }

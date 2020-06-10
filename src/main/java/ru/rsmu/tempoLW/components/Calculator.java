@@ -7,7 +7,6 @@ import org.apache.tapestry5.services.javascript.JavaScriptSupport;
 /**
  * @author leonid.
  */
-@Import( module = "calculator")
 public class Calculator {
 
     @Environmental

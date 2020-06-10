@@ -161,6 +161,8 @@ public class TestWizard {
     }
 
     public Object onSuccess() {
+        if ( !checkSessionIntegrity() ) return true;
+
         current.checkCorrectness();
         current.setUpdated( new Date() );
         current.setAnsweredCount( current.getElements().size() );
@@ -329,6 +331,7 @@ public class TestWizard {
     private boolean checkSessionIntegrity() {
         if ( request.isXHR() && ( examResult == null || examResult.getQuestionResults() == null ) ) {
             showMode = ShowMode.NEED_TO_RELOAD;
+            ajaxResponseRenderer.addRender( questionFormZone );
             return false;
         }
         return true;
