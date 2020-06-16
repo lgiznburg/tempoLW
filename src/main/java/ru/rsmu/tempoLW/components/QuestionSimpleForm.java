@@ -2,7 +2,6 @@ package ru.rsmu.tempoLW.components;
 
 import org.apache.tapestry5.SelectModel;
 import org.apache.tapestry5.ValueEncoder;
-import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.annotations.SessionState;
 import org.apache.tapestry5.ioc.Messages;
@@ -13,10 +12,7 @@ import org.apache.tapestry5.services.ValueEncoderSource;
 import ru.rsmu.tempoLW.dao.QuestionDao;
 import ru.rsmu.tempoLW.entities.*;
 
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -64,7 +60,10 @@ public class QuestionSimpleForm {
     }
 
     public void onPrepareForSubmit() {
-        if ( !checkSessionIntegrity() ) return;
+        if ( isSessionLost() ) {
+            questionResult = new QuestionResult();
+            return;
+        }
         prepare();
     }
 
@@ -92,7 +91,7 @@ public class QuestionSimpleForm {
     }
 
     public void onSuccess() {
-        if ( !checkSessionIntegrity() ) return;
+        if ( isSessionLost() ) return;
         // find correct current question. NB: should it be checked for type?
         questionResult = examResult.getCurrentQuestion();
 
@@ -129,27 +128,7 @@ public class QuestionSimpleForm {
     }
 
     public ValueEncoder<AnswerVariant> getAnswerEncoder() {
-        //return new LocalAnswerVariantEncoder();
         return valueEncoderSource.getValueEncoder( AnswerVariant.class );
-    }
-
-    public class LocalAnswerVariantEncoder implements ValueEncoder<AnswerVariant> {
-
-        @Override
-        public String toClient( AnswerVariant value ) {
-            return String.valueOf( value.getId() );
-        }
-
-        @Override
-        public AnswerVariant toValue( String clientValue ) {
-            long id = Long.parseLong( clientValue );
-            for ( AnswerVariant variant : ( (QuestionSimple) questionResult.getQuestion() ).getAnswerVariants() ) {
-                if ( variant.getId() == id ) {
-                    return variant;
-                }
-            }
-            return null;
-        }
     }
 
     public String getMessageWithHint() {
@@ -168,10 +147,7 @@ public class QuestionSimpleForm {
      * If session expire examResult becomes empty. So we need to show friendly message instead of NPE exception
      * @return true if everything is OK, false if examResult is empty
      */
-    private boolean checkSessionIntegrity() {
-        if ( request.isXHR() && ( examResult == null || examResult.getQuestionResults() == null ) ) {
-            return false;
-        }
-        return true;
+    private boolean isSessionLost() {
+        return request.isXHR() && (examResult == null || examResult.getQuestionResults() == null);
     }
 }

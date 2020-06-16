@@ -83,7 +83,10 @@ public class QuestionTreeForm {
     }
 
     public void onPrepareForSubmit() {
-        if ( !checkSessionIntegrity() ) return;
+        if ( isSessionLost() ) {
+            questionResult = new QuestionResult();
+            return;
+        }
         prepare();
     }
 
@@ -119,7 +122,7 @@ public class QuestionTreeForm {
     }
 
     public boolean onSuccess() {
-        if ( !checkSessionIntegrity() ) return false;
+        if ( isSessionLost() ) return false;
         // create elements if not exist
         if ( questionResult.getElements() == null ) {
             questionResult.setElements( new LinkedList<>() );
@@ -166,23 +169,6 @@ public class QuestionTreeForm {
 
     public ValueEncoder<AnswerVariant> getAnswerEncoder() {
         return valueEncoderSource.getValueEncoder( AnswerVariant.class );
-        /*return new ValueEncoder<AnswerVariant>() {
-            @Override
-            public String toClient( AnswerVariant value ) {
-                return String.valueOf( value.getId() );
-            }
-
-            @Override
-            public AnswerVariant toValue( String clientValue ) {
-                long id = Long.parseLong( clientValue );
-                for ( AnswerVariant variant : currentVariant.getCorrectAnswers() ) {
-                    if ( variant.getId() == id ) {
-                        return variant;
-                    }
-                }
-                return null;
-            }
-        };*/
     }
 
     public List<String> getPreviousAnswers() {
@@ -246,10 +232,7 @@ public class QuestionTreeForm {
      * If session expire examResult becomes empty. So we need to show friendly message instead of NPE exception
      * @return true if everything is OK, false if examResult is empty
      */
-    private boolean checkSessionIntegrity() {
-        if ( request.isXHR() && ( examResult == null || examResult.getQuestionResults() == null ) ) {
-            return false;
-        }
-        return true;
+    private boolean isSessionLost() {
+        return request.isXHR() && (examResult == null || examResult.getQuestionResults() == null);
     }
 }

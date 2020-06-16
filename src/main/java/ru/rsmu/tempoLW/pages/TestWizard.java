@@ -60,7 +60,7 @@ public class TestWizard {
      * Switch blocks on the page
      */
     @Inject
-    private Block questionBlock, questionListBlock, startProctoring;
+    private Block questionBlock, questionListBlock, startProctoring, needToReload;
 
     /**
      * Request for handling AJAX async requests
@@ -131,8 +131,12 @@ public class TestWizard {
                     }
                 }
             }
+        } else {
+            if ( isSessionLost() )  {
+                showMode = ShowMode.NEED_TO_RELOAD;
+                return null;
+            }
         }
-        if ( !checkSessionIntegrity() ) return null;
         setupCurrentQuestion();
 
         return null;
@@ -161,7 +165,7 @@ public class TestWizard {
     }
 
     public Object onSuccess() {
-        if ( !checkSessionIntegrity() ) return true;
+        if ( checkSessionDisruption() ) return true;
 
         current.checkCorrectness();
         current.setUpdated( new Date() );
@@ -189,7 +193,7 @@ public class TestWizard {
     }
 
     public boolean onNextQuestion() {
-        if ( !checkSessionIntegrity() ) return true;
+        if ( checkSessionDisruption() ) return true;
 
         if ( examResult.isExamMode() && getEstimatedEndTime().before( new Date() ) ) {
             // check time - if testee used "Next/Prev question" button
@@ -208,7 +212,7 @@ public class TestWizard {
     }
 
     public boolean onPrevQuestion() {
-        if ( !checkSessionIntegrity() ) return true;
+        if ( checkSessionDisruption() ) return true;
 
         if ( examResult.isExamMode() && getEstimatedEndTime().before( new Date() ) ) {
             // check time - if testee used "Next/Prev question" button
@@ -227,7 +231,7 @@ public class TestWizard {
     }
 
     public void onToQuestionList() {
-        if ( !checkSessionIntegrity() ) return;
+        if ( checkSessionDisruption() ) return;
 
         showMode = ShowMode.SHOW_TABLE;
         if ( request.isXHR() ) {
@@ -236,7 +240,7 @@ public class TestWizard {
     }
 
     public void onStartTimer() {
-        if ( !checkSessionIntegrity() ) return;
+        if ( checkSessionDisruption() ) return;
 
         examResult.setStartTime( new Date() );
         if ( examResult.getId() > 0 ) {
@@ -250,7 +254,7 @@ public class TestWizard {
     }
 
     public void onKeepThisQuestion( int questionNumber ) {
-        if ( !checkSessionIntegrity() ) return;
+        if ( checkSessionDisruption() ) return;
 
         if ( examResult.isExamMode() && getEstimatedEndTime().before( new Date() ) ) {
             // check time - if testee used "Next/Prev question" button
@@ -266,7 +270,7 @@ public class TestWizard {
     }
 
     public void onFinishTest() {
-        if ( !checkSessionIntegrity() ) return;
+        if ( checkSessionDisruption() ) return;
 
         examResult.setEndTime( new Date() );
         //save only existed result
@@ -326,15 +330,20 @@ public class TestWizard {
 
     /**
      * If session expire examResult becomes empty. So we need to show friendly message instead of NPE exception
-     * @return true if everything is OK, false if examResult is empty
+     * Returns inverted status
+     * @return false if everything is OK, true if examResult is empty
      */
-    private boolean checkSessionIntegrity() {
-        if ( request.isXHR() && ( examResult == null || examResult.getQuestionResults() == null ) ) {
+    private boolean checkSessionDisruption() {
+        if ( isSessionLost() ) {
             showMode = ShowMode.NEED_TO_RELOAD;
             ajaxResponseRenderer.addRender( questionFormZone );
-            return false;
+            return true;
         }
-        return true;
+        return false;
+    }
+
+    private boolean isSessionLost() {
+        return request.isXHR() && ( examResult == null || examResult.getQuestionResults() == null );
     }
 
     public enum ShowMode {
@@ -352,7 +361,7 @@ public class TestWizard {
             return startProctoring;
         }
         else if ( showMode == ShowMode.NEED_TO_RELOAD ) {
-
+            return needToReload;
         }
         return questionBlock;
     }

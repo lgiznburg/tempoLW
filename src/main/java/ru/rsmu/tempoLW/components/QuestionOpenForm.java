@@ -1,7 +1,6 @@
 package ru.rsmu.tempoLW.components;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.annotations.SessionState;
 import org.apache.tapestry5.ioc.annotations.Inject;
@@ -41,7 +40,10 @@ public class QuestionOpenForm {
     }
 
     public void onPrepareForSubmit() {
-        if ( !checkSessionIntegrity() ) return;
+        if ( isSessionLost() ) {
+            questionResult = new QuestionResult();
+            return;
+        }
         prepare();
     }
 
@@ -58,7 +60,7 @@ public class QuestionOpenForm {
     }
 
     public void onSuccess() {
-        if ( !checkSessionIntegrity() ) return;
+        if ( isSessionLost() ) return;
         // find correct current question. NB: should it be checked for type?
         questionResult = examResult.getCurrentQuestion();
 
@@ -85,10 +87,7 @@ public class QuestionOpenForm {
      * If session expire examResult becomes empty. So we need to show friendly message instead of NPE exception
      * @return true if everything is OK, false if examResult is empty
      */
-    private boolean checkSessionIntegrity() {
-        if ( request.isXHR() && ( examResult == null || examResult.getQuestionResults() == null ) ) {
-            return false;
-        }
-        return true;
+    private boolean isSessionLost() {
+        return request.isXHR() && (examResult == null || examResult.getQuestionResults() == null);
     }
 }
