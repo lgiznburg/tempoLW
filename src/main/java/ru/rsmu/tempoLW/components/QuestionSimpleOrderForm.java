@@ -79,6 +79,7 @@ public class QuestionSimpleOrderForm {
         // create results for displaying on the form
         resultElements = new LinkedList<>();
         QuestionSimpleOrder question = (QuestionSimpleOrder)questionResult.getQuestion();
+        count = 0;
         for ( AnswerVariant variant : question.getAnswerVariants() ) {
             ResultSimpleOrder element = new ResultSimpleOrder();
             element.setAnswerVariant( variant );
@@ -195,9 +196,6 @@ public class QuestionSimpleOrderForm {
      * @return true if everything is OK, false if examResult is empty
      */
     private boolean checkSessionIntegrity() {
-        if ( request.isXHR() && ( examResult == null || examResult.getQuestionResults() == null ) ) {
-            return false;
-        }
-        return true;
+        return !request.isXHR() || (examResult != null && examResult.getQuestionResults() != null);
     }
 }

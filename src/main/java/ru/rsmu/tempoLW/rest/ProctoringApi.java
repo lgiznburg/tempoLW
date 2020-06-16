@@ -37,7 +37,7 @@ public class ProctoringApi {
             String[] parts = apiReport.getId().split( "-" );
             if ( parts.length >= 3 ) { // correct size == 3
                 String testeeCaseNumber = parts[1];
-                Long examId = Long.getLong( parts[2] );
+                Long examId = Long.parseLong( parts[2] );
 
                 Testee testee = testeeDao.findByCaseNumber( testeeCaseNumber );
                 ExamSchedule exam = examDao.find( ExamSchedule.class, examId );

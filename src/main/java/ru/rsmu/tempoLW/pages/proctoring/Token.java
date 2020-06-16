@@ -122,8 +122,12 @@ public class Token {
         if ( systemPropertyService.getPropertyAsInt( StoredPropertyName.PROCTORING_CALLBACK_ALLOWED ) > 0 ) {
             String schema = request.isSecure() ? "https://" : "http://";
             String server = request.getServerName();
-            String callbackUri = schema + server + contextPath + "/rest/proctoring/result";
-            jwtBuilder.withClaim( "api", callbackUri );   // callback address
+            int port = request.getServerPort();
+            StringBuilder callbackUri = new StringBuilder();
+            callbackUri.append( schema ).append( server );
+            if ( port != 0 && port != 80 ) callbackUri.append( ":" ).append( port );
+            callbackUri.append( contextPath ).append( "/rest/proctoring/result" );
+            jwtBuilder.withClaim( "api", callbackUri.toString() );   // callback address
         }
 
         return jwtBuilder;

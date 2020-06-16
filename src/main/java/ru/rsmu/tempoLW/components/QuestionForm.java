@@ -62,11 +62,13 @@ public class QuestionForm {
 
     public boolean isReferencesOrCalculatorPresent() {
         ExamSubject subject = current.getQuestion().getQuestionInfo().getSubject();
-        if ( !Hibernate.isInitialized( subject.getReferenceMaterials() ) ) {
+        /*if ( !Hibernate.isInitialized( subject.getReferenceMaterials() ) ) {
             questionDao.refresh( subject );
-        }
+        }*/
+        long materialsCount = questionDao.findReferencesCount( subject );
         return subject.isUseCalculator()
-                || ( subject.getReferenceMaterials() != null && subject.getReferenceMaterials().size() > 0 );
+                || materialsCount > 0;
+                //( subject.getReferenceMaterials() != null && subject.getReferenceMaterials().size() > 0 );
     }
 
     public ExamSubject getSubject() {

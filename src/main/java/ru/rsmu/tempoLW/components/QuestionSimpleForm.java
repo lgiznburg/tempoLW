@@ -79,6 +79,7 @@ public class QuestionSimpleForm {
         questionDao.refresh( questionResult.getQuestion() );
         Collections.shuffle( ((QuestionSimple)questionResult.getQuestion()).getAnswerVariants() );
         answerModel = modelFactory.create( ((QuestionSimple)questionResult.getQuestion()).getAnswerVariants(), "text" );
+        count = 0;
         for ( AnswerVariant variant : ((QuestionSimple)questionResult.getQuestion()).getAnswerVariants() ) {
             if ( variant.isCorrect() ) {
                 count++;
