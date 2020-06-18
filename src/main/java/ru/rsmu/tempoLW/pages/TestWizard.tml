@@ -81,7 +81,7 @@
             <h3 class="panel-title">${message:unexpected-error}</h3>
         </div>
         <div class="panel-body">
-            ${message:unexpected-error-explain}<br/><br/>
+            <t:outputraw value="${message:unexpected-error-explain}"/><br/><br/>
             <t:pagelink page="index" >${message:navbar.logotitle}</t:pagelink>
         </div>
     </div>

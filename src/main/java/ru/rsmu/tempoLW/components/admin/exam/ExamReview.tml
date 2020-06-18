@@ -27,6 +27,15 @@
                 </t:if>
             </div>
         </div>
+        <div class="row">
+            <div class="col-sm-3 text-right">${message:proctoring-using}:</div>
+            <div class="col-sm-3">
+                <t:if test="exam.useProctoring">
+                    ${message:proctoring-in-use}
+                    <p:else>${message:proctoring-in-no-use}</p:else>
+                </t:if>
+            </div>
+        </div>
         <t:if test="exam.examToTestees">
             <div class="row">
                 <div class="col-sm-3 text-right">${message:testeeList}:</div>

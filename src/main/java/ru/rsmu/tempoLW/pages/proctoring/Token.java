@@ -121,7 +121,7 @@ public class Token {
 
         if ( systemPropertyService.getPropertyAsInt( StoredPropertyName.PROCTORING_CALLBACK_ALLOWED ) > 0 ) {
             String schema = request.isSecure() ? "https://" : "http://";
-            String server = request.getServerName();
+            String server = request.getServerName(); //"85.142.163.82";
             int port = request.getServerPort();
             StringBuilder callbackUri = new StringBuilder();
             callbackUri.append( schema ).append( server );

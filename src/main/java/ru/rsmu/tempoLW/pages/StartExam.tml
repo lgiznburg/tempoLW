@@ -41,8 +41,8 @@
             <h3 class="panel-title">${message:attention}</h3>
         </div>
         <div class="panel-body">
-            ${message:proctoring-text}<br/><br/>
-            ${startExamMessage}
+            <t:outputraw value="${message:proctoring-text}"/><br/>
+            <p>${startExamMessage}</p>
         </div>
     </div>
 

@@ -1,9 +1,16 @@
 package ru.rsmu.tempoLW.pages;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.JWTCreator;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTCreationException;
 import org.apache.tapestry5.Block;
+import org.apache.tapestry5.SymbolConstants;
 import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.corelib.components.Zone;
 import org.apache.tapestry5.ioc.annotations.Inject;
+import org.apache.tapestry5.ioc.annotations.Symbol;
+import org.apache.tapestry5.services.HttpError;
 import org.apache.tapestry5.services.Request;
 import org.apache.tapestry5.services.ajax.AjaxResponseRenderer;
 import org.apache.tapestry5.services.ajax.JavaScriptCallback;
@@ -16,9 +23,8 @@ import ru.rsmu.tempoLW.entities.*;
 import ru.rsmu.tempoLW.entities.system.StoredPropertyName;
 import ru.rsmu.tempoLW.services.SecurityUserHelper;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.LinkedList;
+import javax.servlet.http.HttpServletResponse;
+import java.util.*;
 
 /**
  * @author leonid.
@@ -68,6 +74,10 @@ public class TestWizard {
     @Inject
     private Request request;
 
+    @Inject
+    @Symbol(SymbolConstants.CONTEXT_PATH)
+    private String contextPath;
+
     @InjectComponent
     private Zone questionFormZone, examTimingZone;
 
@@ -85,7 +95,6 @@ public class TestWizard {
         if ( examResult.getExam() != null && examResult.getExam().isUseProctoring() ) {
             String proctoringJS = propertyService.getProperty( StoredPropertyName.PROCTORING_JS_URL );
             String proctoringServer = propertyService.getProperty( StoredPropertyName.PROCTORING_SERVER_ADDRESS );
-//            javaScriptSupport.importJavaScriptLibrary( proctoringJS );
             /*javaScriptSupport.addModuleConfigurationCallback(
                     new ModuleConfigurationCallback() {
                         @Override
@@ -96,7 +105,7 @@ public class TestWizard {
                         }
                     }
             );*/
-            javaScriptSupport.require( "proctoring" ).invoke( "startSession" ).with( proctoringServer );
+            javaScriptSupport.require( "proctoring" ).invoke( "startSession" ).with( proctoringServer, getToken() );
         }
     }
 
@@ -374,4 +383,55 @@ public class TestWizard {
     public boolean getUseProctoring() {
         return examResult != null && examResult.getExam() != null && examResult.getExam().isUseProctoring();
     }
+
+    private String getToken() {
+        ExamSchedule exam = examResult.getExam();
+        Testee testee = examResult.getTestee();
+
+        String sessionId = String.format( "%s-%s-%d", testee.getLogin(),
+                testee.getCaseNumber(),
+                exam.getId() );
+        sessionId = sessionId.replaceAll( " ", "" );
+
+        Map<String,Object> payload = new HashMap<>();
+
+        Calendar expiration = Calendar.getInstance();
+        if ( examResult.getStartTime() != null ) {
+            expiration.setTime( examResult.getStartTime() ); // in case of restart
+        }
+        expiration.add( Calendar.HOUR, exam.getDurationHours() );
+        expiration.add( Calendar.MINUTE, exam.getDurationMinutes() + 20 ); //extra 20 min
+        JWTCreator.Builder jwtBuilder = JWT.create()
+                .withExpiresAt( expiration.getTime() )
+                .withClaim( "username", testee.getCaseNumber() )
+                //.withClaim( "role", "student" )
+                .withClaim( "nickname", testee.getLastName() )
+                .withClaim( "id", sessionId )      // proctoring session
+                .withClaim( "subject", exam.getName() + " - " + exam.getTestingPlan().getSubject().getTitle() ); // session name
+
+        if ( propertyService.getPropertyAsInt( StoredPropertyName.PROCTORING_CALLBACK_ALLOWED ) > 0 ) {
+            String schema = request.isSecure() ? "https://" : "http://";
+            String server = request.getServerName(); //"85.142.163.82";
+            int port = request.getServerPort();
+            StringBuilder callbackUri = new StringBuilder();
+            callbackUri.append( schema ).append( server );
+            if ( port != 0 && port != 80 ) callbackUri.append( ":" ).append( port );
+            callbackUri.append( contextPath ).append( "/rest/proctoring/result" );
+            jwtBuilder.withClaim( "api", callbackUri.toString() );   // callback address
+        }
+
+        String secretString = propertyService.getProperty( StoredPropertyName.PROCTORING_SECRET_KEY );
+        Algorithm algorithmHS = Algorithm.HMAC256( secretString );
+        String token = "";
+        try {
+            token = jwtBuilder
+                    .sign( algorithmHS );
+        } catch (JWTCreationException exception){
+            //Invalid Signing configuration / Couldn't convert Claims.
+            //return new HttpError( HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Can't create token or convert it into JSON" );
+        }
+        return token;
+    }
+
 }
+
