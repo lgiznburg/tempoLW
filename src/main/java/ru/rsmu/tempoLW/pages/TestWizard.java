@@ -410,7 +410,7 @@ public class TestWizard {
                 .withClaim( "subject", exam.getName() + " - " + exam.getTestingPlan().getSubject().getTitle() ); // session name
 
         if ( propertyService.getPropertyAsInt( StoredPropertyName.PROCTORING_CALLBACK_ALLOWED ) > 0 ) {
-            String schema = request.isSecure() ? "https://" : "http://";
+            String schema = "https://"; // request.isSecure() ? "https://" : "http://";
             String server = request.getServerName(); //"85.142.163.82";
             int port = request.getServerPort();
             StringBuilder callbackUri = new StringBuilder();
