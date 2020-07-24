@@ -33,10 +33,6 @@ public class ExamSchedule implements Serializable {
     private TestingPlan testingPlan;
 
     @ManyToMany( mappedBy = "exam", cascade = CascadeType.ALL)
-    /*@JoinTable( name = "exam_testees",
-            joinColumns = @JoinColumn(name = "exam_id"),
-            inverseJoinColumns = @JoinColumn(name = "testee_id")
-    )*/
     private List<ExamToTestee> examToTestees;
 
     @Column
@@ -51,6 +47,14 @@ public class ExamSchedule implements Serializable {
 
     @Column(name = "use_proctoring")
     private boolean useProctoring;
+
+    @Column(name = "period_start_time")
+    @Temporal( TemporalType.TIMESTAMP )
+    private Date periodStartTime;
+
+    @Column(name = "period_end_time")
+    @Temporal( TemporalType.TIMESTAMP )
+    private Date periodEndTime;
 
     public long getId() {
         return id;
@@ -132,6 +136,22 @@ public class ExamSchedule implements Serializable {
 
     public void setUseProctoring( boolean useProctoring ) {
         this.useProctoring = useProctoring;
+    }
+
+    public Date getPeriodStartTime() {
+        return periodStartTime;
+    }
+
+    public void setPeriodStartTime( Date periodStartTime ) {
+        this.periodStartTime = periodStartTime;
+    }
+
+    public Date getPeriodEndTime() {
+        return periodEndTime;
+    }
+
+    public void setPeriodEndTime( Date periodEndTime ) {
+        this.periodEndTime = periodEndTime;
     }
 
     @Override

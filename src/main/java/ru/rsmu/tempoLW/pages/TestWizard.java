@@ -183,7 +183,9 @@ public class TestWizard {
         //save only existed result
         if ( examResult.getId() > 0 ) {
             if ( getEstimatedEndTime().before( new Date() ) ) {
-                examResult.setEndTime( new Date() );
+                //examResult.setEndTime( new Date() );
+                onFinishTest();
+                return true;
             }
             examDao.save( examResult );
         }
@@ -206,9 +208,13 @@ public class TestWizard {
 
         if ( examResult.isExamMode() && getEstimatedEndTime().before( new Date() ) ) {
             // check time - if testee used "Next/Prev question" button
+            onFinishTest();
+            return true;
+/*
             examResult.setEndTime( new Date() );
             examDao.save( examResult );
             showMode = ShowMode.SHOW_TABLE;
+*/
         }
         else if ( examResult.getQuestionResults().size()-1 > examResult.getCurrentQuestionNumber() ) {
             examResult.setCurrentQuestionNumber( examResult.getCurrentQuestionNumber() + 1 );
@@ -225,9 +231,13 @@ public class TestWizard {
 
         if ( examResult.isExamMode() && getEstimatedEndTime().before( new Date() ) ) {
             // check time - if testee used "Next/Prev question" button
+            onFinishTest();
+            return true;
+/*
             examResult.setEndTime( new Date() );
             examDao.save( examResult );
             showMode = ShowMode.SHOW_TABLE;
+*/
         }
         else if ( examResult.getCurrentQuestionNumber() > 0 ) {
             examResult.setCurrentQuestionNumber( examResult.getCurrentQuestionNumber() - 1 );
@@ -242,6 +252,11 @@ public class TestWizard {
     public void onToQuestionList() {
         if ( checkSessionDisruption() ) return;
 
+        if ( examResult.isExamMode() && getEstimatedEndTime().before( new Date() ) ) {
+            // check time - if testee used "Next/Prev question" button
+            onFinishTest();
+            return;
+        }
         showMode = ShowMode.SHOW_TABLE;
         if ( request.isXHR() ) {
             ajaxResponseRenderer.addRender( questionFormZone );
@@ -267,9 +282,13 @@ public class TestWizard {
 
         if ( examResult.isExamMode() && getEstimatedEndTime().before( new Date() ) ) {
             // check time - if testee used "Next/Prev question" button
+            onFinishTest();
+            return;
+/*
             examResult.setEndTime( new Date() );
             examDao.save( examResult );
             showMode = ShowMode.SHOW_TABLE;
+*/
         }
         examResult.setCurrentQuestionNumber( questionNumber );
         setupCurrentQuestion();
@@ -332,6 +351,12 @@ public class TestWizard {
             }
             if ( examResult.getExam().getDurationMinutes() > 0 ) {
                 calendar.add( Calendar.MINUTE, examResult.getExam().getDurationMinutes() );
+            }
+            ExamSchedule exam = examResult.getExam();
+            if ( exam.getPeriodEndTime() != null ) {
+                if ( calendar.getTime().after( exam.getPeriodEndTime() ) ) {
+                    return exam.getPeriodEndTime();
+                }
             }
         }
         return calendar.getTime();
@@ -412,6 +437,12 @@ public class TestWizard {
         if ( propertyService.getPropertyAsInt( StoredPropertyName.PROCTORING_CALLBACK_ALLOWED ) > 0 ) {
             String schema = "https://"; // request.isSecure() ? "https://" : "http://";
             String server = request.getServerName(); //"85.142.163.82";
+
+            if ( propertyService.getPropertyAsInt( StoredPropertyName.PROCTORING_DEBUG_ENVIRONMENT ) > 0 ) { // for debug only - dev's comp params
+                schema = "http://";
+                server = "85.142.163.82";
+            }
+
             int port = request.getServerPort();
             StringBuilder callbackUri = new StringBuilder();
             callbackUri.append( schema ).append( server );

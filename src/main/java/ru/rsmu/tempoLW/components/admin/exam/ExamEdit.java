@@ -1,11 +1,14 @@
 package ru.rsmu.tempoLW.components.admin.exam;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.tapestry5.*;
 import org.apache.tapestry5.annotations.InjectComponent;
 import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.corelib.components.Form;
+import org.apache.tapestry5.corelib.components.TextField;
 import org.apache.tapestry5.internal.OptionModelImpl;
+import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.SelectModelFactory;
 import org.apache.tapestry5.services.ValueEncoderSource;
@@ -43,6 +46,12 @@ public class ExamEdit {
     @Property
     private Date proxyDate;
 
+    @Property
+    private String startTime;
+
+    @Property
+    private String endTime;
+
     @Inject
     private ExamDao examDao;
 
@@ -55,6 +64,12 @@ public class ExamEdit {
     @InjectComponent
     private Form examForm;
 
+    @InjectComponent
+    private TextField startTimeField;
+
+    @InjectComponent
+    private TextField endTimeField;
+
     @Inject
     private SelectModelFactory modelFactory;
 
@@ -63,6 +78,11 @@ public class ExamEdit {
 
     @Inject
     private ValueEncoderSource valueEncoderSource;
+
+    @Inject
+    private Messages messages;
+
+    private static final SimpleDateFormat TIME_FORMAT = new SimpleDateFormat( "HH:mm" );
 
     public void onPrepareForRender() {
         if ( examForm.isValid() ) {
@@ -93,6 +113,11 @@ public class ExamEdit {
         }
         proxyDate = proxyCalendar.getTime();
 
+        if ( exam.getPeriodStartTime() != null && exam.getPeriodEndTime() != null ) {
+            startTime = TIME_FORMAT.format( exam.getPeriodStartTime() );
+            endTime = TIME_FORMAT.format( exam.getPeriodEndTime() );
+        }
+
         testingPlanModel = new AbstractSelectModel() {
             @Override
             public List<OptionGroupModel> getOptionGroups() {
@@ -120,12 +145,53 @@ public class ExamEdit {
         };
     }
 
+    public void onValidateFromExamForm() {
+        if ( StringUtils.isNotBlank( startTime ) ) {
+            if ( isTimeIncorrect( startTime ) ) {
+                examForm.recordError( startTimeField, messages.get( "incorrect-time" ) );
+            }
+            if ( StringUtils.isBlank( endTime ) ) {
+                examForm.recordError( endTimeField, messages.get( "both-fields" ) );
+            }
+            else if ( isTimeIncorrect( endTime ) ) {
+                examForm.recordError( endTimeField, messages.get( "incorrect-time" ) );
+            }
+
+        }
+    }
+
+    private boolean isTimeIncorrect( String time ) {
+        String[] timeParts = time.split( ":" );
+        try {
+            return timeParts.length < 2 || 23 < Integer.parseInt( timeParts[0] ) || 59 < Integer.parseInt( timeParts[1] );
+        } catch (NumberFormatException e) {
+            return true;
+        }
+    }
+
     public boolean onSuccess() {
         String event = exam.getId() == 0 ? "examCreated" : "examUpdated";
         exam.setExamDate( proxyDate );
+        if ( StringUtils.isNotBlank( startTime ) ) {
+            exam.setPeriodStartTime( createTime( startTime, proxyDate ) );
+            exam.setPeriodEndTime( createTime( endTime, proxyDate ) );
+        }
+        else {
+            exam.setPeriodStartTime( null );
+            exam.setPeriodEndTime( null );
+        }
         examDao.save( exam );
         componentResources.triggerEvent( event, new Object[]{ exam.getId() }, null );
         return true;
+    }
+
+    private Date createTime( String time, Date date ) {
+        String[] timeParts = time.split( ":" );
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime( date );
+        calendar.set( Calendar.HOUR, Integer.parseInt( timeParts[0] ) );
+        calendar.set( Calendar.MINUTE, Integer.parseInt( timeParts[1] ) );
+        return calendar.getTime();
     }
 
     public boolean isEdit() {

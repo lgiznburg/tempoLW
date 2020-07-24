@@ -14,6 +14,16 @@
             <div class="col-sm-3 text-right">${message:examDate-label}:</div>
             <div class="col-sm-8"><t:output format="literal:dd MMMM yyyy" value="exam.examDate"/></div>
         </div>
+        <t:if test="exam.periodStartTime">
+            <div class="row">
+                <div class="col-sm-3 text-right">${message:startTime-label}:</div>
+                <div class="col-sm-8">
+                    <t:output format="literal:HH:mm" value="exam.periodStartTime"/>
+                    -
+                    <t:output format="literal:HH:mm" value="exam.periodEndTime"/>
+                </div>
+            </div>
+        </t:if>
         <div class="row">
             <div class="col-sm-3 text-right">${message:examDuration-label}:</div>
             <div class="col-sm-8">${exam.durationHours}:${exam.durationMinutes}</div>

@@ -19,7 +19,10 @@ public enum StoredPropertyName {
     PROCTORING_SERVER_ADDRESS("Proctoring", "Адрес сервера прокторинга", "https://demo.proctoring.online", StoredPropertyType.STRING),
     PROCTORING_SECRET_KEY("Proctoring", "Секретный ключ доступа", "secret", StoredPropertyType.STRING),
     PROCTORING_API_KEY("Proctoring", "API ключ для передачи результатов", "secret", StoredPropertyType.STRING),
-    PROCTORING_CALLBACK_ALLOWED("Proctoring","Разрешить передачу результатов сессии", "0", StoredPropertyType.INTEGER)
+    PROCTORING_CALLBACK_ALLOWED("Proctoring","Разрешить передачу результатов сессии", "0", StoredPropertyType.INTEGER),
+    PROCTORING_DEBUG_ENVIRONMENT("Proctoring","Режим тестирования (только для разработки)", "0", StoredPropertyType.INTEGER),
+
+    VIEW_ONLY_THIS_YEAR_EXAM("Global", "Показывать экзамены только текущего года", "1", StoredPropertyType.INTEGER )
             ;
 
     private String groupName;

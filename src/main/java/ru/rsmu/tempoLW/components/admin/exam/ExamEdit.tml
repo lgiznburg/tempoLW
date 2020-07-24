@@ -27,10 +27,21 @@
                     <t:datefield t:id="examDate" value="proxyDate" format="prop:correctDateFormat"/>
                 </div>
             </div>
+
+            <div class="form-group">
+                <t:label for="startTimeField" class="col-sm-3"/>
+                <div class="col-sm-3">
+                    <t:textfield value="startTime" t:id="startTimeField" t:mixins="MaskedInput" mask="99:99"/>
+                </div>
+                <div class="col-sm-3">
+                    <t:textfield value="endTime" t:id="endTimeField" t:mixins="MaskedInput" mask="99:99"/>
+                </div>
+            </div>
+
             <div class="form-group">
                 <t:label for="examDuration" class="col-sm-3"/>
                 <div class="col-sm-3">
-                    <t:select t:id="examDuration" value="exam.durationHours" model="literal:1,2,3,4,5" validate="required" title="${message:hours}"/>
+                    <t:select t:id="examDuration" value="exam.durationHours" model="literal:0,1,2,3,4,5" validate="required" title="${message:hours}"/>
                 </div>
                 <div class="col-sm-3">
                     <t:select value="exam.durationMinutes" model="literal:0,10,15,20,30,40,45" validate="required" title="${message:minutes}"/>

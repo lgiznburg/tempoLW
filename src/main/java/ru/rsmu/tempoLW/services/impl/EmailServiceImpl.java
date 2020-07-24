@@ -1,4 +1,4 @@
-package ru.rsmu.tempoLW.services;
+package ru.rsmu.tempoLW.services.impl;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.mail.EmailException;
@@ -13,6 +13,8 @@ import org.slf4j.LoggerFactory;
 import ru.rsmu.tempoLW.dao.SystemPropertyDao;
 import ru.rsmu.tempoLW.entities.Testee;
 import ru.rsmu.tempoLW.entities.system.StoredPropertyName;
+import ru.rsmu.tempoLW.services.EmailService;
+import ru.rsmu.tempoLW.services.EmailType;
 
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
