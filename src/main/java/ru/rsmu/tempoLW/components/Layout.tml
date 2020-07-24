@@ -42,7 +42,9 @@
                                 </t:security.hasAnyRoles>
                                 <t:security.hasRole role="admin">
                                     <li><t:pagelink page="admin/users">${message:navbar.admin.users}</t:pagelink></li>
+                                    <li><t:pagelink page="admin/loademails">${message:navbar.admin.load-emails}</t:pagelink></li>
                                     <li><t:pagelink page="admin/templates/rtftemplates">${message:rtf-template-short}</t:pagelink></li>
+                                    <li><t:pagelink page="admin/systemproperties">${message:navbar.admin.system-properties}</t:pagelink></li>
                                     <li role="separator" class="divider"></li>
                                 </t:security.hasRole>
                                 <t:security.hasAnyRoles roles="admin, subject_admin, teacher">
@@ -76,7 +78,13 @@
 </div>
 
 <div class="row">
-
+    <div class="col-sm-11 col-sm-offset-1">
+        <p class="text-muted">
+            <small>Copyright <span class="glyphicon glyphicon-copyright-mark" aria-hidden="true"></span>
+                &nbsp;&nbsp;&nbsp; РНИМУ им.Н.И.Пирогова
+                &nbsp;&nbsp;&nbsp; 2019-${thisYear}</small>
+        </p>
+    </div>
 </div>
 </body>
 </html>

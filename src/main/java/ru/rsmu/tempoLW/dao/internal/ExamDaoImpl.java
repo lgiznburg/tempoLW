@@ -7,6 +7,7 @@ import org.hibernate.criterion.Restrictions;
 import ru.rsmu.tempoLW.dao.ExamDao;
 import ru.rsmu.tempoLW.entities.*;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -17,9 +18,24 @@ import java.util.List;
 public class ExamDaoImpl extends BaseDaoImpl implements ExamDao {
     @Override
     public List<ExamSchedule> findExamsOfSubjects( List<ExamSubject> subjects ) {
-        Criteria criteria = session.createCriteria( ExamSchedule.class )
-                .createAlias( "testingPlan", "plan" )
-                .add( Restrictions.in( "plan.subject", subjects ) );
+        return findExamsOfSubjects( subjects, null );
+    }
+
+    @Override
+    public List<ExamSchedule> findExamsOfSubjects( List<ExamSubject> subjects, Date date ) {
+        Criteria criteria = session.createCriteria( ExamSchedule.class );
+
+        if ( date != null ) {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime( date );
+            calendar.set( Calendar.MONTH, 0 ); // set january
+            calendar.set( Calendar.DAY_OF_MONTH, 1 );
+            criteria.add( Restrictions.ge( "examDate", calendar.getTime() ) );
+        }
+
+        criteria.createAlias( "testingPlan", "plan" )
+                .add( Restrictions.in( "plan.subject", subjects ) )
+                .addOrder( Order.asc( "examDate" ) );
 
         return criteria.list();
     }
@@ -27,6 +43,18 @@ public class ExamDaoImpl extends BaseDaoImpl implements ExamDao {
     @Override
     public List<ExamSchedule> findExams() {
         Criteria criteria = session.createCriteria( ExamSchedule.class )
+                .addOrder( Order.asc( "examDate" ) );
+        return criteria.list();
+    }
+
+    @Override
+    public List<ExamSchedule> findExams( Date date ) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime( date );
+        calendar.set( Calendar.MONTH, 0 ); // set january
+        calendar.set( Calendar.DAY_OF_MONTH, 1 );
+        Criteria criteria = session.createCriteria( ExamSchedule.class )
+                .add( Restrictions.ge( "examDate", calendar.getTime() ) )
                 .addOrder( Order.asc( "examDate" ) );
         return criteria.list();
     }
@@ -80,5 +108,39 @@ public class ExamDaoImpl extends BaseDaoImpl implements ExamDao {
                 .createAlias( "testingPlan", "testingPlan" )
                 .add( Restrictions.eq( "testingPlan.subject", subject ) );
         return criteria.list();
+    }
+
+    @Override
+    public ProctoringReport findProctoringReport( String sessionId ) {
+        Criteria criteria = session.createCriteria( ProctoringReport.class )
+                .add( Restrictions.eq( "sessionId", sessionId ) )
+                .setMaxResults( 1 );
+        return ((ProctoringReport) criteria.uniqueResult());
+    }
+
+    @Override
+    public List<ProctoringReport> findProctoringForExam( ExamSchedule exam ) {
+        Criteria criteria = session.createCriteria( ProctoringReport.class )
+                .createAlias( "examResult", "examResult" )
+                .add( Restrictions.eq( "examResult.exam", exam ) );
+        return criteria.list();
+    }
+
+    @Override
+    public List<ExamSchedule> findAllExamsToday() {
+        Criteria criteria = session.createCriteria( ExamSchedule.class )
+                .add( Restrictions.eq( "examDate", new Date() ) );
+        return criteria.list();
+    }
+
+    @Override
+    public List<ExamResult> findOldExamResults( ExamSchedule examSchedule, Date time ) {
+        Criteria criteria = session.createCriteria( ExamResult.class )
+                .add( Restrictions.eq( "exam", examSchedule ) )
+                .add( Restrictions.isNull( "endTime" ) );
+        if ( time != null ) {
+            criteria.add( Restrictions.lt( "startTime", time ) );
+        }
+        return (List<ExamResult>) criteria.list();
     }
 }

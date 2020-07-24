@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<t:container xmlns="http://www.w3.org/1999/xhtml" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd" xmlns:p="tapestry:parameter">
-
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd" xmlns:p="tapestry:parameter">
+<t:content>
     <div id="examEdit">
         <t:form t:id="examForm" class="form-horizontal" validate="exam">
             <div class="row">
@@ -27,13 +27,30 @@
                     <t:datefield t:id="examDate" value="proxyDate" format="prop:correctDateFormat"/>
                 </div>
             </div>
+
+            <div class="form-group">
+                <t:label for="startTimeField" class="col-sm-3"/>
+                <div class="col-sm-3">
+                    <t:textfield value="startTime" t:id="startTimeField" t:mixins="MaskedInput" mask="99:99"/>
+                </div>
+                <div class="col-sm-3">
+                    <t:textfield value="endTime" t:id="endTimeField" t:mixins="MaskedInput" mask="99:99"/>
+                </div>
+            </div>
+
             <div class="form-group">
                 <t:label for="examDuration" class="col-sm-3"/>
                 <div class="col-sm-3">
-                    <t:select t:id="examDuration" value="exam.durationHours" model="literal:1,2,3,4,5" validate="required" title="${message:hours}"/>
+                    <t:select t:id="examDuration" value="exam.durationHours" model="literal:0,1,2,3,4,5" validate="required" title="${message:hours}"/>
                 </div>
                 <div class="col-sm-3">
-                    <t:select value="exam.durationMinutes" model="literal:0,10,15,20,30,45" validate="required" title="${message:minutes}"/>
+                    <t:select value="exam.durationMinutes" model="literal:0,10,15,20,30,40,45" validate="required" title="${message:minutes}"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <t:label for="useProctoring" class="col-sm-3">${message:use-proctoring}</t:label>
+                <div class="col-sm-6">
+                    <t:checkbox t:id="useProctoring" value="exam.useProctoring"/>
                 </div>
             </div>
 
@@ -46,4 +63,5 @@
 
         </t:form>
     </div>
-</t:container>
+</t:content>
+</html>

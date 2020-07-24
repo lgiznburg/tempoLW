@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd" xmlns:p="tapestry:parameter">
+<t:content>
+    <div id="questionPreview" class="row">
+        <h3>${question.questionInfo.name}</h3>
+        <blockquote>
+            <p class="text-lg">${question.text}</p>
+            <t:if test="question.image">
+                <img src="${imageLink}" class="question-image"/>
+            </t:if>
+        </blockquote>
+    </div>
+    <div class="row">
+        <div class="col-sm-8 col-sm-offset-4">
+            <t:delegate to="questionBlock"/>
+        </div>
+    </div>
+
+    <t:block t:id="questionSimple" id="questionSimple">
+        <ul>
+            <t:loop source="simpleAnswers" value="answer">
+                <li>
+                    <t:if test="answer.correct">
+                        <span class="alert-success">${answer.text}</span>
+                        <p:else>${answer.text}</p:else>
+                    </t:if>
+                </li>
+            </t:loop>
+        </ul>
+    </t:block>
+    <t:block t:id="questionSimpleOrder" id="questionSimpleOrder">
+        <ul>
+            <t:loop source="simpleAnswers" value="answer">
+                <li>
+                    <t:if test="answer.correct">
+                        <span class="alert-success">${answer.text} (${answer.sequenceOrder})</span>
+                        <p:else>${answer.text}</p:else>
+                    </t:if>
+                </li>
+            </t:loop>
+        </ul>
+    </t:block>
+    <t:block t:id="questionOpen" id="questionOpen">
+        <ul>
+            <t:loop source="simpleAnswers" value="answer">
+                <li><span class="alert-success">${answer.readableText}</span></li>
+            </t:loop>
+        </ul>
+    </t:block>
+    <t:block t:id="questionCorrespondence" id="questionCorrespondence">
+        <dl>
+            <t:loop source="correspondenceVariants" value="correspondence">
+                <dt>${correspondence.text}
+                    <t:if test="correspondence.image">
+                        <img src="${correspondenceImageLink}"/>
+                    </t:if>
+                </dt>
+                <dd>
+                    <ul>
+                        <t:loop source="correspondence.correctAnswers" value="answer">
+                            <li class="alert-success">${answer.text}</li>
+                        </t:loop>
+                    </ul>
+                </dd>
+            </t:loop>
+        </dl>
+        <ul>
+            <t:loop source="simpleAnswers" value="answer">
+                <li>${answer.text}</li>
+            </t:loop>
+        </ul>
+    </t:block>
+    <t:block t:id="questionTree" id="questionTree">
+        <dl>
+            <t:loop source="correspondenceVariants" value="correspondence">
+                <dt>${correspondence.text}
+                    <t:if test="correspondence.image">
+                        <img class="question-image" src="${correspondenceImageLink}"/>
+                    </t:if>
+                </dt>
+                <dd>
+                    <ul>
+                        <t:loop source="correspondence.correctAnswers" value="answer">
+                            <li>
+                                <t:if test="answer.correct">
+                                    <span class="alert-success">${answer.text}</span>
+                                    <p:else>${answer.text}</p:else>
+                                </t:if>
+                            </li>
+                        </t:loop>
+                    </ul>
+                </dd>
+            </t:loop>
+        </dl>
+    </t:block>
+</t:content>
+</html>

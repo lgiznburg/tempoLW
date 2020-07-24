@@ -20,6 +20,7 @@ import ru.rsmu.tempoLW.entities.auth.UserRoleName;
 import ru.rsmu.tempoLW.utils.PasswordEncoder;
 
 import java.security.NoSuchAlgorithmException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -76,6 +77,17 @@ public class TesteeRealm extends AuthorizingRealm {
             examToTestee = checkCurrentExam( testee, PasswordEncoder.encrypt( new String( upToken.getPassword() ) ) );
             if ( examToTestee == null ) {
                 throw new LockedAccountException( messages.get( "realm.account-locked" ) ); //"Account [" + login + "] is locked."
+            }
+            else if ( examToTestee.getExam().getPeriodStartTime() != null ) {
+                Date currentTime = new Date();
+                if ( examToTestee.getExam().getPeriodStartTime().after( currentTime )
+                        || examToTestee.getExam().getPeriodEndTime().before( currentTime ) ) {
+                    // it's too early or too late
+                    SimpleDateFormat df = new SimpleDateFormat( "HH:mm" );
+                    throw new DisabledAccountException( messages.format( "realm.out-of-exam-period",
+                            df.format( examToTestee.getExam().getPeriodStartTime() ),
+                            df.format( examToTestee.getExam().getPeriodEndTime() ) ) );
+                }
             }
         } catch (NoSuchAlgorithmException e) { // really? is it even possible?
             throw new LockedAccountException( messages.get( "realm.account-locked" ) ); //"Account [" + login + "] is locked."

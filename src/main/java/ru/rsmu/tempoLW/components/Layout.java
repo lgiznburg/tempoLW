@@ -15,6 +15,7 @@ import ru.rsmu.tempoLW.pages.Index;
 import ru.rsmu.tempoLW.pages.Login;
 import ru.rsmu.tempoLW.services.SecurityUserHelper;
 
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -94,6 +95,11 @@ public class Layout {
         else {
             return Login.class;
         }
+    }
+
+    public int getThisYear() {
+        Calendar calendar = Calendar.getInstance();
+        return calendar.get( Calendar.YEAR );
     }
 
 }

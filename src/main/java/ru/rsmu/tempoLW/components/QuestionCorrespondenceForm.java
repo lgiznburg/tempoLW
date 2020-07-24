@@ -2,25 +2,31 @@ package ru.rsmu.tempoLW.components;
 
 import org.apache.tapestry5.SelectModel;
 import org.apache.tapestry5.ValueEncoder;
-import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.annotations.Property;
+import org.apache.tapestry5.annotations.SessionState;
 import org.apache.tapestry5.internal.services.LinkSource;
 import org.apache.tapestry5.ioc.annotations.Inject;
+import org.apache.tapestry5.services.Request;
 import org.apache.tapestry5.services.SelectModelFactory;
+import org.apache.tapestry5.services.ValueEncoderSource;
 import ru.rsmu.tempoLW.dao.QuestionDao;
 import ru.rsmu.tempoLW.entities.*;
 import ru.rsmu.tempoLW.pages.QuestionImage;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * @author leonid.
  */
 public class QuestionCorrespondenceForm {
-    @Parameter(required = true)
     @Property
     private QuestionResult questionResult;
+
+    /**
+     * Current exam - stored in the session, used to extract current question from
+     */
+    @SessionState
+    private ExamResult examResult;
 
     @Property
     private List<CorrespondenceRow> rows;
@@ -40,17 +46,29 @@ public class QuestionCorrespondenceForm {
     @Inject
     private LinkSource linkSource;
 
+    @Inject
+    private ValueEncoderSource valueEncoderSource;
+
+    @Inject
+    private Request request;
+
 
     public void setupRender() {
         prepare();
     }
 
     public void onPrepareForSubmit() {
+        if ( isSessionLost() ) {
+            questionResult = new QuestionResult();
+            return;
+        }
         prepare();
     }
 
 
     private void prepare() {
+        questionResult = examResult.getCurrentQuestion();
+
         rows = new LinkedList<>();
         QuestionCorrespondence question = (QuestionCorrespondence) questionResult.getQuestion();
         // Lazy init
@@ -79,6 +97,10 @@ public class QuestionCorrespondenceForm {
     }
 
     public void onSuccess() {
+        if ( isSessionLost() ) return;
+        // find correct current question. NB: should it be checked for type?
+        questionResult = examResult.getCurrentQuestion();
+
         if ( questionResult.getElements() == null ) {
             questionResult.setElements( new LinkedList<>() );
         }
@@ -92,11 +114,11 @@ public class QuestionCorrespondenceForm {
             CorrespondenceRow checkRow = rowMap.get( element.getCorrespondenceVariant().getId() );
             if ( checkRow != null ) { // just in case
                 if ( !checkRow.getSelectedAnswers().contains( element.getAnswerVariant() ) ) {
+                    elementIt.remove();
                     if ( element.getId() != 0 ) {
                         // delete element from DB if exists.
                         questionDao.delete( element );
                     }
-                    elementIt.remove();
                 }
             }
         }
@@ -159,23 +181,7 @@ public class QuestionCorrespondenceForm {
     }
 
     public ValueEncoder<AnswerVariant> getAnswerEncoder() {
-        return new ValueEncoder<AnswerVariant>() {
-            @Override
-            public String toClient( AnswerVariant value ) {
-                return String.valueOf( value.getId() );
-            }
-
-            @Override
-            public AnswerVariant toValue( String clientValue ) {
-                long id = Long.parseLong( clientValue );
-                for ( AnswerVariant variant : ( (QuestionCorrespondence) questionResult.getQuestion() ).getAnswerVariants() ) {
-                    if ( variant.getId() == id ) {
-                        return variant;
-                    }
-                }
-                return null;
-            }
-        };
+        return valueEncoderSource.getValueEncoder( AnswerVariant.class );
     }
 
     public ValueEncoder<CorrespondenceRow> getRowEncoder() {
@@ -198,4 +204,11 @@ public class QuestionCorrespondenceForm {
         };
     }
 
+    /**
+     * If session expire examResult becomes empty. So we need to show friendly message instead of NPE exception
+     * @return true if everything is OK, false if examResult is empty
+     */
+    private boolean isSessionLost() {
+        return request.isXHR() && (examResult == null || examResult.getQuestionResults() == null);
+    }
 }

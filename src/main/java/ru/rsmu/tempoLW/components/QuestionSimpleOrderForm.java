@@ -4,12 +4,14 @@ import org.apache.tapestry5.OptionGroupModel;
 import org.apache.tapestry5.OptionModel;
 import org.apache.tapestry5.SelectModel;
 import org.apache.tapestry5.ValueEncoder;
-import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.annotations.Property;
+import org.apache.tapestry5.annotations.SessionState;
 import org.apache.tapestry5.internal.OptionModelImpl;
 import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
+import org.apache.tapestry5.services.Request;
 import org.apache.tapestry5.services.SelectModelFactory;
+import org.apache.tapestry5.services.ValueEncoderSource;
 import org.apache.tapestry5.util.AbstractSelectModel;
 import ru.rsmu.tempoLW.dao.QuestionDao;
 import ru.rsmu.tempoLW.entities.*;
@@ -23,9 +25,14 @@ import java.util.List;
  * @author leonid.
  */
 public class QuestionSimpleOrderForm {
-    @Parameter(required = true)
     @Property
     private QuestionResult questionResult;
+
+    /**
+     * Current exam - stored in the session, used to extract current question from
+     */
+    @SessionState
+    private ExamResult examResult;
 
     @Property
     private List<ResultSimpleOrder> resultElements;
@@ -47,21 +54,34 @@ public class QuestionSimpleOrderForm {
     @Inject
     private Messages messages;
 
+    @Inject
+    private ValueEncoderSource valueEncoderSource;
+
+    @Inject
+    private Request request;
+
     public void setupRender() {
         prepare();
     }
 
     public void onPrepareForSubmit() {
+        if ( isSessionLost() ) {
+            questionResult = new QuestionResult();
+            return;
+        }
         prepare();
     }
 
 
     private void prepare() {
+        questionResult = examResult.getCurrentQuestion();
+
         // Lazy init
         questionDao.refresh( questionResult.getQuestion() );
         // create results for displaying on the form
         resultElements = new LinkedList<>();
         QuestionSimpleOrder question = (QuestionSimpleOrder)questionResult.getQuestion();
+        count = 0;
         for ( AnswerVariant variant : question.getAnswerVariants() ) {
             ResultSimpleOrder element = new ResultSimpleOrder();
             element.setAnswerVariant( variant );
@@ -89,7 +109,7 @@ public class QuestionSimpleOrderForm {
             public List<OptionModel> getOptions() {
                 List<OptionModel> options = new ArrayList<OptionModel>();
                 for ( int i = 0; i <= question.getAnswerVariants().size(); i++ ) {
-                    options.add(new OptionModelImpl( i==0?"":String.valueOf( i ), i ));
+                    options.add(new OptionModelImpl( i==0? "—":String.valueOf( i ), i )); //messages.get( "incorrect_answer" )
                 }
                 return options;
             }
@@ -98,6 +118,10 @@ public class QuestionSimpleOrderForm {
     }
 
     public void onSuccess() {
+        if ( isSessionLost() ) return;
+        // find correct current question. NB: should it be checked for type?
+        questionResult = examResult.getCurrentQuestion();
+
         // create elements if not exist
         if ( questionResult.getElements() == null ) {
             questionResult.setElements( new LinkedList<>() );
@@ -116,8 +140,11 @@ public class QuestionSimpleOrderForm {
             }
             else { // answer was selected as incorrect
                 if ( existed != null ) {
-                    //todo remove from DB (use DAO)
+                    // remove from DB (use DAO)
                     questionResult.getElements().remove( existed );
+                    if ( existed.getId() > 0 ) {
+                        questionDao.delete( existed );
+                    }
                 }
             }
         }
@@ -164,5 +191,13 @@ public class QuestionSimpleOrderForm {
             }
         }
         return messages.get( "SimpleOrderAnswer-label" );
+    }
+
+    /**
+     * If session expire examResult becomes empty. So we need to show friendly message instead of NPE exception
+     * @return true if everything is OK, false if examResult is empty
+     */
+    private boolean isSessionLost() {
+        return request.isXHR() && (examResult == null || examResult.getQuestionResults() == null);
     }
 }

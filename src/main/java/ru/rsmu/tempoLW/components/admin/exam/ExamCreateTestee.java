@@ -1,5 +1,6 @@
 package ru.rsmu.tempoLW.components.admin.exam;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.tapestry5.ComponentResources;
 import org.apache.tapestry5.Field;
@@ -41,11 +42,15 @@ public class ExamCreateTestee {
     private String caseNumber;
 
     @Property
+    private String email;
+
+    @Property
     private ExamSchedule exam;
 
     @InjectComponent
     private Form addTesteeForm;
 
+/*
     @InjectComponent
     private TextField lastname;
 
@@ -57,6 +62,10 @@ public class ExamCreateTestee {
 
     @InjectComponent
     private TextField casenumber;
+
+    @InjectComponent
+    private TextField emailField;
+*/
 
     @Inject
     private ExamDao examDao;
@@ -94,18 +103,30 @@ public class ExamCreateTestee {
     }
 
     boolean onValidateFromAddTesteeForm() {
-        if ( this.caseNumber != null && !this.lastName.isEmpty() && !this.firstName.isEmpty() && !this.middleName.isEmpty() ) {
+        if ( StringUtils.isNotBlank( caseNumber )  ) {
 
             Testee existedOne = testeeDao.findByCaseNumber( caseNumber );
             if ( existedOne != null ) {
                 testee = existedOne;
             }
             if ( testee.getId() == 0 ) {
-                testee.setCaseNumber(caseNumber);
-                testee.setLastName(lastName + " " + firstName + " " + middleName);
-                testee.setLogin(new TesteeLoader(testeeDao).createLogin( caseNumber ) );
+                if ( StringUtils.isNotBlank( lastName ) ) {
+                    testee.setCaseNumber( caseNumber );
+                    StringBuilder builder = new StringBuilder( lastName );
+                    if ( StringUtils.isNotBlank( firstName ) ) {
+                        builder.append( " " ).append( firstName );
+                    }
+                    if ( StringUtils.isNotBlank( middleName ) ) {
+                        builder.append( " " ).append( middleName );
+                    }
+                    testee.setLastName( builder.toString() );
+                    testee.setLogin( new TesteeLoader( testeeDao ).createLogin( caseNumber ) );
+                    testee.setEmail( email );
+                }
+                else {
+                    addTesteeForm.recordError(messages.get("add-testee-incomplete"));
+                }
             }
-
             if ( isTesteeInExam() ) {
                 addTesteeForm.recordError(messages.get("testee-already-exists"));
             }

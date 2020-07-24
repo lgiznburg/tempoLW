@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                   http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="2020-06-08-create-reference-materials" author="leonid">
+        <createTable tableName="subject_reference_materials">
+            <column autoIncrement="true" name="id" type="${id.type}">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="image_id" type="${id.type}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="subject_id" type="${id.type}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="title" type="${string.type}"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="2020-06-08-add-use-calculator-flag" author="leonid">
+        <addColumn tableName="test_subject">
+            <column name="use_calculator" type="BIT" defaultValueBoolean="false"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="2020-06-08-populate-use-calculator-flag" author="leonid">
+        <update tableName="test_subject">
+            <column name="use_calculator" valueBoolean="false"/>
+        </update>
+    </changeSet>
+
+    <changeSet id="2020-06-08-set-materials-foreign-keys" author="leonid">
+        <addForeignKeyConstraint baseTableName="subject_reference_materials" baseColumnNames="subject_id"
+                                 constraintName="fk_material_exam_subjects"
+                                 referencedTableName="test_subject" referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="subject_reference_materials" baseColumnNames="image_id"
+                                 constraintName="fk_material_images"
+                                 referencedTableName="uploaded_images" referencedColumnNames="id"/>
+    </changeSet>
+
+</databaseChangeLog>

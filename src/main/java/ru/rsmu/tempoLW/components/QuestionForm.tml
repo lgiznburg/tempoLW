@@ -13,20 +13,24 @@
     </div>
     <t:delegate to="questionBlock"/>
 
+    <t:if test="referencesOrCalculatorPresent">
+        <t:referencematerials subject="subject"/>
+    </t:if>
+
     <t:block t:id="questionSimple">
-        <t:questionsimpleform questionResult="current"/>
+        <t:questionsimpleform />
     </t:block>
     <t:block t:id="questionOpen">
-        <t:questionopenform questionResult="current"/>
+        <t:questionopenform />
     </t:block>
     <t:block t:id="questionCorrespondence">
-        <t:questioncorrespondenceform questionResult="current"/>
+        <t:questioncorrespondenceform />
     </t:block>
     <t:block t:id="questionSimpleOrder">
-        <t:questionsimpleorderform questionResult="current"/>
+        <t:questionsimpleorderform />
     </t:block>
     <t:block t:id="questionTree">
-        <t:questiontreeform questionResult="current"/>
+        <t:questiontreeform />
     </t:block>
 </t:content>
 </html>

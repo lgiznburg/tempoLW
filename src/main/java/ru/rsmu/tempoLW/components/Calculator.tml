@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
+      xmlns:p="tapestry:parameter" >
+<t:content>
+
+<div class="row form-group">
+    <div class="col-sm-6"><input type="text" class="form-control"  id="txtbox_area"/></div>
+    <div class="col-sm-1"><button id="btclear" value="C / CE" class="btn btn-default btn-block">C/CE</button> </div>
+    <div class="col-sm-1"><button id="equals" value="=" class="btn btn-default btn-block">=</button> </div>
+</div>
+    <div class="row form-group">
+        <div class="col-sm-1"><button id="Seven" value="7" class="btn btn-default btn-block">7</button> </div>
+        <div class="col-sm-1"><button id="Eight" value="8" class="btn btn-default btn-block">8</button> </div>
+        <div class="col-sm-1"><button id="Nine" value="9" class="btn btn-default btn-block">9</button> </div>
+        <div class="col-sm-1"><button id="btplus" value="+" class="btn btn-default btn-block">+</button> </div>
+        <div class="col-sm-1"><button id="neg" value="+/-" class="btn btn-default btn-block">&#8723;</button> </div>
+        <div class="col-sm-1"><button id="btsin" value="sin" class="btn btn-default btn-block">sin</button> </div>
+        <div class="col-sm-1"><button id="btcos" value="cos" class="btn btn-default btn-block">cos</button> </div>
+        <div class="col-sm-1"><button id="bttan" value="tg" class="btn btn-default btn-block">tan</button> </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-sm-1"><button id="Four" value="4" class="btn btn-default btn-block">4</button> </div>
+        <div class="col-sm-1"><button id="Five" value="5" class="btn btn-default btn-block">5</button> </div>
+        <div class="col-sm-1"><button id="Six" value="6" class="btn btn-default btn-block">6</button> </div>
+        <div class="col-sm-1"><button id="btsub" value="-" class="btn btn-default btn-block">-</button> </div>
+        <div class="col-sm-1"><button id="Percent" value="%" class="btn btn-default btn-block">%</button> </div>
+        <div class="col-sm-1"><button id="btasin" value="asin" class="btn btn-default btn-block">asin</button> </div>
+        <div class="col-sm-1"><button id="btacos" value="acos" class="btn btn-default btn-block">acos</button> </div>
+        <div class="col-sm-1"><button id="btatan" value="atg" class="btn btn-default btn-block">atan</button> </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-sm-1"><button id="One" value="1" class="btn btn-default btn-block">1</button> </div>
+        <div class="col-sm-1"><button id="Two" value="2" class="btn btn-default btn-block">2</button> </div>
+        <div class="col-sm-1"><button id="Three" value="3" class="btn btn-default btn-block">3</button> </div>
+        <div class="col-sm-1"><button id="btmult" value="x" class="btn btn-default btn-block">&times;</button> </div>
+        <div class="col-sm-1"><button id="Sqrt" value="sqrt" class="btn btn-default btn-block"><sub>&radic;</sub><sup>&minus;</sup></button> </div>
+        <div class="col-sm-1"><button id="cubbut" value="x^2" class="btn btn-default btn-block">X<sup>2</sup></button> </div>
+        <div class="col-sm-1"><button id="e" value="e" class="btn btn-default btn-block">e</button> </div>
+        <div class="col-sm-1"><button id="Pi" value="Pi" class="btn btn-default btn-block">&pi;</button> </div>
+    </div>
+    <div class="row form-group">
+        <div class="col-sm-1"><button id="Zero" value="0" class="btn btn-default btn-block">0</button> </div>
+        <div class="col-sm-1"><button id="TwoZeros" value="00" class="btn btn-default btn-block">00</button> </div>
+        <div class="col-sm-1"><button id="dot" value="." class="btn btn-default btn-block">.</button> </div>
+        <div class="col-sm-1"><button id="btdiv" value="/" class="btn btn-default btn-block">&divide;</button> </div>
+<!--        <div class="col-sm-1"><button id="rounding" value="round" class="btn btn-default btn-block">round</button> </div>-->
+<!--        <div class="col-sm-1"><button id="btrdm" value="rand" class="btn btn-default btn-block">random</button> </div>-->
+        <div class="col-sm-2">&nbsp;</div>
+        <div class="col-sm-1"><button id="btlog" value="log" class="btn btn-default btn-block">log</button> </div>
+        <div class="col-sm-1"><button id="btln" value="ln" class="btn btn-default btn-block">ln</button> </div>
+    </div>
+
+</t:content>
+</html>

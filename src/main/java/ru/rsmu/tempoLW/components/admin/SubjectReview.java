@@ -7,12 +7,14 @@ import org.apache.tapestry5.SelectModel;
 import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.internal.OptionModelImpl;
+import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.LocalizationSetter;
 import org.apache.tapestry5.util.AbstractSelectModel;
 import ru.rsmu.tempoLW.dao.QuestionDao;
 import ru.rsmu.tempoLW.entities.ExamSubject;
 import ru.rsmu.tempoLW.entities.SubTopic;
+import ru.rsmu.tempoLW.entities.SubjectReferenceMaterial;
 import ru.rsmu.tempoLW.entities.TestingPlan;
 
 import java.util.ArrayList;
@@ -44,12 +46,21 @@ public class SubjectReview {
     @Property
     private SubTopic topic;
 
+    /**
+     * object for iteration through subject.referenceMaterials
+     */
+    @Property
+    private SubjectReferenceMaterial referenceMaterial;
+
     @Inject
     private LocalizationSetter localizationSetter;
 
     // other
     @Inject
     private QuestionDao questionDao;
+
+    @Inject
+    private Messages messages;
 
     public void setupRender() {
         subject = subjectId != null ? questionDao.find( ExamSubject.class, subjectId ) : null;
@@ -81,5 +92,13 @@ public class SubjectReview {
             }
         }
         return "";
+    }
+
+    public String getSubjectLevel() {
+        return messages.get( subject.getType().name() );
+    }
+
+    public boolean isReferenceMaterialsPresent() {
+        return subject.getReferenceMaterials() != null && subject.getReferenceMaterials().size() > 0;
     }
 }

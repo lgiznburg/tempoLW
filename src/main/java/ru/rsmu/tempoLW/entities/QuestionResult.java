@@ -1,5 +1,7 @@
 package ru.rsmu.tempoLW.entities;
 
+import org.hibernate.annotations.Formula;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -45,6 +47,8 @@ public class QuestionResult implements Serializable {
     @Temporal( TemporalType.TIMESTAMP )
     private Date updated;
 
+    @Formula( "(select count(*) from result_element re where re.question_result_id = id)" )
+    private int answeredCount;
 
     public long getId() {
         return id;
@@ -129,9 +133,22 @@ public class QuestionResult implements Serializable {
         }
     }
 
-    @Transient
+    /*@Transient
     public boolean isAnswered() {
         return elements != null && elements.size() > 0;
+    }*/
+
+    public int getAnsweredCount() {
+        return answeredCount;
+    }
+
+    public void setAnsweredCount( int answeredCount ) {
+        this.answeredCount = answeredCount;
+    }
+
+    @Transient
+    public boolean isAnswered() {
+        return answeredCount > 0;
     }
 
     @Transient

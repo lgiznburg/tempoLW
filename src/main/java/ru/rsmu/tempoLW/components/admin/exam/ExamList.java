@@ -4,15 +4,18 @@ import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import ru.rsmu.tempoLW.dao.ExamDao;
+import ru.rsmu.tempoLW.dao.SystemPropertyDao;
 import ru.rsmu.tempoLW.entities.ExamSchedule;
 import ru.rsmu.tempoLW.entities.ExamSubject;
 import ru.rsmu.tempoLW.entities.auth.SubjectManager;
 import ru.rsmu.tempoLW.entities.auth.User;
 import ru.rsmu.tempoLW.entities.auth.UserRoleName;
+import ru.rsmu.tempoLW.entities.system.StoredPropertyName;
 import ru.rsmu.tempoLW.services.SecurityUserHelper;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -37,16 +40,29 @@ public class ExamList {
     @Inject
     private SecurityUserHelper securityUserHelper;
 
+    @Inject
+    private SystemPropertyDao systemPropertyDao;
 
     public void setupRender() {
+        int showThisYearOnly = systemPropertyDao.getPropertyAsInt( StoredPropertyName.VIEW_ONLY_THIS_YEAR_EXAM );
+
         User user = securityUserHelper.getCurrentUser();
         if ( user.isUserInRole( UserRoleName.admin ) ) {
-            exams = examDao.findExams();
+            if ( showThisYearOnly == 0 ) {
+                exams = examDao.findExams();
+            }
+            else {
+                exams = examDao.findExams( new Date() );
+            }
         }
         else {
             SubjectManager subjectManager = securityUserHelper.getSubjectManager( user );
             List<ExamSubject> subjects = subjectManager.getSubjects();
-            exams = examDao.findExamsOfSubjects( subjects );
+            if ( showThisYearOnly == 0 ) {
+                exams = examDao.findExamsOfSubjects( subjects );
+            } else {
+                exams = examDao.findExamsOfSubjects( subjects, new Date() );
+            }
         }
 
         Comparator<ExamSchedule> examComparator = new Comparator<ExamSchedule>() {

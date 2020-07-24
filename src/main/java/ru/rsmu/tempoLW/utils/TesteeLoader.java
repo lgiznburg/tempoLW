@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -23,6 +24,9 @@ public class TesteeLoader extends ExcelReader {
     private static final short CASE_NUMBER_CELL = 0;
     private static final short FULL_NAME_CELL = 1;
     private static final short EXAM_DATE_CELL = 4;
+    private static final short FIRST_NAME_CELL = 2;
+    private static final short MIDDLE_NAME_CELL = 3;
+    private static final short EMAIL_CELL = 4;
 
 
     private TesteeDao testeeDao;
@@ -83,7 +87,6 @@ public class TesteeLoader extends ExcelReader {
         } while ( true );
 
         return testees;
-
     }
 
     public String createLogin( String caseNumber ) {
@@ -96,5 +99,40 @@ public class TesteeLoader extends ExcelReader {
         return "rsmu_" + numberCode.substring( 0,2 ) +
                 random.substring( 0, 2 ) + numberCode.substring( 2 ) +
                 random.substring( 2 );
+    }
+
+    public void loadTesteeEmails( InputStream input, boolean excel2007 ) throws IOException {
+        Workbook wb;
+        if ( excel2007 ) {
+            wb = new HSSFWorkbook( input );
+        }
+        else {
+            wb = new XSSFWorkbook( input );
+        }
+        Sheet sheet = wb.getSheetAt( 0 );  // main page
+        Iterator<Row> rowIterator = sheet.rowIterator();
+        if ( rowIterator.hasNext() ) rowIterator.next(); // skip first line / header
+        while ( rowIterator.hasNext() ) {
+            Row row = rowIterator.next();
+            String caseNumber = getCellValue( row, CASE_NUMBER_CELL );
+
+            if ( caseNumber != null && caseNumber.matches( "\\d{9}" ) ) {
+                Testee testee = testeeDao.findByCaseNumber( caseNumber );
+
+                if ( testee == null ) {
+                    testee = new Testee();
+                    testee.setCaseNumber( caseNumber );
+                    testee.setLogin( createLogin( caseNumber ) );
+                }
+                testee.setLastName( getCellValue( row, FULL_NAME_CELL ) );
+                testee.setFirstName( getCellValue( row, FIRST_NAME_CELL ) );
+                testee.setMiddleName( getCellValue( row, MIDDLE_NAME_CELL ) );
+                testee.setEmail( getCellValue( row, EMAIL_CELL ) );
+                //if ( createNewTestee ) {
+                testeeDao.save( testee );
+                //}
+
+            }
+        }
     }
 }

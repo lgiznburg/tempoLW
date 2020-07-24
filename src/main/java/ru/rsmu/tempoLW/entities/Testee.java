@@ -1,5 +1,8 @@
 package ru.rsmu.tempoLW.entities;
 
+import org.apache.commons.lang.text.StrBuilder;
+import org.apache.commons.lang3.StringUtils;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -37,6 +40,9 @@ public class Testee implements Serializable {
 
     @Column
     private String lastName;
+
+    @Column
+    private String email;
 
     @Column(name = "expiration_date")
     @Temporal( TemporalType.DATE )
@@ -106,6 +112,14 @@ public class Testee implements Serializable {
         this.expirationDate = expirationDate;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail( String email ) {
+        this.email = email;
+    }
+
     @Override
     public boolean equals( Object o ) {
         if ( this == o ) return true;
@@ -127,5 +141,17 @@ public class Testee implements Serializable {
     @Transient
     public boolean isCredentialsExpired() {
         return expirationDate == null || expirationDate.before( new Date() );
+    }
+
+    @Transient
+    public String getFullName() {
+        StringBuilder builder = new StringBuilder( lastName );
+        if ( StringUtils.isNotBlank( firstName ) ) {
+            builder.append( " " ).append( firstName );
+        }
+        if ( StringUtils.isNotBlank( middleName ) ) {
+            builder.append( " " ).append( middleName );
+        }
+        return builder.toString();
     }
 }

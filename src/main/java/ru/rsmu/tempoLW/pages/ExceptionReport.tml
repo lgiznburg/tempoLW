@@ -1,0 +1,45 @@
+<html t:type="layout" t:pageTitle="${message:header}"
+      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
+>
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="row">
+                <div>
+                    <div class="panel panel-danger">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">${message:error-message}</h3>
+                        </div>
+                        <div class="panel-body">
+                            <span>${message:what-to-do}:</span><br/>
+                            <span>${message:tell-support}:</span><br/>
+                            <span style="font-weight: bold">${message:email}</span>&nbsp;<a href="mailto:prk@rsmu.ru">prk@rsmu.ru</a> <br/>
+                            <span style="font-weight: bold">${message:phone}</span>&nbsp;+7 (495) 434-31-74
+                        </div>
+                        <div class="panel-footer">
+                            <span style="font-weight: bold">${message:error}</span>&nbsp;<span>${rootException?.toString()}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <a class="btn btn-danger" data-toggle="collapse" data-target="#error-area" aria-expanded="false">
+            ${message:expand} <span class="caret"/>
+        </a>
+    </div>
+    <div class="row collapse" id="error-area" style="border: 1px solid #ebccd1; border-radius: 4px; padding: 5px">
+        <div class="col-sm-12">
+            <t:if test="! productionMode">
+                <t:exceptiondisplay exception="rootException"/>
+                <h3>${message:request}</h3>
+                <t:renderobject object="request"/>
+            </t:if>
+        </div>
+    </div>
+
+</div>
+</html>

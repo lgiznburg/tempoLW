@@ -79,16 +79,19 @@ public class LocalLoginForm {
             currentUser.login( token );
         } catch (UnknownAccountException | IncorrectCredentialsException e)
         {
-            loginMessage = messages.get("realm.wrong-credentials");
+            loginMessage = messages.get("realm.wrong-credentials"); //no user
         } catch (LockedAccountException e)
         {
-            loginMessage = messages.get("realm.account-locked");
+            loginMessage = messages.get("realm.account-locked");  //exam day
         } catch (ExpiredCredentialsException e)
         {
-            loginMessage = messages.get("realm.account-expired");
+            loginMessage = messages.get("realm.account-expired"); //expired
+        } catch ( DisabledAccountException e )
+        {
+            loginMessage = e.getMessage();  // exam period
         } catch (AuthenticationException e)
         {
-            loginMessage = messages.get("realm.error");
+            loginMessage = messages.get("realm.error"); // general error
         }
 
         if (loginMessage != null)

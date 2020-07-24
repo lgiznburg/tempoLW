@@ -49,14 +49,24 @@
             ${message:test-mode-info}
         </div>
     </div>
-    <t:loop source="testingPlans" value="plan" empty="block:notests">
-        <div class="row">
-            <div class="col-sm-10 col-sm-offset-2">
-                <t:pagelink page="starttest" context="plan"><strong>${plan.subject.title}</strong> ( ${plan.name} )
-                </t:pagelink>
+    <t:loop source="testsLevels" value="currentLevel" empty="block:notests">
+        <t:if test="currentLevelHasTitle">
+            <div class="row">
+                <div class="col-sm-10 text-info" style="padding-top: 1rem; padding-bottom: 1rem;">
+                    <h4>${currentLevelTitle}</h4>
+                </div>
             </div>
-        </div>
+        </t:if>
+        <t:loop source="currentLevelPlans" value="plan">
+            <div class="row">
+                <div class="col-sm-10 col-sm-offset-2">
+                    <t:pagelink page="starttest" context="plan"><strong>${plan.subject.title}</strong> ( ${plan.name} )
+                    </t:pagelink>
+                </div>
+            </div>
+        </t:loop>
     </t:loop>
+
 
 <t:if test="hiddenPlans">
     <t:security.hasanyroles roles="admin,subject_admin,teacher">

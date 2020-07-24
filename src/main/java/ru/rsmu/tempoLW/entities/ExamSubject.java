@@ -4,6 +4,7 @@ import org.apache.tapestry5.beaneditor.Validate;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -31,6 +32,19 @@ public class ExamSubject implements Serializable {
      */
     @Column(name = "show_answers_quantity")
     private boolean showAnswersQuantity;
+
+    /**
+     * Type of subject to make group on Home page
+     */
+    @Column(name = "subject_type")
+    @Enumerated(EnumType.STRING)
+    private SubjectType type;
+
+    @Column(name = "use_calculator")
+    private boolean useCalculator = false;
+
+    @OneToMany( mappedBy = "subject" )
+    private List<SubjectReferenceMaterial> referenceMaterials;
 
     public long getId() {
         return id;
@@ -62,6 +76,30 @@ public class ExamSubject implements Serializable {
 
     public void setShowAnswersQuantity( boolean showAnswersQuantity ) {
         this.showAnswersQuantity = showAnswersQuantity;
+    }
+
+    public SubjectType getType() {
+        return type;
+    }
+
+    public void setType( SubjectType type ) {
+        this.type = type;
+    }
+
+    public boolean isUseCalculator() {
+        return useCalculator;
+    }
+
+    public void setUseCalculator( boolean useCalculator ) {
+        this.useCalculator = useCalculator;
+    }
+
+    public List<SubjectReferenceMaterial> getReferenceMaterials() {
+        return referenceMaterials;
+    }
+
+    public void setReferenceMaterials( List<SubjectReferenceMaterial> referenceMaterials ) {
+        this.referenceMaterials = referenceMaterials;
     }
 
     @Override

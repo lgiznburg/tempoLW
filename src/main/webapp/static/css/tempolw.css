@@ -117,7 +117,7 @@ button.bg-dark:focus {
 
 }
 
-#questionView {
+#questionView, #examGreetings, #proctoringGreetings {
     font-size: 18px;
 }
 
@@ -144,6 +144,26 @@ button.bg-dark:focus {
 body {
     font-family: ubuntu;
     font-weight: 300;
+    /* make footer at the page bottom*/
+    display: flex;
+    flex-direction: column;
+    flex: auto;
+}
+
+.container {
+    margin-bottom: 7rem;
+    /* make footer at the page bottom*/
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+html {
+    /* make footer at the page bottom*/
+    min-height:100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 strong {

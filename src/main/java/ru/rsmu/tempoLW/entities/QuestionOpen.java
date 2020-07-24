@@ -2,6 +2,8 @@ package ru.rsmu.tempoLW.entities;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author leonid.
@@ -35,7 +37,9 @@ public class QuestionOpen extends Question {
             String pattern = variant.getRegex();
             if ( pattern != null ) {
                 // use variant text as REGEX pattern
-                if ( result.matches( pattern ) ) {
+                Pattern p = Pattern.compile( pattern );
+                Matcher m = p.matcher( result );
+                if ( m.find() ) {
                     correctCount++;
                 }
             }

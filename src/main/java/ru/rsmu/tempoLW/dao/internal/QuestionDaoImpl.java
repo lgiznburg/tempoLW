@@ -239,4 +239,20 @@ public class QuestionDaoImpl extends BaseDaoImpl implements QuestionDao {
         }
         return null;
     }
+
+    @Override
+    public long findReferencesCount( ExamSubject subject ) {
+        Criteria criteria = session.createCriteria( SubjectReferenceMaterial.class )
+                .add( Restrictions.eq( "subject", subject ) )
+                .setProjection( Projections.rowCount() );
+
+        return (long) criteria.uniqueResult();
+    }
+
+    @Override
+    public List<SubjectReferenceMaterial> findReferenceMaterials( ExamSubject subject ) {
+        Criteria criteria = session.createCriteria( SubjectReferenceMaterial.class )
+                .add( Restrictions.eq( "subject", subject ) );
+        return criteria.list();
+    }
 }

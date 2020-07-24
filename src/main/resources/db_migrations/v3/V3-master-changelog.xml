@@ -8,5 +8,11 @@
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
 
     <include file="2020-04-07-add-subject-show-answers.xml" relativeToChangelogFile="true"/>
+    <include file="2020-05-08-add-system-property.xml" relativeToChangelogFile="true"/>
+    <include file="2020-05-17-add-question-created.xml" relativeToChangelogFile="true"/>
+    <include file="2020-05-22-add-subject-type.xml" relativeToChangelogFile="true"/>
+    <include file="2020-05-25-create-proctoring-reports.xml" relativeToChangelogFile="true"/>
+    <include file="2020-06-08-create-reference-materials.xml" relativeToChangelogFile="true"/>
+    <include file="2020-07-07-add-exam-time-interval.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

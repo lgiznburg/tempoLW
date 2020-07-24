@@ -35,4 +35,8 @@ public interface QuestionDao extends BaseDao {
     List<Question> findSubjectQuestions( ExamSubject subject );
 
     <T> List<T> findResultsOfAnswer( Class<T> resultClass, AnswerVariant answerVariant );
+
+    long findReferencesCount( ExamSubject subject  );
+    List<SubjectReferenceMaterial> findReferenceMaterials( ExamSubject subject );
+
 }

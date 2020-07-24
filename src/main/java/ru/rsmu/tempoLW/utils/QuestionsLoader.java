@@ -12,6 +12,7 @@ import ru.rsmu.tempoLW.utils.builder.QuestionBuilder;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -75,6 +76,7 @@ public class QuestionsLoader extends ExcelReader implements ExcelLayout {
                     rowN = builder.parse( sheet, rowN );
                     Question question = builder.getResult();
                     question.setQuestionInfo( questionInfo );
+                    question.setCreatedDate( new Date() );
                     questionDao.save( question );
                     continue;
                 }

@@ -45,6 +45,9 @@ public class ExamResult implements Serializable {
     @JoinColumn(name = "exam_id")
     private ExamSchedule exam;
 
+    @Transient
+    private int currentQuestionNumber;
+
     public long getId() {
         return id;
     }
@@ -125,5 +128,18 @@ public class ExamResult implements Serializable {
     @Transient
     public boolean isExamMode() {
         return testee != null && exam != null;
+    }
+
+    public int getCurrentQuestionNumber() {
+        return currentQuestionNumber;
+    }
+
+    public void setCurrentQuestionNumber( int currentQuestionNumber ) {
+        this.currentQuestionNumber = currentQuestionNumber;
+    }
+
+    @Transient
+    public QuestionResult getCurrentQuestion() {
+        return questionResults.get( currentQuestionNumber );
     }
 }

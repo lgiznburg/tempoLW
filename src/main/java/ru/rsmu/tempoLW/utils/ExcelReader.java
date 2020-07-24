@@ -35,6 +35,7 @@ public abstract class ExcelReader {
                             value = "";
                         }
                     }
+                    break;
                 default:
                     return null;
             }

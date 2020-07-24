@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd" xmlns:p="tapestry:parameter">
 <t:content>
-    <t:form t:id="questionSimpleForm" validate="questionResult" class="form-horizontal">
-
+    <t:form t:id="questionSimpleForm" validate="questionResult" class="form-horizontal" async="true">
         <div class="form-group">
             <div style="padding-top: 2rem;">
                 <t:if test="plural">

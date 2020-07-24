@@ -1,19 +1,20 @@
 <!DOCTYPE html>
-<t:container xmlns="http://www.w3.org/1999/xhtml" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd" xmlns:p="tapestry:parameter">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd" xmlns:p="tapestry:parameter">
+<t:content>
+    <t:form t:id="questionOpenForm" validate="questionResult" class="form-horizontal" async="true">
 
-<t:form t:id="questionOpenForm" validate="questionResult" class="form-horizontal">
-
-    <div class="form-group">
-        <t:label for="openAnswer" class="col-sm-4"/>
-        <div class="col-sm-8">
-            <t:textfield t:id="openAnswer" value="resultOpen.value" autocomplete="off"/>
+        <div class="form-group">
+            <t:label for="openAnswer" class="col-sm-4"/>
+            <div class="col-sm-8">
+                <t:textfield t:id="openAnswer" value="resultOpen.value" autocomplete="off"/>
+            </div>
         </div>
-    </div>
-    <div class="form-group">
-        <div class="col-sm-4 col-sm-offset-4">
-            <t:submit value="message:save" class="btn btn-primary"/>
+        <div class="form-group">
+            <div class="col-sm-4 col-sm-offset-4">
+                <t:submit value="message:save" class="btn btn-primary"/>
+            </div>
         </div>
-    </div>
 
-</t:form>
-</t:container>
+    </t:form>
+</t:content>
+</html>

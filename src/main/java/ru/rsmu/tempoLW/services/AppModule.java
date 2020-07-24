@@ -12,13 +12,15 @@ import org.apache.tapestry5.ioc.ServiceBinder;
 import org.apache.tapestry5.ioc.annotations.Contribute;
 import org.apache.tapestry5.ioc.annotations.ImportModule;
 import org.apache.tapestry5.ioc.annotations.InjectService;
+import org.apache.tapestry5.ioc.annotations.Startup;
 import org.apache.tapestry5.ioc.services.ApplicationDefaults;
 import org.apache.tapestry5.ioc.services.SymbolProvider;
 import org.tynamo.security.SecuritySymbols;
 import org.tynamo.security.services.SecurityFilterChainFactory;
 import org.tynamo.security.services.impl.SecurityFilterChain;
 import ru.rsmu.tempoLW.dao.HibernateModule;
-import com.anjlab.tapestry5.services.liquibase.AutoConfigureLiquibaseDatasourceModule;
+import ru.rsmu.tempoLW.services.impl.EmailServiceImpl;
+import ru.rsmu.tempoLW.services.impl.RunJobsServiceImpl;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
@@ -93,12 +95,15 @@ public class AppModule {
     }
     * */
 
+    @SuppressWarnings( "all" )  //what is the name of warning to hide "binding is unnecassary"
     public static void bind(ServiceBinder binder) {
         binder.bind(AuthorizingRealm.class, UserDetailsRealm.class).withId(UserDetailsRealm.class.getSimpleName());
         binder.bind( AuthorizingRealm.class, TesteeRealm.class ).withId( TesteeRealm.class.getSimpleName() );
 
         binder.bind( SecurityUserHelper.class );
 
+        binder.bind( EmailService.class, EmailServiceImpl.class );
+        binder.bind( RunJobsService.class, RunJobsServiceImpl.class );
     }
 
     public static void contributeSecurityConfiguration(OrderedConfiguration<SecurityFilterChain> configuration,
@@ -117,4 +122,8 @@ public class AppModule {
         configuration.add( testeeRealm );
     }
 
+    @Startup
+    public static void startCleanupService( RunJobsService runJobsService ) {
+        runJobsService.starUp();
+    }
 }

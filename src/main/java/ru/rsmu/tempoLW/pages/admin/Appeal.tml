@@ -21,7 +21,7 @@
         <br/>
         <t:zone t:id="questionListZone">
             <t:grid source="resultsDataSource" t:id="resultsGrid" rowsPerPage="10" pagerPosition="bottom"
-                    row="questionResult" exclude="id,score,scoreCost,orderNumber,updated,answered"
+                    row="questionResult" exclude="id,score,scoreCost,orderNumber,updated,answered,answeredCount"
                     add="title" reorder="viewNumber,title,mark">
                 <p:titleCell>
                     <t:if test="activeRow">
