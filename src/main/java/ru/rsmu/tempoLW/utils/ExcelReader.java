@@ -52,6 +52,14 @@ public abstract class ExcelReader {
                 case NUMERIC:
                     value = Math.round( cell.getNumericCellValue() );
                     break;
+                case FORMULA:
+                    try {
+                        value = Math.round( cell.getNumericCellValue() );
+                    }
+                    catch (Exception e) {
+                        value = null;
+                    }
+                    break;
                 default:
                     return null;
             }
