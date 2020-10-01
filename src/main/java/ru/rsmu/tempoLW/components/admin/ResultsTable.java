@@ -30,4 +30,6 @@ public class ResultsTable {
     public void setupRender() {
         results = examDao.findResultsForTestee( testee );
     }
+
+    public boolean getRtf() { return true; }
 }

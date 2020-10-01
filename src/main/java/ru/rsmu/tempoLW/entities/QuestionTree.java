@@ -1,9 +1,9 @@
 package ru.rsmu.tempoLW.entities;
 
-import javax.persistence.CascadeType;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import javax.persistence.OneToMany;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
+import javax.persistence.*;
 import java.util.List;
 
 /**
@@ -14,7 +14,8 @@ import java.util.List;
 public class QuestionTree extends Question {
     private static final long serialVersionUID = 5105975666890792471L;
 
-    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL )
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @LazyCollection( LazyCollectionOption.TRUE )
     private List<CorrespondenceVariant> correspondenceVariants;
 
     public List<CorrespondenceVariant> getCorrespondenceVariants() {

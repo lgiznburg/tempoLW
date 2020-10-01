@@ -1,5 +1,8 @@
 package ru.rsmu.tempoLW.entities;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -31,7 +34,8 @@ public class ExamResult implements Serializable {
     @Column
     private String title;
 
-    @OneToMany( mappedBy = "examResult", cascade = CascadeType.ALL )
+    @OneToMany( mappedBy = "examResult", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @LazyCollection( LazyCollectionOption.TRUE )
     private List<QuestionResult> questionResults;
 
     @ManyToOne

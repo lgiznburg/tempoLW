@@ -19,6 +19,7 @@ import org.tynamo.security.SecuritySymbols;
 import org.tynamo.security.services.SecurityFilterChainFactory;
 import org.tynamo.security.services.impl.SecurityFilterChain;
 import ru.rsmu.tempoLW.dao.HibernateModule;
+import ru.rsmu.tempoLW.services.impl.CorrectnessServiceImpl;
 import ru.rsmu.tempoLW.services.impl.EmailServiceImpl;
 import ru.rsmu.tempoLW.services.impl.RunJobsServiceImpl;
 
@@ -101,6 +102,8 @@ public class AppModule {
         binder.bind( AuthorizingRealm.class, TesteeRealm.class ).withId( TesteeRealm.class.getSimpleName() );
 
         binder.bind( SecurityUserHelper.class );
+
+        binder.bind( CorrectnessService.class, CorrectnessServiceImpl.class );
 
         binder.bind( EmailService.class, EmailServiceImpl.class );
         binder.bind( RunJobsService.class, RunJobsServiceImpl.class );

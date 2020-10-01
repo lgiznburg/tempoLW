@@ -1,6 +1,8 @@
 package ru.rsmu.tempoLW.entities;
 
 import org.hibernate.annotations.Formula;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,7 +14,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "question_result")
-public class QuestionResult implements Serializable {
+public class QuestionResult implements Serializable, Comparable<QuestionResult> {
     private static final long serialVersionUID = -2651105107206732216L;
 
     @Id
@@ -26,7 +28,8 @@ public class QuestionResult implements Serializable {
     @JoinColumn(name = "test_result_id")
     private ExamResult examResult;
 
-    @OneToMany( mappedBy = "questionResult", cascade = CascadeType.ALL )
+    @OneToMany( mappedBy = "questionResult", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @LazyCollection( LazyCollectionOption.TRUE )
     private List<ResultElement> elements;
 
     // result for this question
@@ -122,6 +125,8 @@ public class QuestionResult implements Serializable {
         this.updated = updated;
     }
 
+    //@Deprecated
+    // it could cause LazyInitException for Tree and Correspondence
     public void checkCorrectness() {
         if ( elements != null && elements.size() > 0 ) {
             elements.forEach( ResultElement::checkCorrectness );
@@ -132,11 +137,6 @@ public class QuestionResult implements Serializable {
             mark = score * scoreCost;
         }
     }
-
-    /*@Transient
-    public boolean isAnswered() {
-        return elements != null && elements.size() > 0;
-    }*/
 
     public int getAnsweredCount() {
         return answeredCount;
@@ -156,4 +156,8 @@ public class QuestionResult implements Serializable {
         return orderNumber + 1;
     }
 
+    @Override
+    public int compareTo( QuestionResult o ) {
+        return orderNumber - o.getOrderNumber();
+    }
 }

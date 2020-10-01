@@ -21,6 +21,7 @@ import ru.rsmu.tempoLW.dao.QuestionDao;
 import ru.rsmu.tempoLW.dao.SystemPropertyDao;
 import ru.rsmu.tempoLW.entities.*;
 import ru.rsmu.tempoLW.entities.system.StoredPropertyName;
+import ru.rsmu.tempoLW.services.CorrectnessService;
 import ru.rsmu.tempoLW.services.SecurityUserHelper;
 
 import javax.servlet.http.HttpServletResponse;
@@ -62,6 +63,11 @@ public class TestWizard {
     @Inject
     private SecurityUserHelper securityUserHelper;
 
+/*
+    @Inject
+    private CorrectnessService correctnessService;
+
+*/
     /**
      * Switch blocks on the page
      */
@@ -93,9 +99,10 @@ public class TestWizard {
         javaScriptSupport.require( "katex/contrib/auto-render" ).invoke( "renderMathInElementOfClass" ).with( "container" );
 
         if ( examResult.getExam() != null && examResult.getExam().isUseProctoring() ) {
-            String proctoringJS = propertyService.getProperty( StoredPropertyName.PROCTORING_JS_URL );
             String proctoringServer = propertyService.getProperty( StoredPropertyName.PROCTORING_SERVER_ADDRESS );
-            /*javaScriptSupport.addModuleConfigurationCallback(
+/* keep it here just as example how to use external JS library. actually it must match with 'require'
+            String proctoringJS = propertyService.getProperty( StoredPropertyName.PROCTORING_JS_URL );
+            javaScriptSupport.addModuleConfigurationCallback(
                     new ModuleConfigurationCallback() {
                         @Override
                         public JSONObject configure( JSONObject configuration ) {
@@ -104,7 +111,8 @@ public class TestWizard {
                             return configuration;
                         }
                     }
-            );*/
+            );
+*/
             javaScriptSupport.require( "proctoring" ).invoke( "startSession" ).with( proctoringServer, getToken() );
         }
     }
@@ -122,12 +130,14 @@ public class TestWizard {
                 //return TestFinal.class;
                 showMode = ShowMode.SHOW_TABLE;
             }
+/*
             if ( examResult.getId() > 0 ) {
                 //proof lazy init exception
                 if ( !Hibernate.isInitialized( examResult.getQuestionResults() ) ) {
                     examDao.refresh( examResult );
                 }
             }
+*/
             if ( examResult.getStartTime() == null ) {
                 //just started
                 if ( examResult.getExam() != null && examResult.getExam().isUseProctoring() ) {
@@ -162,32 +172,33 @@ public class TestWizard {
         }
         // lazy init for Correspondence and Tree questions
         Question question = current.getQuestion();
-        if ( question instanceof QuestionCorrespondence &&
+        /*if ( question instanceof QuestionCorrespondence &&
                 !Hibernate.isInitialized( ((QuestionCorrespondence)question).getCorrespondenceVariants() ) ) {
             examDao.refresh( question );
         }
         if ( question instanceof QuestionTree &&
                 !Hibernate.isInitialized( ((QuestionTree)question).getCorrespondenceVariants() ) ) {
             examDao.refresh( question );
-        }
+        }*/
 
     }
 
     public Object onSuccess() {
         if ( checkSessionDisruption() ) return true;
 
+//        correctnessService.checkCorrectness( current );
         current.checkCorrectness();
         current.setUpdated( new Date() );
         current.setAnsweredCount( current.getElements().size() );
 
         //save only existed result
         if ( examResult.getId() > 0 ) {
+            examDao.save( examResult );
             if ( getEstimatedEndTime().before( new Date() ) ) {
                 //examResult.setEndTime( new Date() );
                 onFinishTest();
                 return true;
             }
-            examDao.save( examResult );
         }
 
         if ( examResult.getQuestionResults().size() -1 == examResult.getCurrentQuestionNumber()
@@ -210,11 +221,6 @@ public class TestWizard {
             // check time - if testee used "Next/Prev question" button
             onFinishTest();
             return true;
-/*
-            examResult.setEndTime( new Date() );
-            examDao.save( examResult );
-            showMode = ShowMode.SHOW_TABLE;
-*/
         }
         else if ( examResult.getQuestionResults().size()-1 > examResult.getCurrentQuestionNumber() ) {
             examResult.setCurrentQuestionNumber( examResult.getCurrentQuestionNumber() + 1 );
@@ -233,11 +239,6 @@ public class TestWizard {
             // check time - if testee used "Next/Prev question" button
             onFinishTest();
             return true;
-/*
-            examResult.setEndTime( new Date() );
-            examDao.save( examResult );
-            showMode = ShowMode.SHOW_TABLE;
-*/
         }
         else if ( examResult.getCurrentQuestionNumber() > 0 ) {
             examResult.setCurrentQuestionNumber( examResult.getCurrentQuestionNumber() - 1 );
@@ -284,11 +285,6 @@ public class TestWizard {
             // check time - if testee used "Next/Prev question" button
             onFinishTest();
             return;
-/*
-            examResult.setEndTime( new Date() );
-            examDao.save( examResult );
-            showMode = ShowMode.SHOW_TABLE;
-*/
         }
         examResult.setCurrentQuestionNumber( questionNumber );
         setupCurrentQuestion();
@@ -300,6 +296,11 @@ public class TestWizard {
     public void onFinishTest() {
         if ( checkSessionDisruption() ) return;
 
+        int finalMark = 0;
+        for ( QuestionResult questionResult : examResult.getQuestionResults() ) {
+            finalMark += questionResult.getMark();
+        }
+        examResult.setMarkTotal( finalMark );
         examResult.setEndTime( new Date() );
         //save only existed result
         if ( examResult.getId() > 0 ) {
@@ -426,13 +427,17 @@ public class TestWizard {
         }
         expiration.add( Calendar.HOUR, exam.getDurationHours() );
         expiration.add( Calendar.MINUTE, exam.getDurationMinutes() + 20 ); //extra 20 min
+        List<String> tags = new ArrayList<>();
+        tags.add( testee.getCaseNumber() );
+        tags.addAll( Arrays.asList( testee.getLastName().split( " " ) ) );
         JWTCreator.Builder jwtBuilder = JWT.create()
                 .withExpiresAt( expiration.getTime() )
                 .withClaim( "username", testee.getCaseNumber() )
                 //.withClaim( "role", "student" )
-                .withClaim( "nickname", testee.getLastName() )
+                .withClaim( "nickname", testee.getFullName() )
                 .withClaim( "id", sessionId )      // proctoring session
-                .withClaim( "subject", exam.getName() + " - " + exam.getTestingPlan().getSubject().getTitle() ); // session name
+                .withClaim( "subject", exam.getName() + " - " + exam.getTestingPlan().getSubject().getTitle() ) // session name
+                .withClaim( "tags", tags );
 
         if ( propertyService.getPropertyAsInt( StoredPropertyName.PROCTORING_CALLBACK_ALLOWED ) > 0 ) {
             String schema = "https://"; // request.isSecure() ? "https://" : "http://";

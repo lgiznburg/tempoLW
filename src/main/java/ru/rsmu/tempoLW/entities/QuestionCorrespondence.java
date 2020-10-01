@@ -1,5 +1,9 @@
 package ru.rsmu.tempoLW.entities;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import javax.persistence.*;
 import java.util.HashMap;
 import java.util.List;
@@ -13,10 +17,12 @@ import java.util.Map;
 public class QuestionCorrespondence extends Question {
     private static final long serialVersionUID = 2586460208558792514L;
 
-    @OneToMany( mappedBy = "question", cascade = CascadeType.ALL )
+    @OneToMany( mappedBy = "question", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @LazyCollection( LazyCollectionOption.TRUE )
     private List<AnswerVariant> answerVariants;
 
-    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL )
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @LazyCollection( LazyCollectionOption.TRUE )
     private List<CorrespondenceVariant> correspondenceVariants;
 
     public List<AnswerVariant> getAnswerVariants() {

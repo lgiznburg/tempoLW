@@ -7,6 +7,7 @@ import org.quartz.JobExecutionException;
 import ru.rsmu.tempoLW.dao.ExamDao;
 import ru.rsmu.tempoLW.entities.ExamResult;
 import ru.rsmu.tempoLW.entities.ExamSchedule;
+import ru.rsmu.tempoLW.entities.QuestionResult;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -22,6 +23,9 @@ import java.util.List;
  */
 public class CleanupJob implements Job {
 
+    public static int ADDITIONAL_MINUTES = 2;  //additional minutes to complete the test
+
+
     @Inject
     private ExamDao examDao;
 
@@ -36,17 +40,22 @@ public class CleanupJob implements Job {
             if ( examSchedule.getPeriodEndTime() == null ) {
                 calendar.add( Calendar.MINUTE, examSchedule.getDurationMinutes() * (-1) );
                 calendar.add( Calendar.HOUR, examSchedule.getDurationHours() * (-1) );
-                calendar.add( Calendar.MINUTE, -10 ); // additional minutes
+                calendar.add( Calendar.MINUTE, -ADDITIONAL_MINUTES ); // additional minutes
                 rottenResults = examDao.findOldExamResults( examSchedule, calendar.getTime() );
             }
             else {
-                calendar.add( Calendar.MINUTE, -10 ); // additional minutes
+                calendar.add( Calendar.MINUTE, -ADDITIONAL_MINUTES ); // additional minutes
                 if ( examSchedule.getPeriodEndTime().before( calendar.getTime() ) ) {
                     rottenResults = examDao.findOldExamResults( examSchedule, null );
                 }
             }
 
             for ( ExamResult examResult : rottenResults ) {
+                int finalMark = 0;
+                for ( QuestionResult questionResult : examResult.getQuestionResults() ) {
+                    finalMark += questionResult.getMark();
+                }
+                examResult.setMarkTotal( finalMark );
                 examResult.setEndTime( new Date() );
                 examDao.save( examResult );
             }

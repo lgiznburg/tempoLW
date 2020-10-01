@@ -11,10 +11,25 @@
     </div>
     <div class="row" id="examsList">
         <t:grid t:id="usersGrid" source="results" row="result"
-                exclude="Id,questionResults,testee,testingPlan,exam,endTime,finished,examMode"
+                exclude="Id,questionResults,testee,testingPlan,exam,endTime,finished,examMode,currentQuestionNumber"
+                add="printStatement"
                 class="table table-bordered table-hover"
                 rowsPerPage="10" pagerPosition="bottom"
                 empty="block:emptyResults">
+            <p:printStatementCell>
+                <p style="margin-left: 0px"> <!-- text-center -->
+                    <span title="${message:exam-statement} (.rtf)"><!-- col-xs-7 -->
+                        <t:pagelink page="admin/examtesteeresult" context="[result.exam,testee,rtf]" class="btn btn-info btn-sm" aria-label="Print">
+                                    <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
+                                </t:pagelink>
+                            </span>
+                    <span title="${message:exam-statement} (.xlsx)"><!-- col-xs-7 -->
+                        <t:pagelink page="admin/examtesteeresult" context="[result.exam,testee]" class="btn btn-success btn-sm" aria-label="Print">
+                                    <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
+                                </t:pagelink>
+                            </span>
+                </p>
+            </p:printStatementCell>
         </t:grid>
 
         <t:block t:id="emptyResults">

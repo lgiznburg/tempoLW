@@ -109,6 +109,9 @@ public class Index {
                 if ( examToTestee != null ) {
                     assignedExam = examToTestee.getExam();
                     examResult = examDao.findExamResultForTestee( assignedExam, testee );
+                    if ( examResult != null ) {
+                        Collections.sort( examResult.getQuestionResults() );
+                    }
                 }
             }
         }

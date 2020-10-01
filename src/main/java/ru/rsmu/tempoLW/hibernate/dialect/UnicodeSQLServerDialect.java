@@ -1,5 +1,6 @@
 package ru.rsmu.tempoLW.hibernate.dialect;
 
+import org.hibernate.dialect.SQLServer2012Dialect;
 import org.hibernate.dialect.SQLServerDialect;
 import org.hibernate.type.StandardBasicTypes;
 
@@ -10,7 +11,7 @@ import java.sql.Types;
  *
  * Copied from internet. Use nvarchar for all character and string types
  */
-public class UnicodeSQLServerDialect extends SQLServerDialect {
+public class UnicodeSQLServerDialect extends SQLServer2012Dialect {
     public UnicodeSQLServerDialect() {
         super();
         registerColumnType(Types.CHAR, "nchar(1)");

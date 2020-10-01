@@ -34,9 +34,9 @@
             </div>
             <div class="col-sm-4">
                 <t:if test="nextStepPresent">
-                    <t:submit value="message:oneStepForward" class="btn btn-primary"/>
+                    <t:submit value="message:oneStepForward" class="btn btn-primary" mixins="ClickOnce"/>
                     <p:else>
-                        <t:submit value="message:save" class="btn btn-primary"/>
+                        <t:submit value="message:save" class="btn btn-primary" mixins="ClickOnce"/>
                     </p:else>
                 </t:if>
             </div>

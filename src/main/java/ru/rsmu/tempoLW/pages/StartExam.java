@@ -14,6 +14,7 @@ import ru.rsmu.tempoLW.entities.TestingPlan;
 import ru.rsmu.tempoLW.services.SecurityUserHelper;
 import ru.rsmu.tempoLW.utils.ExamBuilder;
 
+import java.util.Collections;
 import java.util.Date;
 
 /**
@@ -59,6 +60,7 @@ public class StartExam {
                 return null;
             }
             else {
+                Collections.sort( examResult.getQuestionResults() );
                 //return TestFinal.class;  // test has been already created
                 return TestWizard.class;
             }

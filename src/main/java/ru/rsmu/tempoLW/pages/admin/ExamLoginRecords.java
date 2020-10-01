@@ -107,17 +107,23 @@ public class ExamLoginRecords {
             table.add( row );
             testeeDao.save( examToTestee );
 
+            SimpleDateFormat stimef = new SimpleDateFormat("HH:mm");
             if ( exam.isUseProctoring() && StringUtils.isNotBlank( examToTestee.getTestee().getEmail() ) ) {
                 // need to send email to testee
                 Map<String,Object> model = new HashMap<>();
 
                 model.put( "fullName", examToTestee.getTestee().getFullName() );
-                model.put( "examName", exam.getTestingPlan().getSubject().getTitle() );
+                model.put( "examName", String.format( "%s (%s)", exam.getTestingPlan().getSubject().getTitle(), exam.getTestingPlan().getName() ) );
                 model.put( "examDate", examDate );
                 model.put( "serverAddress", "https://tempolw.rsmu.ru" );
                 model.put( "examDuration", examDuration );
                 model.put( "testeeLogin", examToTestee.getTestee().getLogin() );
                 model.put( "testeePassword", password );
+                if ( exam.getPeriodStartTime() != null && exam.getPeriodEndTime() != null ) {
+                    model.put( "examPeriod", String.format( "%s - %s",
+                            stimef.format( exam.getPeriodStartTime() ),
+                            stimef.format( exam.getPeriodEndTime() )) );
+                }
 
                 emailService.sendEmail( examToTestee.getTestee(), emailType, model );
             }

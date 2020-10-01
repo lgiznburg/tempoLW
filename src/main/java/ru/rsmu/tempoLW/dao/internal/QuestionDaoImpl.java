@@ -4,6 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.*;
 import org.hibernate.transform.AliasToBeanResultTransformer;
+import org.hibernate.transform.DistinctRootEntityResultTransformer;
 import ru.rsmu.tempoLW.dao.QuestionDao;
 import ru.rsmu.tempoLW.entities.*;
 
@@ -253,6 +254,15 @@ public class QuestionDaoImpl extends BaseDaoImpl implements QuestionDao {
     public List<SubjectReferenceMaterial> findReferenceMaterials( ExamSubject subject ) {
         Criteria criteria = session.createCriteria( SubjectReferenceMaterial.class )
                 .add( Restrictions.eq( "subject", subject ) );
+        return criteria.list();
+    }
+
+    @Override
+    public List<CorrespondenceVariant> findCorrespondenceVariants( Question question ) {
+        Criteria criteria = session.createCriteria( CorrespondenceVariant.class )
+                .add( Restrictions.eq( "question", question ) )
+                .setResultTransformer( CriteriaSpecification.DISTINCT_ROOT_ENTITY )
+                .addOrder( Order.asc( "id" ) );
         return criteria.list();
     }
 }

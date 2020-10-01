@@ -82,11 +82,11 @@ public class ExamTesteeResult {
             FieldModifier fm = new FieldModifier();
             TableModifier tm = new TableModifier();
 
-            fm.put( "examName", StringUtils.join( exam.getTestingPlan().getSubject().getTitle(), " ( ",
+            fm.put( "examSubject", StringUtils.join( exam.getTestingPlan().getSubject().getTitle(), " ( ",
                     exam.getTestingPlan().getName(), " )" ) );
             fm.put( "examDate", new SimpleDateFormat( "dd MMMM yyyy", currentLocale ).format( exam.getExamDate() ) );
             fm.put( "caseNumber",  testee.getCaseNumber() );
-            fm.put( "testeeName", testee.getLastName() );
+            fm.put( "testeeName", testee.getFullName() );
 
             String fileName = "unknown.rtf";
 
@@ -108,7 +108,7 @@ public class ExamTesteeResult {
                         row.add( StringUtils.join(
                                 String.valueOf(questionResult.getMark()),
                                 " ( из ",
-                                String.valueOf( questionResult.getScore()*questionResult.getScoreCost() ),
+                                String.valueOf( questionResult.getQuestion().getQuestionInfo().getMaxScore()*questionResult.getScoreCost() ),
                                 " )"
                         ) );
                         resultsTable.add( row );

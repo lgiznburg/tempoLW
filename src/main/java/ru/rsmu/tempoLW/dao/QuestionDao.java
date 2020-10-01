@@ -39,4 +39,5 @@ public interface QuestionDao extends BaseDao {
     long findReferencesCount( ExamSubject subject  );
     List<SubjectReferenceMaterial> findReferenceMaterials( ExamSubject subject );
 
+    List<CorrespondenceVariant> findCorrespondenceVariants( Question question );
 }

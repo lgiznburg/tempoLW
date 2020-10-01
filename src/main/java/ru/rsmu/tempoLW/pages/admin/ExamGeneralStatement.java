@@ -91,7 +91,7 @@ public class ExamGeneralStatement {
                 List<String> row = new ArrayList<>();
                 row.add( String.valueOf( num++ ) );
                 row.add( examToTestee.getTestee().getCaseNumber() );
-                row.add( examToTestee.getTestee().getLastName() );
+                row.add( examToTestee.getTestee().getFullName() );
 
                 ExamResult result = findResultForTestee( examToTestee.getTestee(), results );
                 if ( result == null ) {

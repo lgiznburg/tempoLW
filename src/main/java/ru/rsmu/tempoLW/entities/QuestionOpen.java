@@ -1,5 +1,8 @@
 package ru.rsmu.tempoLW.entities;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import javax.persistence.*;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -13,7 +16,8 @@ import java.util.regex.Pattern;
 public class QuestionOpen extends Question {
     private static final long serialVersionUID = -8942060514891282894L;
 
-    @OneToMany( mappedBy = "question", cascade = CascadeType.ALL )
+    @OneToMany( mappedBy = "question", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @LazyCollection( LazyCollectionOption.TRUE )
     private List<AnswerVariant> answerVariants;
 
     public List<AnswerVariant> getAnswerVariants() {

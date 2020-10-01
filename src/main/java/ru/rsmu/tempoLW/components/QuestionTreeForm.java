@@ -102,9 +102,10 @@ public class QuestionTreeForm {
             internalStep = 0;
         }
 
+        //List<CorrespondenceVariant> variants = questionDao.findCorrespondenceVariants( question );
         // get current step - currentVariant
-        if ( internalStep < question.getCorrespondenceVariants().size() ) {
-            currentVariant = question.getCorrespondenceVariants().get( internalStep );
+        if ( internalStep < /*variants.size()*/ question.getCorrespondenceVariants().size() ) {
+            currentVariant = /*variants.get( internalStep )*/ question.getCorrespondenceVariants().get( internalStep );
             Collections.shuffle( currentVariant.getCorrectAnswers() );
             answerModel = modelFactory.create( currentVariant.getCorrectAnswers(), "text" );
         }
@@ -136,7 +137,7 @@ public class QuestionTreeForm {
             if ( ((ResultTree)element).getCorrespondenceVariant() == currentVariant && !selectedAnswers.contains( ((ResultTree)element).getAnswerVariant() ) ) {
                 elementIt.remove();
                 if ( element.getId() != 0 ) {
-                    // delete element from DB if exists.
+                    // if element has been stored delete it from DB.
                     questionDao.delete( element );
                 }
             }
@@ -162,6 +163,9 @@ public class QuestionTreeForm {
             return false;
         }
         // this tree is unfinished, trigger another event to keep question number unchanged
+        if ( questionResult.getId() > 0 ) {
+            questionDao.save( questionResult );
+        }
         componentResources.triggerEvent( KEEP_THIS_QUESTION, new Object[] {examResult.getCurrentQuestionNumber()}, null );
         return true;
         // we do not pass control to up level.
@@ -181,7 +185,7 @@ public class QuestionTreeForm {
             List<String> currentAnswers = new ArrayList<>();
             for ( ResultElement resultElement : questionResult.getElements() ) {
                 ResultTree resultTree = (ResultTree) resultElement;
-                if ( resultTree.getCorrespondenceVariant() == previousVariant && resultTree.getAnswerVariant() != null ) {
+                if ( resultTree.getCorrespondenceVariant().getId() == previousVariant.getId() && resultTree.getAnswerVariant() != null ) {
                     currentAnswers.add( resultTree.getAnswerVariant().getText() );
                     existedAnswers--;
                 }
