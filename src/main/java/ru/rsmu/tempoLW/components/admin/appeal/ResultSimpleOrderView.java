@@ -73,4 +73,8 @@ public class ResultSimpleOrderView {
         return !correctAnswerPresent && numEl < orderedCorrectAnswers.size();
     }
 
+    public Boolean getAnswerExist() {
+        return givenAnswersMap.get( numEl ) != null && givenAnswersMap.get( numEl ).size() > 0;
+    }
+
 }

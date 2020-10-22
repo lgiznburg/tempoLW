@@ -13,10 +13,11 @@
                 </tr>
 
                 <t:loop source="givenAnswersMap.keySet()" value="numEl">
-                    <tr>
-                        <td>${viewableNumber}</td>
+                    <t:if test="answerExist">
+                        <tr>
+                            <td>${viewableNumber}</td>
                             <td>
-                                <t:loop source="givenAnswersMap.get(numEl)" value="el" >
+                                <t:loop source="givenAnswersMap.get(numEl)" value="el">
                                     <t:if test="el.correct">
                                         <p class="bg-success">${el.answerVariant.readableText}</p>
                                         <p:else>
@@ -26,11 +27,12 @@
                                 </t:loop>
                             </td>
                             <td>
-                                <t:if test="correctAnswerExist" >
+                                <t:if test="correctAnswerExist">
                                     <p>${orderedCorrectAnswers.get(numEl).readableText}</p>
                                 </t:if>
                             </td>
-                     </tr>
+                        </tr>
+                    </t:if>
                 </t:loop>
             </table>
         </div>
