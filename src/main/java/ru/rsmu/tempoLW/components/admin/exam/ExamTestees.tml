@@ -11,9 +11,10 @@
                 reorder="caseNumber,fullName,testResult,printStatement"
                 rowsPerPage="50" pagerPosition="bottom"
                 empty="block:emptyTestees">
-            <!--<p:lastNameCell>
-                ${testeeFullName}
-            </p:lastNameCell>-->
+            <p:fullNameCell>
+                <t:security.hasanyroles roles="admin,subject_admin">${testee.fullName}</t:security.hasanyroles>
+                <t:security.hasrole role="teacher">****</t:security.hasrole>
+            </p:fullNameCell>
             <p:testResultCell>
                 <t:if test="currentExamResult">
                     <t:if test="currentExamResult.finished">
@@ -30,16 +31,20 @@
                 <t:if test="currentExamResult">
                     <t:if test="currentExamResult.finished">
                         <p style="margin-left: 0px"> <!-- text-center -->
+                            <t:security.hasanyroles roles="admin,subject_admin">
                             <span title="${message:exam-statement} (.rtf)"><!-- col-xs-7 -->
-                                <t:pagelink page="admin/examtesteeresult" context="[exam,testee,rtf]" class="btn btn-info btn-sm" aria-label="Print">
+                                <t:pagelink page="admin/examtesteeresult" context="[exam,testee,rtf]"
+                                            class="btn btn-info btn-sm" aria-label="Print">
                                     <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
                                 </t:pagelink>
                             </span>
-                            <span title="${message:exam-statement} (.xlsx)"><!-- col-xs-7 -->
-                                <t:pagelink page="admin/examtesteeresult" context="[exam,testee]" class="btn btn-success btn-sm" aria-label="Print">
+                                <span title="${message:exam-statement} (.xlsx)"><!-- col-xs-7 -->
+                                    <t:pagelink page="admin/examtesteeresult" context="[exam,testee]"
+                                                class="btn btn-success btn-sm" aria-label="Print">
                                     <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
                                 </t:pagelink>
                             </span>
+                            </t:security.hasanyroles>
                             <!--<span title="${message:appeal-statement} (.xlsx)">&lt;!&ndash; col-xs-7 &ndash;&gt;
                                 <t:pagelink page="admin/appealstatement" context="[exam,testee]" class="btn btn-danger btn-sm" aria-label="Print">
                                     <span class="glyphicon glyphicon-font" aria-hidden="true"></span>
@@ -53,16 +58,20 @@
                         </p>
                         <p:else>
                             <p style="margin-left: 0px">
+                                <t:security.hasanyroles roles="admin,subject_admin">
                                 <span title="${message:exam-not-finished-statement} (.rtf)" class="text-center"><!-- col-xs-7 -->
-                                    <t:pagelink page="admin/examtesteeresult" context="[exam,testee]" class="btn btn-info btn-sm disabled" aria-label="Print">
+                                    <t:pagelink page="admin/examtesteeresult" context="[exam,testee]"
+                                                class="btn btn-info btn-sm disabled" aria-label="Print">
                                         <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
                                     </t:pagelink>
                                 </span>
-                                <span title="${message:exam-not-finished-statement} (.xlsx)" class="text-center"><!-- col-xs-7 -->
-                                    <t:pagelink page="admin/examtesteeresult" context="[exam,testee]" class="btn btn-success btn-sm disabled" aria-label="Print">
+                                    <span title="${message:exam-not-finished-statement} (.xlsx)" class="text-center"><!-- col-xs-7 -->
+                                        <t:pagelink page="admin/examtesteeresult" context="[exam,testee]"
+                                                    class="btn btn-success btn-sm disabled" aria-label="Print">
                                         <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
                                     </t:pagelink>
                                 </span>
+                                </t:security.hasanyroles>
                                 <span title="${message:appeal-unavailable} (.xlsx)" class="text-center"><!-- col-xs-7 -->
                                     <t:pagelink page="admin/examtesteeresult" context="[exam,testee]" class="btn btn-danger btn-sm disabled" aria-label="Print">
                                         <span class="glyphicon glyphicon-font" aria-hidden="true"></span>
@@ -73,26 +82,33 @@
                     </t:if>
                     <p:else>
                         <p style="margin-left: 0px">
+                            <t:security.hasanyroles roles="admin,subject_admin">
                             <span title="${message:exam-not-started-statement} (.rtf)" class="text-center"><!-- col-xs-3 -->
-                                <t:pagelink page="admin/examtesteeresult" context="[exam,testee,true]" class="btn btn-info btn-sm disabled" aria-label="Print">
+                                <t:pagelink page="admin/examtesteeresult" context="[exam,testee,true]"
+                                            class="btn btn-info btn-sm disabled" aria-label="Print">
                                     <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
                                 </t:pagelink>
                             </span>
-                            <span title="${message:exam-not-started-statement} (.xlsx)" class="text-center"><!-- col-xs-3 -->
-                                <t:pagelink page="admin/examtesteeresult" context="[exam,testee,false]" class="btn btn-success btn-sm disabled" aria-label="Print">
+                                <span title="${message:exam-not-started-statement} (.xlsx)" class="text-center"><!-- col-xs-3 -->
+                                    <t:pagelink page="admin/examtesteeresult" context="[exam,testee,false]"
+                                                class="btn btn-success btn-sm disabled" aria-label="Print">
                                     <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
                                 </t:pagelink>
                             </span>
+                            </t:security.hasanyroles>
                             <span title="${message:appeal-unavailable} (.xlsx)" class="text-center"><!-- col-xs-3 -->
                                 <t:pagelink page="admin/examtesteeresult" context="[exam,testee]" class="btn btn-danger btn-sm disabled" aria-label="Print">
                                     <span class="glyphicon glyphicon-font" aria-hidden="true"></span>
                                 </t:pagelink>
                             </span>
+                            <t:security.hasanyroles roles="admin,subject_admin">
                             <span title="${message:good-reason} (.xlsx)" class="text-center"><!-- col-xs-3 -->
-                                <t:pagelink page="admin/goodreasonstatement" context="[exam,testee]" class="btn btn-warning btn-sm" aria-label="Print">
+                                <t:pagelink page="admin/goodreasonstatement" context="[exam,testee]"
+                                            class="btn btn-warning btn-sm" aria-label="Print">
                                     <span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
                                 </t:pagelink>
                             </span>
+                            </t:security.hasanyroles>
                         </p>
                     </p:else>
                 </t:if>
@@ -103,9 +119,12 @@
         <div class="form-group">
             <div class="row">
                 <div class="col-sm-12">
-                    <t:pagelink page="admin/examgeneralstatement" context="[exam]" class="btn btn-primary" aria-label="Print" title=".xlsx">
-                        ${message:general-statement-full}
-                    </t:pagelink>
+                    <t:security.hasanyroles roles="admin,subject_admin">
+                        <t:pagelink page="admin/examgeneralstatement" context="[exam]" class="btn btn-primary"
+                                    aria-label="Print" title=".xlsx">
+                            ${message:general-statement-full}
+                        </t:pagelink>
+                    </t:security.hasanyroles>
                     <t:eventlink event="cancelTestees" context="examId" class="btn btn-default">${message:back}</t:eventlink>
                 </div>
             </div>

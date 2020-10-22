@@ -12,7 +12,13 @@
         </div>
 </div>
 <div class="row">
-    <div class="col-sm-5 col-sm-offset-1">${message:testee-name} <b>${testee.lastName}</b></div>
+    <div class="col-sm-5 col-sm-offset-1">
+        ${message:testee-name}
+        <t:security.hasanyroles roles="admin,subject_admin">
+            <b>${testee.fullName}</b>
+        </t:security.hasanyroles>
+        <t:security.hasrole role="teacher">****</t:security.hasrole>
+    </div>
         <div class="col-sm-5">${message:final-mark} <b>${examResult.markTotal}</b></div>
 </div>
 <br/>
@@ -49,9 +55,12 @@
 <div class="row">
     <div class="form-group">
         <div class="col-sm-4 col-sm-offset-4">
-            <t:pagelink page="admin/appealstatement" context="[exam,testee]" class="btn btn-success" aria-label="Print">
-                ${message:appeal-statement}
-            </t:pagelink>
+            <t:security.hasanyroles roles="admin,subject_admin">
+                <t:pagelink page="admin/appealstatement" context="[exam,testee]" class="btn btn-success"
+                            aria-label="Print">
+                    ${message:appeal-statement}
+                </t:pagelink>
+            </t:security.hasanyroles>
             <t:pagelink page="admin/exams" parameters="queryParams" class="btn btn-default">${message:back}</t:pagelink>
         </div>
     </div>

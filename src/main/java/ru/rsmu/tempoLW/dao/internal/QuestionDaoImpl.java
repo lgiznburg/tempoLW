@@ -208,6 +208,9 @@ public class QuestionDaoImpl extends BaseDaoImpl implements QuestionDao {
                 if ( resultQuestions.size() == rule.getQuestionCount() ) {
                     break;
                 }
+                if ( resultQuestions.size() == questions.size() ) {
+                    break;  // rule demands more questions than we have
+                }
             }
         }
         return resultQuestions;

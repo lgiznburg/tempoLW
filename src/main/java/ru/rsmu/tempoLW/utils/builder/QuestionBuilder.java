@@ -36,6 +36,9 @@ public abstract class QuestionBuilder extends ExcelReader implements ExcelLayout
         else if ( questionType.equalsIgnoreCase( TREE_TYPE )) {
             return  new TreeQuestionBuilder();
         }
+        else if ( questionType.equalsIgnoreCase( FREE_TYPE ) ) {
+            return new FreeQuestionBuilder();
+        }
         throw new IllegalArgumentException( "Incorrect type of question" );
     }
 
@@ -54,6 +57,9 @@ public abstract class QuestionBuilder extends ExcelReader implements ExcelLayout
         }
         else if ( question instanceof QuestionTree ) {
             return  new TreeQuestionBuilder();
+        }
+        else if ( question instanceof QuestionFree ) {
+            return new FreeQuestionBuilder();
         }
         throw new IllegalArgumentException( "Incorrect type of question" );
     }

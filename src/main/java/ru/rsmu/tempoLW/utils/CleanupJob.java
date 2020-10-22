@@ -51,10 +51,7 @@ public class CleanupJob implements Job {
             }
 
             for ( ExamResult examResult : rottenResults ) {
-                int finalMark = 0;
-                for ( QuestionResult questionResult : examResult.getQuestionResults() ) {
-                    finalMark += questionResult.getMark();
-                }
+                int finalMark = examResult.getQuestionResults().stream().mapToInt( QuestionResult::getMark ).sum();
                 examResult.setMarkTotal( finalMark );
                 examResult.setEndTime( new Date() );
                 examDao.save( examResult );

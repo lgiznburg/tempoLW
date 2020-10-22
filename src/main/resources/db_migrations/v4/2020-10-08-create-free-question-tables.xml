@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                   http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="2020-10-08-create-result-evaluation" author="leonid">
+        <createTable tableName="result_evaluations">
+            <column autoIncrement="true" name="id" type="${id.type}">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="explanation" type="${text.type}"/>
+            <column name="score" type="INT"/>
+            <column name="updated_at" type="datetime"/>
+            <column name="result_element_id" type="${id.type}"/>
+            <column name="user_id" type="${id.type}"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="2020-10-08-create-attached-files" author="leonid">
+        <createTable tableName="attached_files">
+            <column autoIncrement="true" name="id" type="${id.type}">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="content_type" type="${string.type}"/>
+            <column name="content" type="LONGBLOB"/>
+            <column name="source_name" type="${string.type}"/>
+            <column name="result_element_id" type="${id.type}"/>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

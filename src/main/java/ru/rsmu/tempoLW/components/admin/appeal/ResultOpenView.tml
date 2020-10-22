@@ -1,6 +1,7 @@
 <!DOCTYPE html>
-<t:container xmlns="http://www.w3.org/1999/xhtml" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
              xmlns:p="tapestry:parameter" >
+<t:content>
     <div>
         <h5>${message:given-answer}</h5>
         <t:if test="answerIsCorrect()">
@@ -20,4 +21,5 @@
             </t:loop>
         </div>
     </t:if>
-</t:container>
+</t:content>
+</html>

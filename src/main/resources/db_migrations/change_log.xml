@@ -25,4 +25,6 @@
 
     <include file="v3/V3-master-changelog.xml" relativeToChangelogFile="true"/>
 
+    <include file="v4/v4-master-changelog.xml" relativeToChangelogFile="true" />
+
 </databaseChangeLog>

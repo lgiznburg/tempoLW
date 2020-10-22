@@ -17,7 +17,7 @@ public class ResultView {
     private LinkSource linkSource;
 
     @Inject
-    Block questionSimple, questionOpen, questionCorrespondence, questionSimpleOrder, questionTree;
+    Block questionSimple, questionOpen, questionCorrespondence, questionSimpleOrder, questionTree, questionFree;
 
     public Block getQuestionBlock() {
         Question question = current.getQuestion();
@@ -35,6 +35,9 @@ public class ResultView {
         }
         else if ( question instanceof QuestionTree ) {
             return questionTree;
+        }
+        else if ( question instanceof QuestionFree ) {
+            return questionFree;
         }
         return null;
     }
