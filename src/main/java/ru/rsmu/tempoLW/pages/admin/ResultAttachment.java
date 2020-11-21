@@ -29,6 +29,7 @@ public class ResultAttachment {
 
     public StreamResponse onActivate() {
         ResultAttachedFile image = questionDao.find( ResultAttachedFile.class, id );
+
         return new AttachmentFile( image.getContent(), image.getSourceName() ) {
             @Override
             public String getContentType() {

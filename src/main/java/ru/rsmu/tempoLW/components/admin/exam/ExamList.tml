@@ -3,7 +3,7 @@
 
     <div id="examsList">
         <t:grid t:id="usersGrid" source="exams" row="exam"
-                exclude="id,name,testingPlan,testees,durationHours,durationMinutes,examDate,useProctoring,periodStartTime,periodEndTime"
+                exclude="id,name,testingPlan,testees,durationHours,durationMinutes,examDate,useProctoring,periodStartTime,periodEndTime,sendEmails"
                 add="title" class="table table-bordered table-hover"
                 rowsPerPage="25" pagerPosition="bottom"
                 empty="block:emptyExams">

@@ -5,16 +5,16 @@ import org.apache.shiro.codec.Base64;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.realm.Realm;
 import org.apache.tapestry5.SymbolConstants;
-import org.apache.tapestry5.ioc.Configuration;
-import org.apache.tapestry5.ioc.MappedConfiguration;
-import org.apache.tapestry5.ioc.OrderedConfiguration;
-import org.apache.tapestry5.ioc.ServiceBinder;
+import org.apache.tapestry5.ioc.*;
 import org.apache.tapestry5.ioc.annotations.Contribute;
 import org.apache.tapestry5.ioc.annotations.ImportModule;
 import org.apache.tapestry5.ioc.annotations.InjectService;
 import org.apache.tapestry5.ioc.annotations.Startup;
 import org.apache.tapestry5.ioc.services.ApplicationDefaults;
 import org.apache.tapestry5.ioc.services.SymbolProvider;
+import org.apache.tapestry5.services.AssetSource;
+import org.apache.tapestry5.services.javascript.JavaScriptModuleConfiguration;
+import org.apache.tapestry5.services.javascript.ModuleManager;
 import org.tynamo.security.SecuritySymbols;
 import org.tynamo.security.services.SecurityFilterChainFactory;
 import org.tynamo.security.services.impl.SecurityFilterChain;
@@ -22,6 +22,7 @@ import ru.rsmu.tempoLW.dao.HibernateModule;
 import ru.rsmu.tempoLW.services.impl.CorrectnessServiceImpl;
 import ru.rsmu.tempoLW.services.impl.EmailServiceImpl;
 import ru.rsmu.tempoLW.services.impl.RunJobsServiceImpl;
+import ru.rsmu.tempoLW.services.impl.TesteeCredentialsServiceImpl;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
@@ -107,6 +108,7 @@ public class AppModule {
 
         binder.bind( EmailService.class, EmailServiceImpl.class );
         binder.bind( RunJobsService.class, RunJobsServiceImpl.class );
+        binder.bind( TesteeCredentialsService.class, TesteeCredentialsServiceImpl.class );
     }
 
     public static void contributeSecurityConfiguration(OrderedConfiguration<SecurityFilterChain> configuration,

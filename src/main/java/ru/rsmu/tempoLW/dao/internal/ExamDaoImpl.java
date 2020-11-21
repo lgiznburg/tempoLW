@@ -60,6 +60,14 @@ public class ExamDaoImpl extends BaseDaoImpl implements ExamDao {
     }
 
     @Override
+    public List<ExamSchedule> findUpcomingExams() {
+        Criteria criteria = session.createCriteria( ExamSchedule.class )
+                .add( Restrictions.ge( "examDate", new Date() ) )
+                .addOrder( Order.asc( "examDate" ) );
+        return criteria.list();
+    }
+
+    @Override
     public ExamSchedule findExamToday() {
         Criteria criteria = session.createCriteria( ExamSchedule.class )
                 .add( Restrictions.eq( "examDate", new Date() ) )
@@ -69,10 +77,12 @@ public class ExamDaoImpl extends BaseDaoImpl implements ExamDao {
 
     @Override
     public ExamToTestee findExamForTestee( Testee testee, String password ) {
+        Date current = new Date();
         Criteria criteria = session.createCriteria( ExamToTestee.class )
                 .createAlias( "exam", "exam" )
                 .createAlias( "testee", "testee" )
-                .add( Restrictions.eq( "exam.examDate", new Date() ) )
+                .add( Restrictions.lt( "exam.periodStartTime", current ) )
+                .add( Restrictions.ge( "exam.periodEndTime", current ) )
                 .add( Restrictions.eq( "testee.id", testee.getId() ) )
                 .add( Restrictions.eq( "password", password ) )
                 .setMaxResults( 1 );
@@ -128,8 +138,20 @@ public class ExamDaoImpl extends BaseDaoImpl implements ExamDao {
 
     @Override
     public List<ExamSchedule> findAllExamsToday() {
+        Calendar passingDay = Calendar.getInstance();
+        passingDay.add( Calendar.HOUR, -1 );
         Criteria criteria = session.createCriteria( ExamSchedule.class )
-                .add( Restrictions.eq( "examDate", new Date() ) );
+                .add( Restrictions.lt( "periodStartTime", new Date() ) )
+                .add( Restrictions.ge( "periodEndTime", passingDay.getTime() ) );
+        return criteria.list();
+    }
+
+    @Override
+    public List<ExamSchedule> findRunningExams() {
+        Date current = new Date();
+        Criteria criteria = session.createCriteria( ExamSchedule.class )
+                .add( Restrictions.lt( "periodStartTime", current ) )
+                .add( Restrictions.ge( "periodEndTime", current ) );
         return criteria.list();
     }
 

@@ -30,7 +30,8 @@ public class QuestionSimple extends Question {
     public int countErrors( List<ResultElement> elements ) {
         int errors = 0;
         int correctCount = (int) answerVariants.stream().filter( AnswerVariant::isCorrect ).count();
-        errors += Math.max( 0, correctCount - elements.size() ); // add errors only if there are less answers
+        int correctEntered = (int) elements.stream().filter( ResultElement::isCorrect ).count();
+        errors += Math.max( 0, correctCount - correctEntered ); // add errors only if there are less answers
         errors += (int) elements.stream().filter( rs -> !rs.isCorrect() ).count(); //count incorrect results
         return errors;
     }

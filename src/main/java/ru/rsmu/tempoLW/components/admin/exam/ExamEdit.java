@@ -156,7 +156,10 @@ public class ExamEdit {
             else if ( isTimeIncorrect( endTime ) ) {
                 examForm.recordError( endTimeField, messages.get( "incorrect-time" ) );
             }
-
+        }
+        if ( exam.isUseProctoring() && !exam.isSendEmails() ) {
+            //always send email if using proctoring
+            exam.setSendEmails( true );
         }
     }
 
@@ -177,9 +180,21 @@ public class ExamEdit {
             exam.setPeriodEndTime( createTime( endTime, proxyDate ) );
         }
         else {
-            exam.setPeriodStartTime( null );
-            exam.setPeriodEndTime( null );
+            exam.setPeriodStartTime( createTime( "0:0", proxyDate ) );
+            Calendar wholeDay = Calendar.getInstance();  // exam day midnight
+            wholeDay.setTime( proxyDate );
+            wholeDay.add( Calendar.DAY_OF_YEAR, 1 );  //next midnight
+            exam.setPeriodEndTime( createTime( "0:0", proxyDate ) );
         }
+        // check if duration exceeds periodEndTime;
+        Calendar durationEnd = Calendar.getInstance();
+        durationEnd.setTime( exam.getPeriodStartTime() );
+        durationEnd.add( Calendar.HOUR, exam.getDurationHours() );
+        durationEnd.add( Calendar.MINUTE, exam.getDurationMinutes() );
+        if( durationEnd.getTime().after( exam.getPeriodEndTime() ) ) {
+            exam.setPeriodEndTime( durationEnd.getTime() );
+        }
+
         examDao.save( exam );
         componentResources.triggerEvent( event, new Object[]{ exam.getId() }, null );
         return true;

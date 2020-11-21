@@ -22,8 +22,9 @@ public enum StoredPropertyName {
     PROCTORING_CALLBACK_ALLOWED("Proctoring","Разрешить передачу результатов сессии", "0", StoredPropertyType.INTEGER),
     PROCTORING_DEBUG_ENVIRONMENT("Proctoring","Режим тестирования (только для разработки)", "0", StoredPropertyType.INTEGER),
 
-    VIEW_ONLY_THIS_YEAR_EXAM("Global", "Показывать экзамены только текущего года", "1", StoredPropertyType.INTEGER )
-            ;
+    VIEW_ONLY_THIS_YEAR_EXAM("Global", "Показывать экзамены только текущего года", "1", StoredPropertyType.INTEGER ),
+    MY_OWN_URI("Global", "Адрес данного сервера", "https://tempolw.rsmu.ru", StoredPropertyType.STRING )
+    ;
 
     private String groupName;
     private String title;

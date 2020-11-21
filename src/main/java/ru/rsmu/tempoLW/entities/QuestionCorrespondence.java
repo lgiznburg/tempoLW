@@ -44,15 +44,17 @@ public class QuestionCorrespondence extends Question {
     @Override
     public int countErrors( List<ResultElement> elements ) {
         int errors = 0;
-        Map<Long,Integer> counts = new HashMap<>();
+        Map<Long,Integer> counts = new HashMap<>();  // map of variant ID -> number of given answers
         for ( ResultElement result : elements ) {
             errors += result.isCorrect() ? 0:1;
             Long id = ((ResultCorrespondence)result).getCorrespondenceVariant().getId();
-            if ( counts.containsKey( id ) ) {
-                counts.put( id, counts.get( id ) + 1 );
-            }
-            else {
-                counts.put( id, 1 );
+            if ( result.isCorrect() ) {
+                if ( counts.containsKey( id ) ) {
+                    counts.put( id, counts.get( id ) + 1 );
+                }
+                else {
+                    counts.put( id, 1 );
+                }
             }
         }
 

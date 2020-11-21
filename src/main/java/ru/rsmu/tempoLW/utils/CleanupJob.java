@@ -17,7 +17,7 @@ import java.util.List;
 /**
  * @author leonid.
  *
- * Clean up result. It testee did not finish his exam this job will finish them.
+ * Clean up result. If testee did not finish his exam this job will finish it.
  * Looking for exams started earlier than exam duration minus 10 minutes
  * or any exams at 10 minutes after exam end period.
  */

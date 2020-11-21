@@ -94,8 +94,12 @@ public class TesteeLoader extends ExcelReader {
         int yearSinceBegin = Calendar.getInstance().get( Calendar.YEAR ) - 2019;
         number += 100000 * yearSinceBegin;
         String numberCode = Long.toHexString( number );
-        String random = RandomStringUtils.randomAlphanumeric( 4 ).toLowerCase();
-        random = random.replace( 'l', 'k' ).replace( 'I', 'U' );
+        String random = RandomStringUtils.randomAlphabetic( 4 ).toLowerCase();
+        random = random
+                .replace( 'l', 'k' )
+                .replace( 'O', 'W' )
+                .replace( 'o', 'w' )
+                .replace( 'I', 'U' );
         return "rsmu_" + numberCode.substring( 0,2 ) +
                 random.substring( 0, 2 ) + numberCode.substring( 2 ) +
                 random.substring( 2 );

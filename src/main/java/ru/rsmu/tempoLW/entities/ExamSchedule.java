@@ -56,6 +56,9 @@ public class ExamSchedule implements Serializable {
     @Temporal( TemporalType.TIMESTAMP )
     private Date periodEndTime;
 
+    @Column(name = "send_emails")
+    private boolean sendEmails;
+
     public long getId() {
         return id;
     }
@@ -152,6 +155,14 @@ public class ExamSchedule implements Serializable {
 
     public void setPeriodEndTime( Date periodEndTime ) {
         this.periodEndTime = periodEndTime;
+    }
+
+    public boolean isSendEmails() {
+        return sendEmails;
+    }
+
+    public void setSendEmails( boolean sendEmails ) {
+        this.sendEmails = sendEmails;
     }
 
     @Override

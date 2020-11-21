@@ -4,8 +4,8 @@ package ru.rsmu.tempoLW.services;
  * @author leonid.
  */
 public enum EmailType {
-    EXAM_PASSWORD_RU("/emails/ExamPasswordRu.vm", "Вступительный экзамен в РНИМУ им.Н.И.Пирогова"),
-    EXAM_PASSWORD_EN("/emails/ExamPasswordEn.vm", "Pirogov's University entrant exam");
+    EXAM_PASSWORD_RU("/emails/ExamPasswordRu.vm", "${eventType} в РНИМУ им.Н.И.Пирогова"),
+    EXAM_PASSWORD_EN("/emails/ExamPasswordEn.vm", "Pirogov's University ${eventType}");
 
     public static final String EXAM_PASSWORD_SHORT_NAME = "EXAM_PASSWORD_";
 

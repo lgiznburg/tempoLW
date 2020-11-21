@@ -6,8 +6,14 @@
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
                    http://www.liquibase.org/xml/ns/dbchangelog
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
-
-    <include file="2020-10-08-create-free-question-tables.xml" relativeToChangelogFile="true"/>
-    <include file="2020-10-22-add-send-email-flag.xml" relativeToChangelogFile="true"/>
-
+    <changeSet id="2020-10-22-add-send-email-flag" author="leonid">
+        <addColumn tableName="exam_schedule">
+            <column name="send_emails" type="BIT" defaultValueBoolean="false"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="2020-10-22-set-send-email-default" author="leonid">
+        <update tableName="exam_schedule">
+            <column name="send_emails" valueBoolean="false"/>
+        </update>
+    </changeSet>
 </databaseChangeLog>
