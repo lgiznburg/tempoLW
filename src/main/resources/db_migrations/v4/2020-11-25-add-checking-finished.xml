@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                   http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="2020-11-25-add-checking-finished" author="leonid">
+        <addColumn tableName="teacher_assignments">
+            <column name="finished" type="BIT" defaultValueBoolean="false"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="2020-11-25-set-finished-default" author="leonid">
+        <update tableName="teacher_assignments">
+            <column name="finished" valueBoolean="false"/>
+        </update>
+    </changeSet>
+
+    <changeSet id="2020-11-25-add-file-size" author="leonid">
+        <addColumn tableName="attached_files">
+            <column name="file_size" type="${id.type}"/>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>

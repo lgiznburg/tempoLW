@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd
+                   http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+    <changeSet id="2020-11-21-create-assignment" author="leonid">
+        <createTable tableName="teacher_assignments">
+            <column autoIncrement="true" name="id" type="${id.type}">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="teacher_id" type="${id.type}"/>
+            <column name="result_id" type="${id.type}"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="2020-11-21-create-email-queue" author="leonid">
+        <createTable tableName="email_queue">
+            <column autoIncrement="true" name="id" type="${id.type}">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="email_type" type="${string.type}"/>
+            <column name="model" type="${text.type}"/>
+            <column name="testee_id" type="${id.type}"/>
+            <column name="status" type="${string.type}"/>
+            <column name="created_at" type="datetime"/>
+            <column name="updated_at" type="datetime"/>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

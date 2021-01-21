@@ -3,9 +3,12 @@ package ru.rsmu.tempoLW.services.impl;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tapestry5.ioc.annotations.Inject;
+import org.codehaus.jackson.map.ObjectMapper;
+import ru.rsmu.tempoLW.dao.EmailDao;
 import ru.rsmu.tempoLW.dao.SystemPropertyDao;
 import ru.rsmu.tempoLW.dao.TesteeDao;
 import ru.rsmu.tempoLW.dao.UserDao;
+import ru.rsmu.tempoLW.entities.EmailQueue;
 import ru.rsmu.tempoLW.entities.ExamSchedule;
 import ru.rsmu.tempoLW.entities.ExamToTestee;
 import ru.rsmu.tempoLW.entities.system.StoredPropertyName;
@@ -13,6 +16,7 @@ import ru.rsmu.tempoLW.services.EmailService;
 import ru.rsmu.tempoLW.services.EmailType;
 import ru.rsmu.tempoLW.services.TesteeCredentialsService;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -26,6 +30,9 @@ public class TesteeCredentialsServiceImpl implements TesteeCredentialsService {
 
     @Inject
     private TesteeDao testeeDao;
+
+    @Inject
+    private EmailDao emailDao;
 
     @Inject
     private EmailService emailService;
@@ -67,14 +74,14 @@ public class TesteeCredentialsServiceImpl implements TesteeCredentialsService {
             //"Номер дела", "ФИО", "ФИО", "Логин", "Пароль"
             List<String> row = new ArrayList<>();
             row.add( examToTestee.getTestee().getCaseNumber() );
-            row.add( examToTestee.getTestee().getEmail() );       // use email
+            row.add( examToTestee.getTestee().getEmail() != null ? examToTestee.getTestee().getEmail() : examToTestee.getTestee().getFullName() );       // use email
             row.add( examToTestee.getTestee().getFullName() );
             row.add( examToTestee.getTestee().getLogin() );
             row.add( password );
             table.add( row );
             testeeDao.save( examToTestee );
 
-            SimpleDateFormat stimef = new SimpleDateFormat("HH:mm");
+            SimpleDateFormat stimef = new SimpleDateFormat("dd/MM HH:mm");
             if ( (exam.isUseProctoring() || exam.isSendEmails()) && StringUtils.isNotBlank( examToTestee.getTestee().getEmail() ) ) {
                 // need to send email to testee
                 Map<String,Object> model = new HashMap<>();
@@ -95,7 +102,18 @@ public class TesteeCredentialsServiceImpl implements TesteeCredentialsService {
                             stimef.format( exam.getPeriodEndTime() )) );
                 }
 
-                emailService.sendEmail( examToTestee.getTestee(), emailType, model );
+                EmailQueue emailQueue = new EmailQueue();
+                emailQueue.setEmailType( emailType );
+                emailQueue.setTestee( examToTestee.getTestee() );
+                ObjectMapper mapper = new ObjectMapper();
+                try {
+                    emailQueue.setModel( mapper.writeValueAsString( model ) );
+                } catch (IOException e) {
+                    // do nothing
+                }
+                emailDao.save( emailQueue );
+
+                //emailService.sendEmail( examToTestee.getTestee(), emailType, model );
             }
         }
         return table;

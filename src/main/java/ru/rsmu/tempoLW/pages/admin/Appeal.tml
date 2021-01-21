@@ -60,8 +60,12 @@
                             aria-label="Print">
                     ${message:appeal-statement}
                 </t:pagelink>
+                <t:pagelink page="admin/exams" parameters="queryParams" class="btn btn-default">${message:back}</t:pagelink>
             </t:security.hasanyroles>
-            <t:pagelink page="admin/exams" parameters="queryParams" class="btn btn-default">${message:back}</t:pagelink>
+            <t:security.hasrole role="teacher">
+                <t:pagelink page="admin/worksassignedtome"
+                            class="btn btn-default">${message:back}</t:pagelink>
+            </t:security.hasrole>
         </div>
     </div>
 </div>

@@ -1,0 +1,38 @@
+<html t:type="layout" t:pageTitle="${message:exams-pagetitle}"
+      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
+      xmlns:p="tapestry:parameter"><!-- Администрирование:Список предметов -->
+<body>
+
+<div class="row"><h3>${message:assign-teachers}</h3></div>
+
+<t:form t:id="assignTeachersForm" class="form-horizontal">
+    <div class="form-group">
+        <div class="col-sm-6">${message:exams-to-assign}</div>
+        <div class="col-sm-6">${message:teachers-to-assing}</div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-6">
+            <t:checklist selected="selectedExams" model="examsModel" encoder="examEncoder"/>
+        </div>
+        <div class="col-sm-6">
+            <t:checklist selected="selectedTeachers" model="teachersModel" encoder="teacherEncoder" />
+        </div>
+    </div>
+
+    <t:if test="message">
+        <div class="form-group">
+            <div class="col-sm-6 offset-3">${message}</div>
+        </div>
+    </t:if>
+
+    <div class="form-group">
+        <div class="col-sm-6 offset-3">
+            <t:submit value="message:do-assign" class="btn btn-primary" mixins="ClickOnce"/>
+        </div>
+    </div>
+
+</t:form>
+
+</body>
+</html>

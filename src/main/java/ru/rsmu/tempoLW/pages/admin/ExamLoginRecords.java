@@ -3,8 +3,6 @@ package ru.rsmu.tempoLW.pages.admin;
 import com.rtfparserkit.parser.IRtfParser;
 import com.rtfparserkit.parser.IRtfSource;
 import com.rtfparserkit.parser.RtfStreamSource;
-import com.tutego.jrtf.*;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.tapestry5.StreamResponse;
 import org.apache.tapestry5.annotations.PageActivationContext;
@@ -16,18 +14,20 @@ import ru.rsmu.rtf.model.RtfDocument;
 import ru.rsmu.rtf.parser.TemplateRtfListener;
 import ru.rsmu.rtf.parser.TemplateRtfParser;
 import ru.rsmu.tempoLW.consumabales.AttachmentRtf;
-import ru.rsmu.tempoLW.dao.RtfTemplateDao;
-import ru.rsmu.tempoLW.dao.TesteeDao;
-import ru.rsmu.tempoLW.dao.UserDao;
 import ru.rsmu.tempoLW.consumabales.FileNameTransliterator;
-import ru.rsmu.tempoLW.entities.*;
-import ru.rsmu.tempoLW.services.EmailService;
-import ru.rsmu.tempoLW.services.EmailType;
+import ru.rsmu.tempoLW.dao.RtfTemplateDao;
+import ru.rsmu.tempoLW.entities.DocumentTemplate;
+import ru.rsmu.tempoLW.entities.DocumentTemplateType;
+import ru.rsmu.tempoLW.entities.ExamSchedule;
 import ru.rsmu.tempoLW.services.TesteeCredentialsService;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * @author leonid.

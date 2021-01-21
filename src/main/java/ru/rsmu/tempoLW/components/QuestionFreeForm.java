@@ -1,20 +1,25 @@
 package ru.rsmu.tempoLW.components;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.tapestry5.Block;
 import org.apache.tapestry5.ComponentResources;
 import org.apache.tapestry5.annotations.Events;
+import org.apache.tapestry5.annotations.InjectComponent;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.annotations.SessionState;
+import org.apache.tapestry5.corelib.components.Form;
+import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.services.Request;
+import org.apache.tapestry5.upload.components.Upload;
 import org.apache.tapestry5.upload.services.UploadedFile;
 import ru.rsmu.tempoLW.dao.QuestionDao;
-import ru.rsmu.tempoLW.entities.*;
+import ru.rsmu.tempoLW.entities.ExamResult;
+import ru.rsmu.tempoLW.entities.QuestionResult;
+import ru.rsmu.tempoLW.entities.ResultAttachedFile;
+import ru.rsmu.tempoLW.entities.ResultFree;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 /**
  * @author leonid.
@@ -61,6 +66,15 @@ public class QuestionFreeForm {
     @Inject
     private ComponentResources componentResources;
 
+    @Inject
+    private Messages messages;
+
+    @InjectComponent("questionFreeForm")
+    private Form freeForm;
+
+    @InjectComponent("answerFile")
+    private Upload fileUploadField;
+
     public void onPrepareForRender() {
         prepare();
     }
@@ -86,9 +100,14 @@ public class QuestionFreeForm {
         }
     }
 
-
     public void onSelectedFromAttachFile() {
         stayHere = true;
+    }
+
+    public void onValidate() {
+        if ( answerFile != null && !answerFile.getContentType().matches( "(image.*)|(application/pdf)" ) ) {
+            freeForm.recordError( fileUploadField, messages.get( "incorrect-file-type" ) );
+        }
     }
 
     public boolean onSuccess() {
@@ -110,6 +129,7 @@ public class QuestionFreeForm {
                 file.setSourceName( answerFile.getFileName() );
                 file.setContent( IOUtils.toByteArray( answerFile.getStream() ) );
                 file.setResultElement( resultFree );
+                file.setSize( file.getContent().length );
                 resultFree.getFiles().add( file );
                 questionDao.save( resultFree );
                 questionDao.save( file );

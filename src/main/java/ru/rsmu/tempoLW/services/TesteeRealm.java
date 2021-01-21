@@ -111,10 +111,12 @@ public class TesteeRealm extends AuthorizingRealm {
     }
 
     private ExamToTestee checkCurrentExam( Testee testee, String password ) {
+        Date current = new Date();
         Criteria criteria = sessionManager.getSession().createCriteria( ExamToTestee.class )
                 .createAlias( "exam", "exam" )
                 .createAlias( "testee", "testee" )
-                .add( Restrictions.eq( "exam.examDate", new Date() ) )
+                .add( Restrictions.lt( "exam.periodStartTime", current ) )
+                .add( Restrictions.ge( "exam.periodEndTime", current ) )
                 .add( Restrictions.eq( "testee.id", testee.getId() ) )
                 .add( Restrictions.eq( "password", password ) )
                 .setMaxResults( 1 );

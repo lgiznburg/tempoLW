@@ -40,9 +40,13 @@
                                     <!--<li><t:pagelink page="admin/analytics">${message:analytics-title}</t:pagelink></li>-->
                                     <li role="separator" class="divider"></li>
                                 </t:security.hasAnyRoles>
+                                <t:security.hasrole role="teacher">
+                                    <li><t:pagelink page="admin/worksassignedtome">${message:navbar.admin.works-assigned-to-me}</t:pagelink></li>
+                                </t:security.hasrole>
                                 <t:security.hasRole role="admin">
                                     <li><t:pagelink page="admin/users">${message:navbar.admin.users}</t:pagelink></li>
                                     <li><t:pagelink page="admin/loademails">${message:navbar.admin.load-emails}</t:pagelink></li>
+                                    <li><t:pagelink page="admin/assignteachers">${message:navbar.admin.assign-teachers}</t:pagelink></li>
                                     <li><t:pagelink page="admin/templates/rtftemplates">${message:rtf-template-short}</t:pagelink></li>
                                     <li><t:pagelink page="admin/systemproperties">${message:navbar.admin.system-properties}</t:pagelink></li>
                                     <li role="separator" class="divider"></li>

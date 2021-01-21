@@ -9,5 +9,7 @@
 
     <include file="2020-10-08-create-free-question-tables.xml" relativeToChangelogFile="true"/>
     <include file="2020-10-22-add-send-email-flag.xml" relativeToChangelogFile="true"/>
+    <include file="2020-11-21-add-assignment-and-email-queue.xml" relativeToChangelogFile="true"/>
+    <include file="2020-11-25-add-checking-finished.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

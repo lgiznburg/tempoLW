@@ -77,7 +77,7 @@ public class QuestionCorrespondenceForm {
         answerModel = modelFactory.create( question.getAnswerVariants(), "text" );
 
 //        List<CorrespondenceVariant> variants = questionDao.findCorrespondenceVariants( question );
-        Map<Long,CorrespondenceRow> rowMap = new HashMap<>();
+        Map<Long,CorrespondenceRow> rowMap = new LinkedHashMap<>();
         for ( CorrespondenceVariant correspondenceVariant : /*variants*/ question.getCorrespondenceVariants() ) {
             CorrespondenceRow row = new CorrespondenceRow( correspondenceVariant );
             rowMap.put( correspondenceVariant.getId(), row );

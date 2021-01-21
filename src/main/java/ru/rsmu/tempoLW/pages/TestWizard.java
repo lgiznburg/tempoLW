@@ -4,13 +4,15 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTCreator;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
+import org.apache.commons.fileupload.FileUploadException;
 import org.apache.tapestry5.Block;
+import org.apache.tapestry5.PersistenceConstants;
 import org.apache.tapestry5.SymbolConstants;
 import org.apache.tapestry5.annotations.*;
 import org.apache.tapestry5.corelib.components.Zone;
+import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import org.apache.tapestry5.ioc.annotations.Symbol;
-import org.apache.tapestry5.services.HttpError;
 import org.apache.tapestry5.services.Request;
 import org.apache.tapestry5.services.ajax.AjaxResponseRenderer;
 import org.apache.tapestry5.services.ajax.JavaScriptCallback;
@@ -21,10 +23,8 @@ import ru.rsmu.tempoLW.dao.QuestionDao;
 import ru.rsmu.tempoLW.dao.SystemPropertyDao;
 import ru.rsmu.tempoLW.entities.*;
 import ru.rsmu.tempoLW.entities.system.StoredPropertyName;
-import ru.rsmu.tempoLW.services.CorrectnessService;
 import ru.rsmu.tempoLW.services.SecurityUserHelper;
 
-import javax.servlet.http.HttpServletResponse;
 import java.util.*;
 
 /**
@@ -45,6 +45,10 @@ public class TestWizard {
      */
     @Property
     private QuestionResult current;
+
+    @Persist(PersistenceConstants.FLASH)
+    @Property
+    private String uploadMessage;
 
     /**
      * What to show on the page - question or result table (final results)
@@ -73,6 +77,9 @@ public class TestWizard {
      */
     @Inject
     private Block questionBlock, questionListBlock, startProctoring, needToReload;
+
+    @Inject
+    private Messages messages;
 
     /**
      * Request for handling AJAX async requests
@@ -183,6 +190,12 @@ public class TestWizard {
 
     }
 
+    // possible to upload file for FreeQuestion. But exception should be handled here
+    public Object onUploadException( FileUploadException ex ) {
+        uploadMessage = messages.get( "upload-exception" );
+        return this;
+    }
+
     public Object onSuccess() {
         if ( checkSessionDisruption() ) return true;
 
@@ -203,13 +216,8 @@ public class TestWizard {
 
         if ( examResult.getQuestionResults().size() -1 == examResult.getCurrentQuestionNumber()
                 || examResult.isFinished()) {
-            if ( request.isXHR() ) {
-                onToQuestionList();
-                return null;
-            }
-            else {
-                return TestFinal.class;
-            }
+            onToQuestionList();
+            return null;
         }
         return onNextQuestion();
     }

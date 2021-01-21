@@ -96,14 +96,14 @@ public class EmailServiceImpl implements EmailService {
             htmlEmail.setFrom( systemPropertyDao.getProperty( StoredPropertyName.EMAIL_FROM_ADDRESS ),
                     systemPropertyDao.getProperty( StoredPropertyName.EMAIL_FROM_SIGNATURE ),
                     "UTF-8" );
-
-            try {
+            htmlEmail.setBounceAddress( systemPropertyDao.getProperty( StoredPropertyName.EMAIL_FROM_ADDRESS ) ); // todo add to system properties
+            /*try {
                 List<InternetAddress> replyToAddresses = new ArrayList<>();
                 replyToAddresses.add( new InternetAddress("noreply@rsmu.ru") );
                 htmlEmail.setReplyTo( replyToAddresses );
             } catch (AddressException e) {
                 // what?
-            }
+            }*/
 
             model.put( "replyEmail", systemPropertyDao.getProperty( StoredPropertyName.EMAIL_FROM_ADDRESS ) );
             model.put( "signature", systemPropertyDao.getProperty( StoredPropertyName.EMAIL_FROM_SIGNATURE ) );
