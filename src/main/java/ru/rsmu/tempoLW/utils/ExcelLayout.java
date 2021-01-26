@@ -1,32 +1,30 @@
 package ru.rsmu.tempoLW.utils;
 
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-
 /**
  * @author leonid.
  */
 public interface ExcelLayout {
-    public static String QUESTION_ROW = "В";
-    public static String ANSWER_ROW = "О";
-    public static String CORRESPONDENCE_ROW = "У";
+    //String QUESTION_ROW = "В";
+    //String ANSWER_ROW = "О";
+    //String CORRESPONDENCE_ROW = "У";
 
-    public static String SIMPLE_TYPE = "Пр";
-    public static String OPEN_TYPE = "Откр";
-    public static String CORRESPONDENCE_TYPE = "Соот";
-    public static String SIMPLE_ORDER_TYPE = "Посл";
-    public static String TREE_TYPE = "Дер";
+    String SIMPLE_TYPE = "Пр";
+    String OPEN_TYPE = "Откр";
+    String CORRESPONDENCE_TYPE = "Соот";
+    String SIMPLE_ORDER_TYPE = "Посл";
+    String TREE_TYPE = "Дер";
 
-    public static short COLUMN_ROW_TYPE = 0;
-    public static short COLUMN_QUESTION_TYPE = 1;
-    public static short COLUMN_TOPIC = 2;
-    public static short COLUMN_COMPLEXITY = 3;
-    public static short COLUMN_MAX_SCORE = 4;
-    public static short COLUMN_NAME = 5;
-    public static short COLUMN_VARIANT = 6;
-    public static short COLUMN_CODE = 7;
-    public static short COLUMN_TEXT = 8;
-    public static short COLUMN_RIGHTNESS = 9;
-    public static short COLUMN_IMAGE = 10;
+    //short COLUMN_ROW_TYPE = 0;
+    short COLUMN_QUESTION_TYPE = 0;
+    short COLUMN_TOPIC = 1;
+    short COLUMN_COMPLEXITY = 2;
+    short COLUMN_MAX_SCORE = 3;
+    short COLUMN_NAME = 4;
+    //short COLUMN_VARIANT = 6;
+    short COLUMN_CODE = 5;
+    short COLUMN_TEXT = 6;
+    short COLUMN_RIGHTNESS = 7;
+    short COLUMN_IMAGE = 8;
+    short COLUMN_ID = 10;
 
 }

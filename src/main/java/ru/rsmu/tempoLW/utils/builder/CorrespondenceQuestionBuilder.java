@@ -17,7 +17,7 @@ public class CorrespondenceQuestionBuilder extends QuestionBuilder {
     }
 
     @Override
-    public int parse( Sheet sheet, int rowN ) {
+    public int parse( Row row ) {
         QuestionCorrespondence question = new QuestionCorrespondence();
         question.setAnswerVariants( new LinkedList<>() );
         question.setCorrespondenceVariants( new LinkedList<>() );
@@ -99,9 +99,6 @@ public class CorrespondenceQuestionBuilder extends QuestionBuilder {
         for ( CorrespondenceVariant variant : ((QuestionCorrespondence)question).getCorrespondenceVariants() ) {
             row = sheet.createRow( rowN++ );
 
-            cell = row.createCell( COLUMN_ROW_TYPE );
-            cell.setCellValue( CORRESPONDENCE_ROW );
-
             cell = row.createCell( COLUMN_CODE );
             cell.setCellValue( String.valueOf( code ) );
 
@@ -112,6 +109,9 @@ public class CorrespondenceQuestionBuilder extends QuestionBuilder {
                 cell = row.createCell( COLUMN_IMAGE );
                 cell.setCellValue( variant.getImage().getSourceName() );
             }
+
+            cell = row.createCell( COLUMN_ID );
+            cell.setCellValue( variant.getId() );
 
             for ( AnswerVariant answer : variant.getCorrectAnswers() ) {
                 String answerCode = codes.get( answer.getId() );
