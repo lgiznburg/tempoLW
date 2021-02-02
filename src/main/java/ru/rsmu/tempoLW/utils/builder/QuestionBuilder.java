@@ -1,6 +1,7 @@
 package ru.rsmu.tempoLW.utils.builder;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import ru.rsmu.tempoLW.dao.QuestionDao;
@@ -9,6 +10,7 @@ import ru.rsmu.tempoLW.utils.ExcelLayout;
 import ru.rsmu.tempoLW.utils.ExcelReader;
 import ru.rsmu.tempoLW.utils.ImagesExtractor;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -159,6 +161,7 @@ public abstract class QuestionBuilder extends ExcelReader implements ExcelLayout
             row = sheet.createRow( rowN++ );
 
             cell = row.createCell( COLUMN_TEXT );
+            cell.setCellType( CellType.STRING );
             cell.setCellValue( answerVariant.getText() );
 
             if ( codes != null ) {
@@ -181,5 +184,64 @@ public abstract class QuestionBuilder extends ExcelReader implements ExcelLayout
         }
         return rowN;
 
+    }
+
+    protected <T extends Question> T loadQuestion( Row row, Class<T> questionClass ) throws IllegalAccessException, InstantiationException {
+        T question = null;
+        Long questionId = getCellNumber( row, COLUMN_ID );
+        if ( questionId != null && questionId > 0 ) {
+            question = getQuestionDao().find( questionClass, questionId );
+        }
+        if ( question == null ) {
+            question = questionClass.newInstance();
+        }
+
+        question.setText( getCellValue( row, COLUMN_TEXT ) );
+
+        UploadedImage uploadedImage = checkUploadedImage( row );
+        if ( uploadedImage != null ) {
+            question.setImage( uploadedImage );
+        }
+        this.result = question;
+        return question;
+    }
+
+    protected AnswerVariant loadAnswer( Row row ) {
+        Long answerId = getCellNumber( row, COLUMN_ID );
+        AnswerVariant answerVariant = null;
+        if ( answerId != null && answerId > 0 ) {
+            answerVariant = getQuestionDao().find( AnswerVariant.class, answerId );
+        }
+        if ( answerVariant == null ) {
+            answerVariant = new AnswerVariant();
+        }
+        answerVariant.setText( getCellValue( row, COLUMN_TEXT ) );
+        answerVariant.setCorrect( getCellNumber( row, COLUMN_RIGHTNESS ) != null );
+        answerVariant.setQuestion( result );
+        UploadedImage uploadedImage = checkUploadedImage( row );
+        if ( uploadedImage != null ) {
+            answerVariant.setImage( uploadedImage );
+        }
+        return answerVariant;
+    }
+
+    protected CorrespondenceVariant loadCorrespondenceVariant( Row row ) {
+        Long variantId = getCellNumber( row, COLUMN_ID );
+
+        CorrespondenceVariant variant = null;
+        if ( variantId != null && variantId > 0 ) {
+            variant = questionDao.find( CorrespondenceVariant.class, variantId );
+        }
+        if ( variant == null ) {
+            variant = new CorrespondenceVariant();
+            variant.setCorrectAnswers( new LinkedList<>() );
+        }
+        variant.setText( getCellValue( row, COLUMN_TEXT ) );
+        variant.setQuestion( result );
+        UploadedImage uploadedImage = checkUploadedImage( row );
+        if ( uploadedImage != null ) {
+            variant.setImage( uploadedImage );
+        }
+        return variant;
     }
 }

@@ -6,9 +6,9 @@ import org.apache.poi.ss.usermodel.Sheet;
 import ru.rsmu.tempoLW.entities.AnswerVariant;
 import ru.rsmu.tempoLW.entities.Question;
 import ru.rsmu.tempoLW.entities.QuestionSimple;
-import ru.rsmu.tempoLW.entities.UploadedImage;
 
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author leonid.
@@ -23,43 +23,23 @@ public class SimpleQuestionBuilder extends QuestionBuilder {
 
         if ( type != null ) {
             // this is question row. should we check question type again?
-            QuestionSimple question = null;
-            Long questionId = getCellNumber( row, COLUMN_ID );
-            if ( questionId != null && questionId > 0 ) {
-                question = getQuestionDao().find( QuestionSimple.class, questionId );
+            try {
+                QuestionSimple question = loadQuestion( row, QuestionSimple.class );
+                if ( question != null && question.getAnswerVariants() == null ) {
+                    question.setAnswerVariants( new LinkedList<>() );
+                }
+            } catch (IllegalAccessException | InstantiationException e) {
+                // constructor did not work. log it
             }
-            if ( question == null ) {
-                question = new QuestionSimple();
-                question.setAnswerVariants( new LinkedList<>() );
-            }
-
-            question.setText( getCellValue( row, COLUMN_TEXT ) );
-
-            UploadedImage uploadedImage = checkUploadedImage( row );
-            if ( uploadedImage != null ) {
-                question.setImage( uploadedImage );
-            }
-            this.result = question;
         }
         else if ( result != null ){
             // answer row
             String text = getCellValue( row, COLUMN_TEXT );
             if ( StringUtils.isNotBlank( text ) ) {
-                Long answerId = getCellNumber( row, COLUMN_ID );
-                AnswerVariant answerVariant = null;
-                if ( answerId != null && answerId > 0 ) {
-                    answerVariant = getQuestionDao().find( AnswerVariant.class, answerId );
-                }
-                if ( answerVariant == null ) {
-                    answerVariant = new AnswerVariant();
-                }
-                answerVariant.setText( text );
-                answerVariant.setCorrect( getCellNumber( row, COLUMN_RIGHTNESS ) != null );
-                answerVariant.setQuestion( result );
-                ((QuestionSimple)result).getAnswerVariants().add( answerVariant );
-                UploadedImage uploadedImage = checkUploadedImage( row );
-                if ( uploadedImage != null ) {
-                    answerVariant.setImage( uploadedImage );
+                AnswerVariant answerVariant = loadAnswer( row );
+                List<AnswerVariant> answers = ((QuestionSimple)result).getAnswerVariants();
+                if ( !answers.contains( answerVariant ) ) {
+                    answers.add( answerVariant );
                 }
             }
         }

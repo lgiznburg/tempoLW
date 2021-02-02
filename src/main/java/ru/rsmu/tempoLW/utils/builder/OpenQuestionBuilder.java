@@ -1,10 +1,12 @@
 package ru.rsmu.tempoLW.utils.builder;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import ru.rsmu.tempoLW.entities.*;
 
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author leonid.
@@ -14,39 +16,33 @@ public class OpenQuestionBuilder extends QuestionBuilder {
     }
 
     @Override
-    public int parse( Sheet sheet, int rowN ) {
-        QuestionOpen question = new QuestionOpen();
-        question.setAnswerVariants( new LinkedList<>() );
+    public int parse( Row row ) {
+        String type = getCellValue( row, COLUMN_QUESTION_TYPE );
 
-        Row row = sheet.getRow( rowN );
-        question.setText( getCellValue( row, COLUMN_TEXT ) );
-
-        UploadedImage uploadedImage = checkUploadedImage( row );
-        if ( uploadedImage != null ) {
-            question.setImage( uploadedImage );
+        if ( type != null ) {
+            // this is question row. should we check question type again?
+            try {
+                QuestionOpen question = loadQuestion( row, QuestionOpen.class );
+                if ( question != null && question.getAnswerVariants() == null ) {
+                    question.setAnswerVariants( new LinkedList<>() );
+                }
+            } catch (IllegalAccessException | InstantiationException e) {
+                // constructor did not work. log it
+            }
+        }
+        else if ( result != null ){
+            // answer row
+            String text = getCellValue( row, COLUMN_TEXT );
+            if ( StringUtils.isNotBlank( text ) ) {
+                AnswerVariant answerVariant = loadAnswer( row );
+                List<AnswerVariant> answers = ((QuestionOpen)result).getAnswerVariants();
+                if ( !answers.contains( answerVariant ) ) {
+                    answers.add( answerVariant );
+                }
+            }
         }
 
-        do {
-            row = sheet.getRow( ++rowN );
-            if ( row == null || row.getCell( COLUMN_ROW_TYPE ) == null ) {
-                break; // empty row
-            }
-            String rowType = getCellValue( row, COLUMN_ROW_TYPE );
-            if ( ANSWER_ROW.equalsIgnoreCase( rowType ) ) {
-                AnswerVariant answerVariant = new AnswerVariant();
-                answerVariant.setText( getCellValue( row, COLUMN_TEXT ) );
-                answerVariant.setCorrect( true );
-                answerVariant.setQuestion( question );
-                question.getAnswerVariants().add( answerVariant );
-            }
-            else {
-                break;
-            }
-
-        } while ( true );
-
-        this.result = question;
-        return rowN;
+        return 0;
     }
 
     @Override
