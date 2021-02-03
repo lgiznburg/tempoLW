@@ -1,77 +1,67 @@
 package ru.rsmu.tempoLW.utils.builder;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import ru.rsmu.tempoLW.entities.*;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author leonid.
  */
 public class TreeQuestionBuilder extends QuestionBuilder {
+
+    private CorrespondenceVariant currentVariant = null;
+
     protected TreeQuestionBuilder() {
     }
 
     @Override
-    public int parse( Sheet sheet, int rowN ) {
-        QuestionTree question = new QuestionTree();
-        question.setCorrespondenceVariants( new ArrayList<>() );
-
-        Row row = sheet.getRow( rowN );
-        question.setText( getCellValue( row, COLUMN_TEXT ) );
-
-        UploadedImage uploadedImage = checkUploadedImage( row );
-        if ( uploadedImage != null ) {
-            question.setImage( uploadedImage );
-        }
-        CorrespondenceVariant currentVariant = null;
-        do {
-            row = sheet.getRow( ++rowN );
-            if ( row == null || row.getCell( COLUMN_ROW_TYPE ) == null ) {
-                break; // empty row
-            }
-            String rowType = getCellValue( row, COLUMN_ROW_TYPE );
-            if ( CORRESPONDENCE_ROW.equalsIgnoreCase( rowType ) ) {
-                CorrespondenceVariant variant = new CorrespondenceVariant();
-                variant.setCorrectAnswers( new LinkedList<>() );
-                variant.setText( getCellValue( row, COLUMN_TEXT ) );
-                variant.setQuestion( question );
-                question.getCorrespondenceVariants().add( variant );
-                uploadedImage = checkUploadedImage( row );
-                if ( uploadedImage != null ) {
-                    variant.setImage( uploadedImage );
+    public int parse( Row row ) {
+        String type = getCellValue( row, COLUMN_QUESTION_TYPE );
+        if ( type != null ) {
+            // this is question row. should we check question type again?
+            try {
+                QuestionCorrespondence question = loadQuestion( row, QuestionCorrespondence.class );
+                if ( question != null && question.getAnswerVariants() == null ) {
+                    question.setAnswerVariants( new LinkedList<>() );
                 }
+                if ( question != null && question.getCorrespondenceVariants() == null ) {
+                    question.setCorrespondenceVariants( new LinkedList<>() );
+                }
+            } catch (IllegalAccessException | InstantiationException e) {
+                // constructor did not work. log it
+            }
+        }
+        else if ( result != null ){
+            String code = getCellValue( row, COLUMN_CODE );
+            String text = getCellValue( row, COLUMN_TEXT );
 
+            if ( StringUtils.isNoneBlank( code, text ) ) {
+                // correspondence variant row
+                CorrespondenceVariant variant = loadCorrespondenceVariant( row );
+                List<CorrespondenceVariant> variants = ((QuestionCorrespondence)result).getCorrespondenceVariants();
+                if ( !variants.contains( variant ) ) {
+                    variants.add( variant );
+                }
                 currentVariant = variant;
             }
-            else if ( ANSWER_ROW.equalsIgnoreCase( rowType ) ) {
-                AnswerVariant answerVariant = new AnswerVariant();
-                answerVariant.setText( getCellValue( row, COLUMN_TEXT ) );
-                answerVariant.setQuestion( question );
-
-                uploadedImage = checkUploadedImage( row );
-                if ( uploadedImage != null ) {
-                    answerVariant.setImage( uploadedImage );
-                }
-
-                answerVariant.setCorrect( getCellNumber( row, COLUMN_RIGHTNESS ) != null );
-
-                if ( currentVariant != null ) {
-                    currentVariant.getCorrectAnswers().add( answerVariant );
-                }
-
-            }
             else {
-                break;
+                // answer row
+                if ( StringUtils.isNotBlank( text ) && currentVariant != null ) {
+                    AnswerVariant answerVariant = loadAnswer( row );
+                    List<AnswerVariant> answers = currentVariant.getCorrectAnswers();
+                    if ( !answers.contains( answerVariant ) ) {
+                        answers.add( answerVariant );
+                    }
+
+                }
             }
-
-        } while ( true );
-
-        this.result = question;
-        return rowN;
+        }
+        return 0;
     }
 
     @Override
@@ -80,12 +70,12 @@ public class TreeQuestionBuilder extends QuestionBuilder {
         writeQuestionInfo( row, question, TREE_TYPE );
 
         Cell cell;
+        char code = 'A';
         for ( CorrespondenceVariant variant : ((QuestionTree)question).getCorrespondenceVariants() ) {
             row = sheet.createRow( rowN++ );
 
-            cell = row.createCell( COLUMN_ROW_TYPE );
-            cell.setCellValue( CORRESPONDENCE_ROW );
-
+            cell = row.createCell( COLUMN_CODE );
+            cell.setCellValue( String.valueOf( code ) );
 
             cell = row.createCell( COLUMN_TEXT );
             cell.setCellValue( variant.getText() );
@@ -94,8 +84,12 @@ public class TreeQuestionBuilder extends QuestionBuilder {
                 cell = row.createCell( COLUMN_IMAGE );
                 cell.setCellValue( variant.getImage().getSourceName() );
             }
-            rowN = writeAnswers( sheet, rowN, variant.getCorrectAnswers() );
 
+            cell = row.createCell( COLUMN_ID );
+            cell.setCellValue( variant.getId() );
+
+            rowN = writeAnswers( sheet, rowN, variant.getCorrectAnswers() );
+            code++;
         }
 
         return rowN;

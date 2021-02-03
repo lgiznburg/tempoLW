@@ -8,9 +8,9 @@ public enum QuestionType {
     OPEN,
     CORRESPONDENCE,
     SIMPLE_ORDER,
-    COMPLEX,
-    SEQUENCE,
-    TREE,
-    PAZL,
-    MAP
+    //COMPLEX,
+    //SEQUENCE,
+    TREE//,
+    //PAZL,
+    //MAP
 }
