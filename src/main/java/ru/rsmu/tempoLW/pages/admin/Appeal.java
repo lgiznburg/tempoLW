@@ -70,7 +70,7 @@ public class Appeal {
         return queryParams;
     }
 
-    public Map<String, Object> getQustionParams() {
+    public Map<String, Object> getQuestionParams() {
         Map<String, Object> queryParams = new HashMap<>();
         queryParams.put("questionId", questionResult.getId());
         return queryParams;

@@ -8,10 +8,10 @@ public enum QuestionType {
     OPEN,
     CORRESPONDENCE,
     SIMPLE_ORDER,
-    COMPLEX,       // not implemented
-    SEQUENCE,       // not implemented
+    //COMPLEX,
+    //SEQUENCE,
     TREE,
-    PAZL,           // not implemented
-    MAP,            // not implemented
+    //PAZL,
+    //MAP
     FREE            // olympiad, result should be entered in form of scanned document
 }

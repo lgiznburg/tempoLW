@@ -1,0 +1,56 @@
+<html t:type="layout" t:pageTitle="${message:questionedit-pagetitle}"
+      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
+      xmlns:p="tapestry:parameter">
+
+<div class="row">
+    <h2>${subject.title} : ${message:create} ${message:question} </h2>
+</div>
+
+<t:form class="form-horizontal" t:id="questionForm">
+    <div class="form-group">
+        <t:label for="questionType" class="col-sm-3"/>
+        <div class="col-sm-6">
+            <t:select t:id="questionType" value="type" validate="required"/>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <t:label for="subTopic" class="col-sm-3"/>
+        <div class="col-sm-6">
+            <t:select t:id="subTopic" value="topic" model="topicModel" encoder="topicEncoder" validate="required"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <t:label for="questionName" class="col-sm-3"/>
+        <div class="col-sm-6">
+            <t:textfield t:id="questionName" value="name"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <t:label for="complexity" class="col-sm-3"/>
+        <div class="col-sm-6">
+            <t:select t:id="complexity" value="complexity" model="literal:1,2,3,4,5,6,7,8,9,10"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <t:label for="maxScore" class="col-sm-3"/>
+        <div class="col-sm-6">
+            <t:select t:id="maxScore" value="maxScore" model="literal:1,2,3,4,5"/>
+        </div>
+    </div>
+    <div class="form-group">
+        <t:label for="questionText" class="col-sm-3"/>
+        <div class="col-sm-6">
+            <t:textarea t:id="questionText" value="text" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div class="col-sm-6 col-sm-offset-3">
+            <t:submit class="btn btn-primary" value="${message:save}"/>&nbsp;
+            <t:pagelink page="admin/subjects" parameters="subjectParams" class="btn btn-default">${message:cancel}</t:pagelink>
+        </div>
+    </div>
+
+</t:form>
+</html>

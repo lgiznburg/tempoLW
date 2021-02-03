@@ -1,13 +1,17 @@
 package ru.rsmu.tempoLW.utils.builder;
 
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import ru.rsmu.tempoLW.dao.QuestionDao;
 import ru.rsmu.tempoLW.entities.*;
 import ru.rsmu.tempoLW.utils.ExcelLayout;
 import ru.rsmu.tempoLW.utils.ExcelReader;
 import ru.rsmu.tempoLW.utils.ImagesExtractor;
 
+import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +23,8 @@ public abstract class QuestionBuilder extends ExcelReader implements ExcelLayout
     protected Question result;
 
     protected ImagesExtractor imagesExtractor;
+
+    protected QuestionDao questionDao;
 
     public static QuestionBuilder create( String questionType ) throws IllegalArgumentException {
         if ( questionType.equalsIgnoreCase( SIMPLE_TYPE ) ) {
@@ -66,11 +72,10 @@ public abstract class QuestionBuilder extends ExcelReader implements ExcelLayout
 
     /**
      * Read a question from the file
-     * @param sheet Sheet in excel file
-     * @param rowN number of row with current question
+     * @param row row with current question. it could be row with question or answer or correspondence variant
      * @return number of row after reading (next question)
      */
-    public abstract int parse( Sheet sheet, int rowN );
+    public abstract int parse( Row row );
 
     /**
      * Write the question into excel file
@@ -93,6 +98,14 @@ public abstract class QuestionBuilder extends ExcelReader implements ExcelLayout
         this.imagesExtractor = imagesExtractor;
     }
 
+    public QuestionDao getQuestionDao() {
+        return questionDao;
+    }
+
+    public void setQuestionDao( QuestionDao questionDao ) {
+        this.questionDao = questionDao;
+    }
+
     UploadedImage checkUploadedImage( Row row ) {
         if ( imagesExtractor != null ) {
             String imageName = getCellValue( row, COLUMN_IMAGE );
@@ -112,8 +125,6 @@ public abstract class QuestionBuilder extends ExcelReader implements ExcelLayout
 
     void writeQuestionInfo( Row row, Question question, String questionType ) {
         Cell cell;
-        cell = row.createCell( COLUMN_ROW_TYPE );
-        cell.setCellValue( QUESTION_ROW );
 
         cell = row.createCell( COLUMN_QUESTION_TYPE );
         cell.setCellValue( questionType );
@@ -132,11 +143,6 @@ public abstract class QuestionBuilder extends ExcelReader implements ExcelLayout
             cell.setCellValue( question.getQuestionInfo().getName() );
         }
 
-        if ( question.getQuestionInfo().getCode() > 0 ) {
-            cell = row.createCell( COLUMN_CODE );
-            cell.setCellValue( question.getQuestionInfo().getCode() );
-        }
-
         cell = row.createCell( COLUMN_TEXT );
         cell.setCellValue( question.getText() );
 
@@ -144,6 +150,10 @@ public abstract class QuestionBuilder extends ExcelReader implements ExcelLayout
             cell = row.createCell( COLUMN_IMAGE );
             cell.setCellValue( question.getImage().getSourceName() );
         }
+
+        cell = row.createCell( COLUMN_ID );
+        cell.setCellValue( question.getId() );
+
     }
 
     int writeAnswers( Sheet sheet, int rowN, List<AnswerVariant> answers ) {
@@ -157,10 +167,8 @@ public abstract class QuestionBuilder extends ExcelReader implements ExcelLayout
         for ( AnswerVariant answerVariant : answers ) {
             row = sheet.createRow( rowN++ );
 
-            cell = row.createCell( COLUMN_ROW_TYPE );
-            cell.setCellValue( ANSWER_ROW );
-
             cell = row.createCell( COLUMN_TEXT );
+            cell.setCellType( CellType.STRING );
             cell.setCellValue( answerVariant.getText() );
 
             if ( codes != null ) {
@@ -176,8 +184,72 @@ public abstract class QuestionBuilder extends ExcelReader implements ExcelLayout
                     cell.setCellValue( 1 );
                 }
             }
+
+            cell = row.createCell( COLUMN_ID );
+            cell.setCellValue( answerVariant.getId() );
+
         }
         return rowN;
 
+    }
+
+    protected <T extends Question> T loadQuestion( Row row, Class<T> questionClass ) throws IllegalAccessException, InstantiationException {
+        T question = null;
+        Long questionId = getCellNumber( row, COLUMN_ID );
+        if ( questionId != null && questionId > 0 ) {
+            question = getQuestionDao().find( questionClass, questionId );
+        }
+        if ( question == null ) {
+            question = questionClass.newInstance();
+            question.setCreatedDate( new Date() );
+        }
+
+        question.setText( getCellValue( row, COLUMN_TEXT ) );
+
+        UploadedImage uploadedImage = checkUploadedImage( row );
+        if ( uploadedImage != null ) {
+            question.setImage( uploadedImage );
+        }
+        this.result = question;
+        return question;
+    }
+
+    protected AnswerVariant loadAnswer( Row row ) {
+        Long answerId = getCellNumber( row, COLUMN_ID );
+        AnswerVariant answerVariant = null;
+        if ( answerId != null && answerId > 0 ) {
+            answerVariant = getQuestionDao().find( AnswerVariant.class, answerId );
+        }
+        if ( answerVariant == null ) {
+            answerVariant = new AnswerVariant();
+        }
+        answerVariant.setText( getCellValue( row, COLUMN_TEXT ) );
+        answerVariant.setCorrect( getCellNumber( row, COLUMN_RIGHTNESS ) != null );
+        answerVariant.setQuestion( result );
+        UploadedImage uploadedImage = checkUploadedImage( row );
+        if ( uploadedImage != null ) {
+            answerVariant.setImage( uploadedImage );
+        }
+        return answerVariant;
+    }
+
+    protected CorrespondenceVariant loadCorrespondenceVariant( Row row ) {
+        Long variantId = getCellNumber( row, COLUMN_ID );
+
+        CorrespondenceVariant variant = null;
+        if ( variantId != null && variantId > 0 ) {
+            variant = questionDao.find( CorrespondenceVariant.class, variantId );
+        }
+        if ( variant == null ) {
+            variant = new CorrespondenceVariant();
+            variant.setCorrectAnswers( new LinkedList<>() );
+        }
+        variant.setText( getCellValue( row, COLUMN_TEXT ) );
+        variant.setQuestion( result );
+        UploadedImage uploadedImage = checkUploadedImage( row );
+        if ( uploadedImage != null ) {
+            variant.setImage( uploadedImage );
+        }
+        return variant;
     }
 }

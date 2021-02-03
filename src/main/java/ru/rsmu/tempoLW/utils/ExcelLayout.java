@@ -1,15 +1,12 @@
 package ru.rsmu.tempoLW.utils;
 
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-
 /**
  * @author leonid.
  */
 public interface ExcelLayout {
-    String QUESTION_ROW = "В";
-    String ANSWER_ROW = "О";
-    String CORRESPONDENCE_ROW = "У";
+    //String QUESTION_ROW = "В";
+    //String ANSWER_ROW = "О";
+    //String CORRESPONDENCE_ROW = "У";
 
     String SIMPLE_TYPE = "Пр";
     String OPEN_TYPE = "Откр";
@@ -18,16 +15,17 @@ public interface ExcelLayout {
     String TREE_TYPE = "Дер";
     String FREE_TYPE = "Своб";
 
-    short COLUMN_ROW_TYPE = 0;
-    short COLUMN_QUESTION_TYPE = 1;
-    short COLUMN_TOPIC = 2;
-    short COLUMN_COMPLEXITY = 3;
-    short COLUMN_MAX_SCORE = 4;
-    short COLUMN_NAME = 5;
-    short COLUMN_VARIANT = 6;
-    short COLUMN_CODE = 7;
-    short COLUMN_TEXT = 8;
-    short COLUMN_RIGHTNESS = 9;
-    short COLUMN_IMAGE = 10;
+    //short COLUMN_ROW_TYPE = 0;
+    short COLUMN_QUESTION_TYPE = 0;
+    short COLUMN_TOPIC = 1;
+    short COLUMN_COMPLEXITY = 2;
+    short COLUMN_MAX_SCORE = 3;
+    short COLUMN_NAME = 4;
+    //short COLUMN_VARIANT = 6;
+    short COLUMN_CODE = 5;
+    short COLUMN_TEXT = 6;
+    short COLUMN_RIGHTNESS = 7;
+    short COLUMN_IMAGE = 8;
+    short COLUMN_ID = 10;
 
 }
