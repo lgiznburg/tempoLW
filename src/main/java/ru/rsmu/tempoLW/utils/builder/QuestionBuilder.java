@@ -10,6 +10,7 @@ import ru.rsmu.tempoLW.utils.ExcelLayout;
 import ru.rsmu.tempoLW.utils.ExcelReader;
 import ru.rsmu.tempoLW.utils.ImagesExtractor;
 
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -194,6 +195,7 @@ public abstract class QuestionBuilder extends ExcelReader implements ExcelLayout
         }
         if ( question == null ) {
             question = questionClass.newInstance();
+            question.setCreatedDate( new Date() );
         }
 
         question.setText( getCellValue( row, COLUMN_TEXT ) );

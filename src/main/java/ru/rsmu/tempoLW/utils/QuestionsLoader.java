@@ -2,18 +2,19 @@ package ru.rsmu.tempoLW.utils;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import ru.rsmu.tempoLW.dao.QuestionDao;
+import ru.rsmu.tempoLW.entities.ExamSubject;
 import ru.rsmu.tempoLW.entities.Question;
 import ru.rsmu.tempoLW.entities.QuestionInfo;
 import ru.rsmu.tempoLW.entities.SubTopic;
-import ru.rsmu.tempoLW.entities.ExamSubject;
 import ru.rsmu.tempoLW.utils.builder.QuestionBuilder;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Date;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -70,7 +71,7 @@ public class QuestionsLoader extends ExcelReader implements ExcelLayout {
                     builder.parse( row );
                     Question question = builder.getResult();
                     question.setQuestionInfo( questionInfo );
-                    question.setCreatedDate( new Date() );
+                    //question.setCreatedDate( new Date() );
                     questions.add( question );
                 }
                 else {
