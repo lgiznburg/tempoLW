@@ -9,7 +9,7 @@ import org.apache.tapestry5.services.ajax.AjaxResponseRenderer;
 import org.apache.tapestry5.services.javascript.JavaScriptSupport;
 import ru.rsmu.tempoLW.consumabales.CrudMode;
 import ru.rsmu.tempoLW.dao.ExamDao;
-import ru.rsmu.tempoLW.datasource.ExamResultDataSource;
+import ru.rsmu.tempoLW.datasource.QuestionResultDataSource;
 import ru.rsmu.tempoLW.entities.ExamResult;
 import ru.rsmu.tempoLW.entities.ExamSchedule;
 import ru.rsmu.tempoLW.entities.QuestionResult;
@@ -90,7 +90,7 @@ public class Appeal {
     }
 
     public GridDataSource getResultsDataSource() {
-        return new ExamResultDataSource( examResult.getQuestionResults() );
+        return new QuestionResultDataSource( examResult.getQuestionResults() );
     }
 
     public boolean isActiveRow() {

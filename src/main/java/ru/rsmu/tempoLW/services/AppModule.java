@@ -5,16 +5,17 @@ import org.apache.shiro.codec.Base64;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.realm.Realm;
 import org.apache.tapestry5.SymbolConstants;
-import org.apache.tapestry5.ioc.*;
+import org.apache.tapestry5.ioc.Configuration;
+import org.apache.tapestry5.ioc.MappedConfiguration;
+import org.apache.tapestry5.ioc.OrderedConfiguration;
+import org.apache.tapestry5.ioc.ServiceBinder;
 import org.apache.tapestry5.ioc.annotations.Contribute;
 import org.apache.tapestry5.ioc.annotations.ImportModule;
 import org.apache.tapestry5.ioc.annotations.InjectService;
 import org.apache.tapestry5.ioc.annotations.Startup;
 import org.apache.tapestry5.ioc.services.ApplicationDefaults;
 import org.apache.tapestry5.ioc.services.SymbolProvider;
-import org.apache.tapestry5.services.AssetSource;
-import org.apache.tapestry5.services.javascript.JavaScriptModuleConfiguration;
-import org.apache.tapestry5.services.javascript.ModuleManager;
+import org.apache.tapestry5.upload.services.UploadSymbols;
 import org.tynamo.security.SecuritySymbols;
 import org.tynamo.security.services.SecurityFilterChainFactory;
 import org.tynamo.security.services.impl.SecurityFilterChain;
@@ -69,6 +70,8 @@ public class AppModule {
         //create rememberMe cipher key, 16 bytes long
         byte[] cipherKeySource = {10, 33, 28, 77, 48, 115, 3, 47, 109, 75, 55, 55, 68, 121, 19, 63};
         configuration.add( SecuritySymbols.REMEMBERME_CIPHERKERY, Base64.encodeToString( cipherKeySource ) );
+
+        configuration.add( UploadSymbols.FILESIZE_MAX, String.valueOf( 5242880 ) );
 
         // provide liquibase integration with master changelog file
         configuration.add( LiquibaseModule.LIQUIBASE_CHANGELOG, "db_migrations/change_log.xml");

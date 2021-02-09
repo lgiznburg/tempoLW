@@ -1,6 +1,7 @@
 package ru.rsmu.tempoLW.dao;
 
 import ru.rsmu.tempoLW.entities.*;
+import ru.rsmu.tempoLW.entities.auth.User;
 
 import java.util.Date;
 import java.util.List;
@@ -54,4 +55,11 @@ public interface ExamDao extends BaseDao {
 
     List<ExamResult> findOldExamResults( ExamSchedule examSchedule, Date time );
 
+    List<ExamResult> findNotAssignedResults( List<ExamSchedule> exams );
+
+    int countAssignedResults( User teacher );
+
+    List<ExamResult> findAssignedResults( User teacher, int startIndex, int size );
+
+    TeacherAssignment findMyAssignment( ExamResult examResult, User teacher );
 }

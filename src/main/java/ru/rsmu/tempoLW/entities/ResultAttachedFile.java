@@ -28,6 +28,9 @@ public class ResultAttachedFile implements Serializable {
     @JoinColumn(name = "result_element_id")
     private ResultElement resultElement;
 
+    @Column(name = "file_size")
+    private Integer size;
+
     public Long getId() {
         return id;
     }
@@ -66,6 +69,14 @@ public class ResultAttachedFile implements Serializable {
 
     public void setResultElement( ResultElement resultElement ) {
         this.resultElement = resultElement;
+    }
+
+    public Integer getSize() {
+        return size;
+    }
+
+    public void setSize( Integer size ) {
+        this.size = size;
     }
 
     @Override

@@ -3,7 +3,11 @@
 <t:content>
     <div class="row" style="margin-top: 15px">
         <div class="col-sm-7">
-            <span style="font-weight: bold">${message:testee-name}</span><span style="color: #00565e; font-size: 16pt">${testee.getLastName()}</span>
+            <span style="font-weight: bold">${message:testee-name}</span>
+            <span style="color: #00565e; font-size: 16pt">
+                <t:security.hasanyroles roles="admin,subject_admin">${testee.fullName}</t:security.hasanyroles>
+                <t:security.hasrole role="teacher">****</t:security.hasrole>
+            </span>
         </div>
         <div class="col-sm-7">
             <span style="font-weight: bold">${message:casenumber}: </span><span style="color: #00565e; font-size: 16pt">${testee.getCaseNumber()}</span>
@@ -11,7 +15,7 @@
     </div>
     <div class="row" id="examsList">
         <t:grid t:id="usersGrid" source="results" row="result"
-                exclude="Id,questionResults,testee,testingPlan,exam,endTime,finished,examMode,currentQuestionNumber"
+                exclude="Id,questionResults,testee,testingPlan,exam,endTime,finished,examMode,currentQuestionNumber,resultAvailableImmediately"
                 add="printStatement"
                 class="table table-bordered table-hover"
                 rowsPerPage="10" pagerPosition="bottom"
@@ -26,6 +30,11 @@
                     <span title="${message:exam-statement} (.xlsx)"><!-- col-xs-7 -->
                         <t:pagelink page="admin/examtesteeresult" context="[result.exam,testee]" class="btn btn-success btn-sm" aria-label="Print">
                                     <span class="glyphicon glyphicon-print" aria-hidden="true"></span>
+                                </t:pagelink>
+                            </span>
+                    <span title="${message:appeal-statement}"><!-- col-xs-7 -->
+                        <t:pagelink page="admin/appeal" context="[result.exam,testee]" class="btn btn-danger btn-sm" aria-label="Print">
+                                    <span class="glyphicon glyphicon-font" aria-hidden="true"></span>
                                 </t:pagelink>
                             </span>
                 </p>

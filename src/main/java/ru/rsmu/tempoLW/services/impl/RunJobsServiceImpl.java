@@ -5,6 +5,7 @@ import org.apache.tapestry5.ioc.annotations.Inject;
 import org.quartz.*;
 import ru.rsmu.tempoLW.services.RunJobsService;
 import ru.rsmu.tempoLW.utils.CleanupJob;
+import ru.rsmu.tempoLW.utils.SendEmailJob;
 
 /**
  * @author leonid.
@@ -31,10 +32,20 @@ public class RunJobsServiceImpl implements RunJobsService {
                 .forJob( cleanupJob )
                 .build();
 
+        JobDetail sendEmailJob = JobBuilder.newJob( SendEmailJob.class ).build();
+
+        ScheduleBuilder<?> emailSchedule = SimpleScheduleBuilder.simpleSchedule()
+                .withIntervalInMinutes( 1 ).repeatForever();
+        Trigger emailJobTrigger = TriggerBuilder.newTrigger()
+                .withSchedule( emailSchedule )
+                .forJob( sendEmailJob )
+                .build();
+
         try {
             scheduler.scheduleJob( cleanupJob, cleanupTrigger );
+            scheduler.scheduleJob( sendEmailJob, emailJobTrigger );
         } catch (SchedulerException e) {
-            loggerSource.getLogger( RunJobsServiceImpl.class ).error( "Can't start exams cleanup job", e );
+            loggerSource.getLogger( RunJobsServiceImpl.class ).error( "Can't start scheduled jobs", e );
         }
     }
 }

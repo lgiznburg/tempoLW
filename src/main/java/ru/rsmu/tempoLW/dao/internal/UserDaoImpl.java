@@ -1,19 +1,21 @@
 package ru.rsmu.tempoLW.dao.internal;
 
 import org.hibernate.Criteria;
+import org.hibernate.criterion.CriteriaSpecification;
 import org.hibernate.criterion.Restrictions;
 import ru.rsmu.tempoLW.dao.UserDao;
 import ru.rsmu.tempoLW.entities.auth.SubjectManager;
 import ru.rsmu.tempoLW.entities.auth.User;
+import ru.rsmu.tempoLW.entities.auth.UserRoleName;
 import ru.rsmu.tempoLW.utils.PasswordEncoder;
 
-import java.math.BigInteger;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 /**
  * @author leonid.
  */
+@SuppressWarnings( "unchecked" )
 public class UserDaoImpl extends BaseDaoImpl implements UserDao {
     @Override
     public User findByUsername( String username ) {
@@ -40,4 +42,12 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao {
         }
     }
 
+    @Override
+    public List<User> finUserForRole( UserRoleName roleName ) {
+        Criteria criteria = session.createCriteria( User.class )
+                .createAlias("roles", "roles"  )
+                .add( Restrictions.eq( "roles.roleName", roleName ) )
+                .setResultTransformer( CriteriaSpecification.DISTINCT_ROOT_ENTITY );
+        return criteria.list();
+    }
 }

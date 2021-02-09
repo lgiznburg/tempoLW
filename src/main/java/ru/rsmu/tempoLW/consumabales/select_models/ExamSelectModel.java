@@ -9,6 +9,7 @@ import ru.rsmu.tempoLW.entities.ExamSchedule;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ExamSelectModel extends AbstractSelectModel {
     private List<ExamSchedule> exams;
@@ -22,10 +23,16 @@ public class ExamSelectModel extends AbstractSelectModel {
 
     @Override
     public List<OptionModel> getOptions() {
-        List<OptionModel> options = new ArrayList<OptionModel>();
-        for (ExamSchedule exam : exams) {
-            options.add(new OptionModelImpl(exam.getName() + " (" + new SimpleDateFormat("dd.MM.yyyy").format( exam.getExamDate() ) + ")", exam));
-        }
+        List<OptionModel> options = exams.stream().map( es -> {
+            String name = es.getName() +
+                    " (" +
+                    new SimpleDateFormat( "dd.MM.yyyy" ).format( es.getExamDate() ) +
+                    ") " +
+                    es.getTestingPlan().getSubject().getTitle() +
+                    " - " +
+                    es.getTestingPlan().getName();
+            return new OptionModelImpl( name, es );
+        } ).collect( Collectors.toList());
         return options;
     }
 }

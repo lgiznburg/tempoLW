@@ -1,0 +1,45 @@
+<html t:type="layout" t:pageTitle="${message:exams-pagetitle}"
+      xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
+      xmlns:p="tapestry:parameter"><!-- Администрирование:Список предметов -->
+<body>
+
+<div class="row">
+
+    <div class="col-sm-11 offset-1">
+        <t:grid source="examResultsDataSource" t:id="resultsList" row="examResult"
+                exclude="id,startTime,endTime,markTotal,title,currentQuestionNumber,finished,examMode,resultAvailableImmediately"
+                add="caseNumber,fullName,testResult,printStatement"
+                class="table table-bordered table-hover"
+                rowsPerPage="50" pagerPosition="both"
+                empty="block:emptyTestees">
+            <p:caseNumberCell>${examResult.testee.caseNumber}</p:caseNumberCell>
+            <p:fullNameCell>****</p:fullNameCell>
+            <p:testResultCell>
+                <t:if test="examResult.finished">
+                    <p class="text-center">
+                        <strong>${examResult.markTotal}</strong><!-- col-xs-5 text-right -->
+<!--                        <t:if test="proctoringExist"><t:delegate to="block:proctoringBlock"/></t:if>-->
+                    </p>
+                    <p:else><span style="color: darkblue;">${message:exam-not-finished}</span></p:else>
+                </t:if>
+            </p:testResultCell>
+            <p:printStatementCell>
+                <t:if test="examResult.finished">
+                    <p style="margin-left: 0px"> <!-- text-center -->
+                        <span title="${message:appeal-statement}"><!-- col-xs-7 -->
+                            <t:pagelink page="admin/appeal" context="[examResult.exam,examResult.testee]" class="btn btn-danger btn-sm" aria-label="Print">
+                                    <span class="glyphicon glyphicon-font" aria-hidden="true"></span>
+                                </t:pagelink>
+                            </span>
+                        <t:eventlink event="checkingFinished" context="examResult" class="btn btn-default">${message:checking-finished}</t:eventlink>
+                    </p>
+                </t:if>
+            </p:printStatementCell>
+        </t:grid>
+    </div>
+
+    <t:block t:id="emptyTestees">Работ на проверку не найдено</t:block>
+</div>
+
+</body>
+</html>

@@ -1,6 +1,7 @@
 package ru.rsmu.tempoLW.utils;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -23,13 +24,12 @@ public class TesteeLoader extends ExcelReader {
 
     private static final short CASE_NUMBER_CELL = 0;
     private static final short FULL_NAME_CELL = 1;
-    private static final short EXAM_DATE_CELL = 4;
     private static final short FIRST_NAME_CELL = 2;
     private static final short MIDDLE_NAME_CELL = 3;
     private static final short EMAIL_CELL = 4;
 
 
-    private TesteeDao testeeDao;
+    private final TesteeDao testeeDao;
 
     //private List<String> warning;
 
@@ -72,14 +72,26 @@ public class TesteeLoader extends ExcelReader {
 
             Testee testee = testeeDao.findByCaseNumber( caseNumber );
 
+            String email = getCellValue( row, EMAIL_CELL );
             if ( testee == null ) {
                 testee = new Testee();
                 testee.setCaseNumber( caseNumber );
                 testee.setLastName( getCellValue( row, FULL_NAME_CELL ) );
+                testee.setFirstName( getCellValue( row, FIRST_NAME_CELL ) );
+                testee.setMiddleName( getCellValue( row, MIDDLE_NAME_CELL ) );
+                if ( StringUtils.isNoneBlank( email ) ) {
+                    testee.setEmail( email );
+                }
+
                 testee.setLogin( createLogin( caseNumber ) );
                 if ( createNewTestee ) {
                     testeeDao.save( testee );
                 }
+            }
+            else if ( StringUtils.isBlank( testee.getEmail()) &&
+                    StringUtils.isNoneBlank( email ) ) {
+                testee.setEmail( email );   // update email address
+                testeeDao.save( testee );
             }
 
             testees.add( testee );

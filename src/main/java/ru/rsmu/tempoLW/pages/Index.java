@@ -103,7 +103,7 @@ public class Index {
             }
         } );
 
-        List<ExamSchedule> todayExams = examDao.findAllExamsToday();
+        List<ExamSchedule> todayExams = examDao.findRunningExams();
         examDay = todayExams != null && todayExams.size() > 0 ;
         if ( examDay ) {
             testee = securityUserHelper.getCurrentTestee();
