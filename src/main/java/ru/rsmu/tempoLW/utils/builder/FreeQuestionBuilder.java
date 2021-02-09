@@ -4,9 +4,6 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import ru.rsmu.tempoLW.entities.Question;
 import ru.rsmu.tempoLW.entities.QuestionFree;
-import ru.rsmu.tempoLW.entities.UploadedImage;
-
-import java.util.LinkedList;
 
 /**
  * @author leonid.
@@ -15,18 +12,20 @@ public class FreeQuestionBuilder extends QuestionBuilder {
     protected FreeQuestionBuilder() {}
 
     @Override
-    public int parse( Sheet sheet, int rowN ) {
-        QuestionFree question = new QuestionFree();
+    public int parse( Row row ) {
 
-        Row row = sheet.getRow( rowN );
-        question.setText( getCellValue( row, COLUMN_TEXT ) );
+        String type = getCellValue( row, COLUMN_QUESTION_TYPE );
 
-        UploadedImage uploadedImage = checkUploadedImage( row );
-        if ( uploadedImage != null ) {
-            question.setImage( uploadedImage );
+        if ( type != null ) {
+            // this is question row. should we check question type again?
+            try {
+                QuestionFree question = loadQuestion( row, QuestionFree.class );
+            } catch (IllegalAccessException | InstantiationException e) {
+                // constructor did not work. log it
+            }
         }
-        this.result = question;
-        return ++rowN;
+
+        return 0;
     }
 
     @Override

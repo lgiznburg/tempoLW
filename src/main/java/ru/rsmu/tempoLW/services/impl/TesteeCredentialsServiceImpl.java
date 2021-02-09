@@ -67,7 +67,7 @@ public class TesteeCredentialsServiceImpl implements TesteeCredentialsService {
             //"Номер дела", "ФИО", "ФИО", "Логин", "Пароль"
             List<String> row = new ArrayList<>();
             row.add( examToTestee.getTestee().getCaseNumber() );
-            row.add( examToTestee.getTestee().getEmail() );       // use email
+            row.add( StringUtils.isNotEmpty( examToTestee.getTestee().getEmail() ) ? examToTestee.getTestee().getEmail() : "" );       // use email
             row.add( examToTestee.getTestee().getFullName() );
             row.add( examToTestee.getTestee().getLogin() );
             row.add( password );

@@ -27,7 +27,8 @@ public class QuestionPreview {
     private LinkSource linkSource;
 
     @Inject
-    private Block questionSimple, questionSimpleOrder, questionOpen, questionCorrespondence, questionTree;
+    private Block questionSimple, questionSimpleOrder, questionOpen,
+            questionCorrespondence, questionTree, questionTreeOpen;
 
     public Question getQuestion() {
         return question;
@@ -83,6 +84,9 @@ public class QuestionPreview {
         if ( question instanceof QuestionTree ) {
             return ((QuestionTree)question).getCorrespondenceVariants();
         }
+        if ( question instanceof QuestionTreeOpen ) {
+            return ((QuestionTreeOpen)question).getCorrespondenceVariants();
+        }
         return Collections.emptyList();
     }
 
@@ -106,6 +110,14 @@ public class QuestionPreview {
         return question instanceof QuestionTree;
     }
 
+    public boolean isQuestionFree() {
+        return question instanceof QuestionFree;
+    }
+
+    public boolean isQuestionTreeOpen() {
+        return question instanceof QuestionTreeOpen;
+    }
+
     /**
      * Switch block according to question type
      * @return Block to preview question of its type
@@ -125,6 +137,12 @@ public class QuestionPreview {
         }
         else if ( question instanceof QuestionTree) {
             return questionTree;
+        }
+        /*else if ( question instanceof QuestionFree) {
+            return questionFree;
+        }*/
+        else if ( question instanceof QuestionTreeOpen) {
+            return questionTreeOpen;
         }
         return null;
     }

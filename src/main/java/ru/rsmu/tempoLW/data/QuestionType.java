@@ -13,5 +13,6 @@ public enum QuestionType {
     TREE,
     //PAZL,
     //MAP
-    FREE            // olympiad, result should be entered in form of scanned document
+    FREE,            // olympiad, result should be entered in form of scanned document
+    TREE_OPEN
 }

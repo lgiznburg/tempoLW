@@ -1,7 +1,6 @@
 package ru.rsmu.tempoLW.utils.builder;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import ru.rsmu.tempoLW.entities.*;
@@ -12,11 +11,10 @@ import java.util.List;
 /**
  * @author leonid.
  */
-public class TreeQuestionBuilder extends QuestionBuilder {
-
+public class TreeOpenQuestionBuilder extends QuestionBuilder {
     private CorrespondenceVariant currentVariant = null;
 
-    protected TreeQuestionBuilder() {
+    protected TreeOpenQuestionBuilder() {
     }
 
     @Override
@@ -25,7 +23,7 @@ public class TreeQuestionBuilder extends QuestionBuilder {
         if ( type != null ) {
             // this is question row. should we check question type again?
             try {
-                QuestionTree question = loadQuestion( row, QuestionTree.class );
+                QuestionTreeOpen question = loadQuestion( row, QuestionTreeOpen.class );
                 if ( question != null && question.getCorrespondenceVariants() == null ) {
                     question.setCorrespondenceVariants( new LinkedList<>() );
                 }
@@ -63,32 +61,6 @@ public class TreeQuestionBuilder extends QuestionBuilder {
 
     @Override
     public int write( Sheet sheet, int rowN, Question question ) {
-        Row row = sheet.createRow( rowN++ );
-        writeQuestionInfo( row, question, TREE_TYPE );
-
-        Cell cell;
-        char code = 'A';
-        for ( CorrespondenceVariant variant : ((QuestionTree)question).getCorrespondenceVariants() ) {
-            row = sheet.createRow( rowN++ );
-
-            cell = row.createCell( COLUMN_CODE );
-            cell.setCellValue( String.valueOf( code ) );
-
-            cell = row.createCell( COLUMN_TEXT );
-            cell.setCellValue( variant.getText() );
-
-            if ( variant.getImage() != null ) {
-                cell = row.createCell( COLUMN_IMAGE );
-                cell.setCellValue( variant.getImage().getSourceName() );
-            }
-
-            cell = row.createCell( COLUMN_ID );
-            cell.setCellValue( variant.getId() );
-
-            rowN = writeAnswers( sheet, rowN, variant.getCorrectAnswers() );
-            code++;
-        }
-
-        return rowN;
+        return 0;
     }
 }

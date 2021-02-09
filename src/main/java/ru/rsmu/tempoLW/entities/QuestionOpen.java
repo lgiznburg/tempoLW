@@ -2,11 +2,10 @@ package ru.rsmu.tempoLW.entities;
 
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
+import ru.rsmu.tempoLW.utils.CorrectnessUtils;
 
 import javax.persistence.*;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * @author leonid.
@@ -34,32 +33,6 @@ public class QuestionOpen extends Question {
         if ( resultOpen == null || resultOpen.getValue() == null ) {
             return answerVariants.size();
         }
-        String result = resultOpen.getValue().toLowerCase();
-        result = result.replaceAll( "(\\d)[.](\\d)", "$1,$2" );
-        int correctCount = 0;
-        for ( AnswerVariant variant : answerVariants ) {
-            String pattern = variant.getRegex();
-            if ( pattern != null ) {
-                // use variant text as REGEX pattern
-                Pattern p = Pattern.compile( pattern );
-                Matcher m = p.matcher( result );
-                if ( m.find() ) {
-                    correctCount++;
-                }
-            }
-            else {
-                // do simple comparison
-                String[] parts = variant.getText().split( "\\|" );
-                for ( String part : parts ) {
-                    String match = part.trim().toLowerCase().replaceAll( "(\\d)[.](\\d)", "$1,$2" );
-                    if ( match.length() > 0 && result.contains( match ) ) {
-                        correctCount++;
-                        break;
-                    }
-                }
-            }
-
-        }
-        return Math.abs( correctCount - answerVariants.size() ) ;
+        return CorrectnessUtils.countErrors( resultOpen.getValue(), answerVariants );
     }
 }

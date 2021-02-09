@@ -18,6 +18,7 @@
 <t:block t:id="questionCorrespondence"><t:admin.question.questioncorrespondenceedit question="question"/></t:block>
 <t:block t:id="questionTree"><t:admin.question.questiontreeedit question="question"/></t:block>
 <t:block t:id="questionFree"><t:admin.question.questionfreeedit question="question"/></t:block>
+<t:block t:id="questionTreeOpen"><t:admin.question.questiontreeopenedit question="question"/></t:block>
 
 
 </html>
