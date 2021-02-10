@@ -13,7 +13,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <logging.version>1.6.1</logging.version>
-        <tapestry-release-version>5.4.3</tapestry-release-version>
+        <tapestry-release-version>5.6.1</tapestry-release-version>
         <servlet-api-release-version>2.5</servlet-api-release-version>
         <testng-release-version>6.8.21</testng-release-version>
         <slf4j-release-version>1.7.19</slf4j-release-version>
