@@ -25,10 +25,7 @@ public class TreeQuestionBuilder extends QuestionBuilder {
         if ( type != null ) {
             // this is question row. should we check question type again?
             try {
-                QuestionCorrespondence question = loadQuestion( row, QuestionCorrespondence.class );
-                if ( question != null && question.getAnswerVariants() == null ) {
-                    question.setAnswerVariants( new LinkedList<>() );
-                }
+                QuestionTree question = loadQuestion( row, QuestionTree.class );
                 if ( question != null && question.getCorrespondenceVariants() == null ) {
                     question.setCorrespondenceVariants( new LinkedList<>() );
                 }

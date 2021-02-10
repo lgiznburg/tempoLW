@@ -126,4 +126,8 @@ public class CommonQuestionEdit {
         }
         return "";
     }
+
+    public boolean getImagePresent() {
+        return question.getImage() != null;
+    }
 }

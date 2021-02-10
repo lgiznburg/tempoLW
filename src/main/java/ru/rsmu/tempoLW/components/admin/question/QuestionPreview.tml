@@ -93,5 +93,23 @@
             </t:loop>
         </dl>
     </t:block>
+    <t:block t:id="questionTreeOpen" id="questionTreeOpen">
+        <dl>
+            <t:loop source="correspondenceVariants" value="correspondence">
+                <dt>${correspondence.text}
+                    <t:if test="correspondence.image">
+                        <img class="question-image" src="${correspondenceImageLink}"/>
+                    </t:if>
+                </dt>
+                <dd>
+                    <ul>
+                        <t:loop source="correspondence.correctAnswers" value="answer">
+                            <li><span class="alert-success">${answer.readableText}</span></li>
+                        </t:loop>
+                    </ul>
+                </dd>
+            </t:loop>
+        </dl>
+    </t:block>
 </t:content>
 </html>

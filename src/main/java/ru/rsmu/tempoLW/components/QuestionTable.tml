@@ -17,9 +17,21 @@
             <t:loop source="examResult.questionResults" value="questionResult">
                 <tr>
                     <t:if test="examResult.finished" >
-                        <td>${message:question-num} ${questionResult.viewNumber}. ${questionResult.question.questionInfo.name}</td>
-                        <td>${questionResult.score} (${questionResult.question.questionInfo.maxScore})</td>
-                        <td>${questionResult.mark}</td>
+                        <t:if test="examResult.resultAvailableImmediately">
+                            <td>${message:question-num} ${questionResult.viewNumber}
+                                . ${questionResult.question.questionInfo.name}</td>
+                            <td>${questionResult.score} (${questionResult.question.questionInfo.maxScore})</td>
+                            <td>${questionResult.mark}</td>
+
+                            <p:else> <!-- There is no result yet -->
+                                <td>${message:question-num} ${questionResult.viewNumber}
+                                    . ${questionResult.question.questionInfo.name}</td>
+                                <td>&nbsp;</td>
+                                <td>
+                                    <t:if test="questionResult.answered"><span class="glyphicon glyphicon-ok"/></t:if>
+                                </td>
+                            </p:else>
+                        </t:if>
 
                         <p:else>
                             <td>
@@ -27,10 +39,7 @@
                             </td>
                             <td>
                                 <t:if test="questionResult.answered">
-                                    <span class="glyphicon glyphicon-ok"> </span>
-                                    <!--<p:else>
-                                        <span class="glyphicon glyphicon-minus"></span>
-                                    </p:else>-->
+                                    <span class="glyphicon glyphicon-ok"/>
                                 </t:if>
                             </td>
                         </p:else>
@@ -38,11 +47,21 @@
                 </tr>
             </t:loop>
             <t:if test="examResult.finished">
-                <tr class="info">
-                    <td>${message:final-mark}</td>
-                    <td>&nbsp;</td>
-                    <td>${examResult.markTotal}</td>
-                </tr>
+                <t:if test="examResult.resultAvailableImmediately">
+                    <tr class="info">
+                        <td>${message:final-mark}</td>
+                        <td>&nbsp;</td>
+                        <td>${examResult.markTotal}</td>
+                    </tr>
+
+                    <p:else>
+                        <tr class="info">
+                            <td>${message:no-result-yet}</td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                        </tr>
+                    </p:else>
+                </t:if>
             </t:if>
         </table>
     </div>

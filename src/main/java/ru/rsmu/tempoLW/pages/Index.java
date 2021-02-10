@@ -1,5 +1,6 @@
 package ru.rsmu.tempoLW.pages;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.annotations.SessionState;
 import org.apache.tapestry5.ioc.Messages;
@@ -11,6 +12,7 @@ import ru.rsmu.tempoLW.entities.*;
 import ru.rsmu.tempoLW.services.SecurityUserHelper;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author leonid.
@@ -48,6 +50,9 @@ public class Index {
     @Property
     private String currentLevel;
 
+    @Property
+    private String eventGreeting = "";
+
     @Inject
     private QuestionDao questionDao;
 
@@ -75,24 +80,21 @@ public class Index {
         testsLevels = new ArrayList<>();
 
         if ( testingPlans != null && testingPlans.size() > 0 ) {
-            if (hiddenPlans == null) {
-                hiddenPlans = new ArrayList<>();
-            }
-            for (int i = 0; i < testingPlans.size(); i++) {
-                TestingPlan plan = testingPlans.get( i );
-                if (!plan.isDisplayed()) {  // hide some plans
-                    hiddenPlans.add(plan);
-                    testingPlans.remove( plan );
-                    i--;
-                }
-                else {
-                    if ( !testsLevels.contains( plan.getSubject().getType().name() ) ) {
-                        testsLevels.add( plan.getSubject().getType().name() );
-                    }
-                }
-            }
+            // select plans which should not be displayed
+            hiddenPlans = testingPlans.stream()
+                    .filter( pl -> !pl.isDisplayed() )
+                    .collect( Collectors.toList());
+            // select plans to display
+            testingPlans = testingPlans.stream()
+                    .filter( pl -> pl.isDisplayed() )
+                    .collect( Collectors.toList());
+            // collect unique names of plan type
+            testsLevels.addAll( testingPlans.stream()
+                    .map( pl -> pl.getSubject().getType().name() )
+                    .collect( Collectors.toSet() )
+            );
         }
-        Collections.sort( testsLevels, new Comparator<String>() {
+        testsLevels.sort( new Comparator<String>() {
             @Override
             public int compare( String o1, String o2 ) {
                 SubjectType one = SubjectType.valueOf( o1 );
@@ -101,7 +103,8 @@ public class Index {
             }
         } );
 
-        examDay = examDao.findExamToday() != null;
+        List<ExamSchedule> todayExams = examDao.findRunningExams();
+        examDay = todayExams != null && todayExams.size() > 0 ;
         if ( examDay ) {
             testee = securityUserHelper.getCurrentTestee();
             if ( testee != null ) {
@@ -114,6 +117,10 @@ public class Index {
                     }
                 }
             }
+
+            // create page greeting
+            Set<String> eventTypes = todayExams.stream().map( ex -> ex.getTestingPlan().getName() ).collect( Collectors.toSet());
+            eventGreeting = messages.format( "exam-day", StringUtils.join( eventTypes, ", " ) );
         }
     }
 
@@ -129,13 +136,9 @@ public class Index {
     }
 
     public List<TestingPlan> getCurrentLevelPlans() {
-        List<TestingPlan> plans = new ArrayList<>();
-        for ( TestingPlan plan : testingPlans ) {
-            if ( plan.getSubject().getType().name().equals( currentLevel ) ) {
-                plans.add( plan );
-            }
-        }
-        return plans;
+        return testingPlans.stream()
+                .filter( pl -> pl.getSubject().getType().name().equals( currentLevel ) )
+                .collect( Collectors.toList() );
     }
 
     public boolean getCurrentLevelHasTitle() {
@@ -146,4 +149,5 @@ public class Index {
         return messages.get( currentLevel.toLowerCase() + "-title" );
     }
 
+    public boolean getTestsPresent() { return testingPlans != null && testingPlans.size() > 0; }
 }

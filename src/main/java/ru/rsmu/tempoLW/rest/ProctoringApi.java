@@ -7,6 +7,7 @@ import ru.rsmu.tempoLW.entities.ExamSchedule;
 import ru.rsmu.tempoLW.entities.ProctoringReport;
 import ru.rsmu.tempoLW.entities.Testee;
 
+import javax.annotation.security.PermitAll;
 import javax.inject.Inject;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -17,6 +18,7 @@ import javax.ws.rs.core.Response;
  * @author leonid.
  */
 @Path( "/proctoring/result" )
+@PermitAll
 public class ProctoringApi {
 
     @Inject

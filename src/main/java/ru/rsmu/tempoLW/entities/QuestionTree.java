@@ -30,14 +30,12 @@ public class QuestionTree extends Question {
     public int countErrors( List<ResultElement> elements ) {
         int correctVariantsCount = 0;
         for ( CorrespondenceVariant correspondenceVariant : correspondenceVariants ) {
-            for ( AnswerVariant answerVariant : correspondenceVariant.getCorrectAnswers() ) {
-                correctVariantsCount += answerVariant.isCorrect() ? 1 : 0;
-            }
+            correctVariantsCount += (int) correspondenceVariant.getCorrectAnswers().stream()
+                    .filter( AnswerVariant::isCorrect ).count();
         }
-        int correctAnswersCount = 0;
-        for ( ResultElement element : elements ) {
-            correctAnswersCount += element.isCorrect() ? 1 : 0;
-        }
-        return Math.abs( correctVariantsCount - correctAnswersCount );
+        int correctAnswersCount = (int) elements.stream().filter( ResultElement::isCorrect ).count();
+        int errors = Math.abs( correctVariantsCount - correctAnswersCount );  // count missed correct answers
+        errors += elements.size() - correctAnswersCount; // count incorrect answers
+        return  errors;
     }
 }

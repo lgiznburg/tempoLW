@@ -121,6 +121,9 @@ public class QuestionCreate {
             case CORRESPONDENCE:
                 question = new QuestionCorrespondence();
                 break;
+            case TREE_OPEN:
+                question = new QuestionTreeOpen();
+                break;
         }
         question.setCreatedDate( new Date() );
         question.setQuestionInfo( questionInfo );

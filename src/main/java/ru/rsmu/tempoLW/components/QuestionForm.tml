@@ -32,5 +32,11 @@
     <t:block t:id="questionTree">
         <t:questiontreeform />
     </t:block>
+    <t:block t:id="questionFree">
+        <t:questionfreeform />
+    </t:block>
+    <t:block t:id="questionTreeOpen">
+        <t:questiontreeopenform />
+    </t:block>
 </t:content>
 </html>

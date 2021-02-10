@@ -29,14 +29,9 @@ public class QuestionSimpleOrder extends Question {
     @Override
     public int countErrors( List<ResultElement> elements ) {
         int errors = 0;
-        int correctCount = 0;
-        for ( AnswerVariant answerVariant : answerVariants ) {
-            correctCount += answerVariant.isCorrect() ? 1 : 0;
-        }
+        int correctCount = (int) answerVariants.stream().filter( AnswerVariant::isCorrect ).count();
         errors += Math.max( 0, correctCount - elements.size() ); // add errors only if there are less answers
-        for ( ResultElement result : elements ) {
-            errors += result.isCorrect() ? 0 : 1;
-        }
+        errors += elements.stream().filter( re -> !re.isCorrect() ).count();
         return errors;
     }
 }

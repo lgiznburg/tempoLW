@@ -1,11 +1,13 @@
 package ru.rsmu.tempoLW.dao.internal;
 
 import org.hibernate.Criteria;
-import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.Query;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import ru.rsmu.tempoLW.dao.ExamDao;
 import ru.rsmu.tempoLW.entities.*;
+import ru.rsmu.tempoLW.entities.auth.User;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -60,6 +62,14 @@ public class ExamDaoImpl extends BaseDaoImpl implements ExamDao {
     }
 
     @Override
+    public List<ExamSchedule> findUpcomingExams() {
+        Criteria criteria = session.createCriteria( ExamSchedule.class )
+                .add( Restrictions.ge( "examDate", new Date() ) )
+                .addOrder( Order.asc( "examDate" ) );
+        return criteria.list();
+    }
+
+    @Override
     public ExamSchedule findExamToday() {
         Criteria criteria = session.createCriteria( ExamSchedule.class )
                 .add( Restrictions.eq( "examDate", new Date() ) )
@@ -69,10 +79,12 @@ public class ExamDaoImpl extends BaseDaoImpl implements ExamDao {
 
     @Override
     public ExamToTestee findExamForTestee( Testee testee, String password ) {
+        Date current = new Date();
         Criteria criteria = session.createCriteria( ExamToTestee.class )
                 .createAlias( "exam", "exam" )
                 .createAlias( "testee", "testee" )
-                .add( Restrictions.eq( "exam.examDate", new Date() ) )
+                .add( Restrictions.lt( "exam.periodStartTime", current ) )
+                .add( Restrictions.ge( "exam.periodEndTime", current ) )
                 .add( Restrictions.eq( "testee.id", testee.getId() ) )
                 .add( Restrictions.eq( "password", password ) )
                 .setMaxResults( 1 );
@@ -128,8 +140,20 @@ public class ExamDaoImpl extends BaseDaoImpl implements ExamDao {
 
     @Override
     public List<ExamSchedule> findAllExamsToday() {
+        Calendar passingDay = Calendar.getInstance();
+        passingDay.add( Calendar.DAY_OF_YEAR, -1 );
         Criteria criteria = session.createCriteria( ExamSchedule.class )
-                .add( Restrictions.eq( "examDate", new Date() ) );
+                .add( Restrictions.lt( "periodStartTime", new Date() ) )
+                .add( Restrictions.ge( "periodEndTime", passingDay.getTime() ) );
+        return criteria.list();
+    }
+
+    @Override
+    public List<ExamSchedule> findRunningExams() {
+        Date current = new Date();
+        Criteria criteria = session.createCriteria( ExamSchedule.class )
+                .add( Restrictions.lt( "periodStartTime", current ) )
+                .add( Restrictions.ge( "periodEndTime", current ) );
         return criteria.list();
     }
 
@@ -142,5 +166,45 @@ public class ExamDaoImpl extends BaseDaoImpl implements ExamDao {
             criteria.add( Restrictions.lt( "startTime", time ) );
         }
         return (List<ExamResult>) criteria.list();
+    }
+
+    @Override
+    public List<ExamResult> findNotAssignedResults( List<ExamSchedule> exams ) {
+        Query query = session.createQuery(
+                "from ExamResult as er " +
+                        "where id not in (select ass.examResult.id from TeacherAssignment as ass) " +
+                        "and er.exam in :exams" )
+                .setParameterList( "exams", exams );
+
+        return query.list();
+    }
+
+    @Override
+    public int countAssignedResults( User teacher ) {
+        Criteria criteria = session.createCriteria( TeacherAssignment.class )
+                .add( Restrictions.eq( "teacher", teacher ) )
+                .add( Restrictions.eq( "finished", false ))
+                .setProjection( Projections.rowCount() );
+        Long count = (Long) criteria.uniqueResult();
+        return count.intValue();
+    }
+
+    @Override
+    public List<ExamResult> findAssignedResults( User teacher, int startIndex, int size ) {
+        Query query = session.createQuery( "select ta.examResult from TeacherAssignment ta " +
+                "where ta.teacher = :teacher and ta.finished = false" )
+                .setParameter( "teacher", teacher )
+                .setFirstResult( startIndex )
+                .setMaxResults( size );
+        return query.list();
+    }
+
+    @Override
+    public TeacherAssignment findMyAssignment( ExamResult examResult, User teacher ) {
+        Criteria criteria = session.createCriteria( TeacherAssignment.class )
+                .add( Restrictions.eq( "teacher", teacher ) )
+                .add( Restrictions.eq( "examResult", examResult ) )
+                .setMaxResults( 1 );
+        return (TeacherAssignment) criteria.uniqueResult();
     }
 }

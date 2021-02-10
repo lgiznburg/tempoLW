@@ -5,7 +5,6 @@ import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.internal.services.LinkSource;
 import org.apache.tapestry5.ioc.annotations.Inject;
-import org.hibernate.Hibernate;
 import ru.rsmu.tempoLW.dao.QuestionDao;
 import ru.rsmu.tempoLW.entities.*;
 import ru.rsmu.tempoLW.pages.QuestionImage;
@@ -26,7 +25,8 @@ public class QuestionForm {
     private LinkSource linkSource;
 
     @Inject
-    Block questionSimple, questionOpen, questionCorrespondence, questionSimpleOrder, questionTree;
+    Block questionSimple, questionOpen, questionCorrespondence,
+            questionSimpleOrder, questionTree, questionFree, questionTreeOpen;
 
     public Block getQuestionBlock() {
         Question question = current.getQuestion();
@@ -44,6 +44,12 @@ public class QuestionForm {
         }
         else if ( question instanceof QuestionTree ) {
             return questionTree;
+        }
+        else if ( question instanceof QuestionFree ) {
+            return questionFree;
+        }
+        else if ( question instanceof QuestionTreeOpen ) {
+            return questionTreeOpen;
         }
         return null;
     }

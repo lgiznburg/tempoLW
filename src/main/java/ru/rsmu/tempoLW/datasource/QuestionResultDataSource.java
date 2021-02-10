@@ -10,10 +10,10 @@ import java.util.List;
 /**
  * @author leonid.
  */
-public class ExamResultDataSource implements GridDataSource {
+public class QuestionResultDataSource implements GridDataSource {
     private List<QuestionResult> results;
 
-    public ExamResultDataSource( List<QuestionResult> results ) {
+    public QuestionResultDataSource( List<QuestionResult> results ) {
         this.results = results;
     }
 

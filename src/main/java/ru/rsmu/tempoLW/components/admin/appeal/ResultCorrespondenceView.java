@@ -21,6 +21,9 @@ public class ResultCorrespondenceView {
     private Map<CorrespondenceVariant,List<AnswerVariant>> chosenAnswersMap = new HashMap<>();
 
     public void setupRender() {
+        missedCorrectAnswersMap = new HashMap<>();
+
+        chosenAnswersMap = new HashMap<>();
         for ( CorrespondenceVariant variant : getQuestionList() ) {
             List<AnswerVariant> missedCorrectAnswers = missedCorrectAnswersMap.computeIfAbsent( variant, k -> new ArrayList<>() );
             List<AnswerVariant> chosenAnswers = chosenAnswersMap.computeIfAbsent( variant, k -> new ArrayList<>() );

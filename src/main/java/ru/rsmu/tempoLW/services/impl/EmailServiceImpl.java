@@ -96,18 +96,18 @@ public class EmailServiceImpl implements EmailService {
             htmlEmail.setFrom( systemPropertyDao.getProperty( StoredPropertyName.EMAIL_FROM_ADDRESS ),
                     systemPropertyDao.getProperty( StoredPropertyName.EMAIL_FROM_SIGNATURE ),
                     "UTF-8" );
-
-            try {
+            htmlEmail.setBounceAddress( systemPropertyDao.getProperty( StoredPropertyName.EMAIL_FROM_ADDRESS ) ); // todo add to system properties
+            /*try {
                 List<InternetAddress> replyToAddresses = new ArrayList<>();
                 replyToAddresses.add( new InternetAddress("noreply@rsmu.ru") );
                 htmlEmail.setReplyTo( replyToAddresses );
             } catch (AddressException e) {
                 // what?
-            }
+            }*/
 
             model.put( "replyEmail", systemPropertyDao.getProperty( StoredPropertyName.EMAIL_FROM_ADDRESS ) );
             model.put( "signature", systemPropertyDao.getProperty( StoredPropertyName.EMAIL_FROM_SIGNATURE ) );
-            htmlEmail.setSubject( emailType.getSubject() );
+            htmlEmail.setSubject( evaluateSubject( emailType.getSubject(), model ) );
             htmlEmail.setHtmlMsg( generateEmailMessage( emailType.getFileName(), model ) );
 
             return htmlEmail;
@@ -127,6 +127,22 @@ public class EmailServiceImpl implements EmailService {
             } catch (Exception e) {
                 throw new EmailException("Can't create email body", e);
             }
+        }
+
+        private String evaluateSubject( final String subjectTemplate, final Map<String,Object> model) throws EmailException {
+            try {
+                final StringWriter subject = new StringWriter();
+                final ToolManager toolManager = new ToolManager();
+                final ToolContext toolContext = toolManager.createContext();
+                final VelocityContext context = new VelocityContext(model, toolContext);
+
+                velocityEngine.evaluate( context, subject, "", subjectTemplate );
+                return subject.getBuffer().toString();
+
+            } catch (Exception e) {
+                throw new EmailException("Can't create email subject", e);
+            }
+
         }
 
 }

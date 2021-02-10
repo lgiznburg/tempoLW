@@ -15,6 +15,7 @@ import org.apache.tapestry5.ioc.annotations.InjectService;
 import org.apache.tapestry5.ioc.annotations.Startup;
 import org.apache.tapestry5.ioc.services.ApplicationDefaults;
 import org.apache.tapestry5.ioc.services.SymbolProvider;
+import org.apache.tapestry5.upload.services.UploadSymbols;
 import org.tynamo.security.SecuritySymbols;
 import org.tynamo.security.services.SecurityFilterChainFactory;
 import org.tynamo.security.services.impl.SecurityFilterChain;
@@ -22,6 +23,7 @@ import ru.rsmu.tempoLW.dao.HibernateModule;
 import ru.rsmu.tempoLW.services.impl.CorrectnessServiceImpl;
 import ru.rsmu.tempoLW.services.impl.EmailServiceImpl;
 import ru.rsmu.tempoLW.services.impl.RunJobsServiceImpl;
+import ru.rsmu.tempoLW.services.impl.TesteeCredentialsServiceImpl;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
@@ -69,6 +71,8 @@ public class AppModule {
         byte[] cipherKeySource = {10, 33, 28, 77, 48, 115, 3, 47, 109, 75, 55, 55, 68, 121, 19, 63};
         configuration.add( SecuritySymbols.REMEMBERME_CIPHERKERY, Base64.encodeToString( cipherKeySource ) );
 
+        configuration.add( UploadSymbols.FILESIZE_MAX, String.valueOf( 5242880 ) );
+
         // provide liquibase integration with master changelog file
         configuration.add( LiquibaseModule.LIQUIBASE_CHANGELOG, "db_migrations/change_log.xml");
     }
@@ -107,6 +111,7 @@ public class AppModule {
 
         binder.bind( EmailService.class, EmailServiceImpl.class );
         binder.bind( RunJobsService.class, RunJobsServiceImpl.class );
+        binder.bind( TesteeCredentialsService.class, TesteeCredentialsServiceImpl.class );
     }
 
     public static void contributeSecurityConfiguration(OrderedConfiguration<SecurityFilterChain> configuration,

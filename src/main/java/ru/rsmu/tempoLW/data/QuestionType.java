@@ -10,7 +10,9 @@ public enum QuestionType {
     SIMPLE_ORDER,
     //COMPLEX,
     //SEQUENCE,
-    TREE//,
+    TREE,
     //PAZL,
     //MAP
+    FREE,            // olympiad, result should be entered in form of scanned document
+    TREE_OPEN
 }

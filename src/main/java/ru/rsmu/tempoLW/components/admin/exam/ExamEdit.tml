@@ -24,7 +24,7 @@
             <div class="form-group">
                 <t:label for="examDate" class="col-sm-3"/>
                 <div class="col-sm-6">
-                    <t:datefield t:id="examDate" value="proxyDate" format="prop:correctDateFormat"/>
+                    <t:datefield t:id="examDate" value="proxyDate" format="dd/MM/yyyy"/>  <!--prop:correctDateFormat-->
                 </div>
             </div>
 
@@ -41,7 +41,7 @@
             <div class="form-group">
                 <t:label for="examDuration" class="col-sm-3"/>
                 <div class="col-sm-3">
-                    <t:select t:id="examDuration" value="exam.durationHours" model="literal:0,1,2,3,4,5" validate="required" title="${message:hours}"/>
+                    <t:select t:id="examDuration" value="exam.durationHours" model="literal:0,1,2,3,4,5,8,12,24" validate="required" title="${message:hours}"/>
                 </div>
                 <div class="col-sm-3">
                     <t:select value="exam.durationMinutes" model="literal:0,10,15,20,30,40,45" validate="required" title="${message:minutes}"/>
@@ -51,6 +51,12 @@
                 <t:label for="useProctoring" class="col-sm-3">${message:use-proctoring}</t:label>
                 <div class="col-sm-6">
                     <t:checkbox t:id="useProctoring" value="exam.useProctoring"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <t:label for="sendEmails" class="col-sm-3"/>
+                <div class="col-sm-6">
+                    <t:checkbox t:id="sendEmails" value="exam.sendEmails"/>
                 </div>
             </div>
 

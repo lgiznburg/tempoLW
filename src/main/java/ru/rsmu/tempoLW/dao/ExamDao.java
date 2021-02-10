@@ -1,6 +1,7 @@
 package ru.rsmu.tempoLW.dao;
 
 import ru.rsmu.tempoLW.entities.*;
+import ru.rsmu.tempoLW.entities.auth.User;
 
 import java.util.Date;
 import java.util.List;
@@ -12,8 +13,24 @@ public interface ExamDao extends BaseDao {
     List<ExamSchedule> findExamsOfSubjects( List<ExamSubject> subjects );
     List<ExamSchedule> findExamsOfSubjects( List<ExamSubject> subjects, Date date );
 
+    /**
+     * Find all exams
+     * @return All exams
+     */
     List<ExamSchedule> findExams();
+
+    /**
+     * Find exams starting from the year of the date
+     * @param date Date to define a year
+     * @return All exams of the year
+     */
     List<ExamSchedule> findExams( Date date );
+
+    /**
+     * Find all upcoming exams starting from current date
+     * @return All upcoming exams
+     */
+    List<ExamSchedule> findUpcomingExams();
 
     ExamSchedule findExamToday();
     ExamToTestee findExamForTestee( Testee testee, String password );
@@ -29,7 +46,20 @@ public interface ExamDao extends BaseDao {
 
     List<ProctoringReport> findProctoringForExam( ExamSchedule exam );
 
+    /**
+     * Find all exams for Cleanup. Exam has been already started and it's end time is no more than an hour ago
+     * @return All exams for cleanup.
+     */
     List<ExamSchedule> findAllExamsToday();
+    List<ExamSchedule> findRunningExams();
 
     List<ExamResult> findOldExamResults( ExamSchedule examSchedule, Date time );
+
+    List<ExamResult> findNotAssignedResults( List<ExamSchedule> exams );
+
+    int countAssignedResults( User teacher );
+
+    List<ExamResult> findAssignedResults( User teacher, int startIndex, int size );
+
+    TeacherAssignment findMyAssignment( ExamResult examResult, User teacher );
 }

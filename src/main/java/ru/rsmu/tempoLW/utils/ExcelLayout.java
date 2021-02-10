@@ -13,6 +13,8 @@ public interface ExcelLayout {
     String CORRESPONDENCE_TYPE = "Соот";
     String SIMPLE_ORDER_TYPE = "Посл";
     String TREE_TYPE = "Дер";
+    String FREE_TYPE = "Своб";
+    String TREE_OPEN_TYPE = "ДерОт";
 
     //short COLUMN_ROW_TYPE = 0;
     short COLUMN_QUESTION_TYPE = 0;

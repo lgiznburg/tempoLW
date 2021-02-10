@@ -28,6 +28,12 @@
     <t:block t:id="questionTree">
         <t:admin.appeal.resulttreeview current="current"/>
     </t:block>
+    <t:block t:id="questionFree">
+        <t:admin.appeal.resultfreeview current="current"/>
+    </t:block>
+    <t:block t:id="questionTreeOpen">
+        <t:admin.appeal.resulttreeopenview current="current"/>
+    </t:block>
 
 </t:content>
 </html>

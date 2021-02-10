@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
+             xmlns:p="tapestry:parameter" >
+<t:content>
+    <div>
+        <t:loop source="questionList" value="correspondenceVariant">
+            <div class="row">
+                <h4>${correspondenceVariant.text}</h4>
+                <div class="col-sm-10 col-lg-offset-2">
+                    <h5>${message:given-answer}</h5>
+                    <t:if test="answerIsCorrect()">
+                        <p class="bg-success">${currentAnswer}</p>
+
+                        <p:else>
+                            <p class="bg-danger">${currentAnswer}</p>
+                            <div>
+                                <h5>${message:correct-answer}</h5>
+                                <t:loop source="correspondenceVariant.correctAnswers" value="answerVariant">
+                                    ${answerVariant.readableText}<br/>
+                                </t:loop>
+                            </div>
+                        </p:else>
+                    </t:if>
+                </div>
+            </div>
+        </t:loop>
+    </div>
+</t:content>
+</html>

@@ -32,6 +32,7 @@ public class HibernateModule {
         binder.bind( ExamDao.class, ExamDaoImpl.class );
         binder.bind( RtfTemplateDao.class, RtfTemplateDaoImpl.class );
         binder.bind( SystemPropertyDao.class, SystemPropertyDaoImpl.class );
+        binder.bind( EmailDao.class, EmailDaoImpl.class );
 
         //seed entity - initial DB population
         binder.bind(SeedEntity.class, SeedEntityImpl.class);

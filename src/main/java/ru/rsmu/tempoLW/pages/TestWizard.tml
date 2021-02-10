@@ -16,12 +16,12 @@
         <t:zone t:id="examTimingZone">
             <t:if test="examResult.startTime">
                 <p class="text-lg">
-                    ${message:exam-start} : <strong><t:output format="literal:HH:mm" value="examResult.startTime"/></strong> -
+                    ${message:exam-start} : <strong><t:output format="literal:dd/MM HH:mm" value="examResult.startTime"/></strong> -
                     ${message:exam-end} :
                     <t:if test="examResult.finished">
-                        <strong><t:output format="literal:HH:mm" value="examResult.endTime"/></strong>
+                        <strong><t:output format="literal:dd/MM HH:mm" value="examResult.endTime"/></strong>
                         <p:else>
-                            <strong><t:output format="literal:HH:mm" value="estimatedEndTime"/></strong>
+                            <strong><t:output format="literal:dd/MM HH:mm" value="estimatedEndTime"/></strong>
                         </p:else>
                     </t:if>
                 </p>
@@ -38,6 +38,11 @@
 
 <t:block t:id="questionBlock">
     <t:questionform current="current"/>
+    <t:if test="uploadMessage">
+        <div class="row">
+            <div class="col-sm-6 offset-1"><span class="text-danger">${uploadMessage}</span></div>
+        </div>
+    </t:if>
     <div class="row subquestion-nav">
         <ul class="pager">
             <li class="previous">

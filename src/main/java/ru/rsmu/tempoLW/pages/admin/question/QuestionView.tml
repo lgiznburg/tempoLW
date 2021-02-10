@@ -10,12 +10,12 @@
                     <span class="glyphicon glyphicon-arrow-left" aria-hidden="true"/>
                 </t:eventlink>
         </div>
-        <t:security.hasAnyRoles roles="admin,subject_admin">
-            <div class="col-sm-4 text-center">
+        <div class="col-sm-4 text-center">
+            <t:security.hasAnyRoles roles="admin,subject_admin">
                 <t:pagelink page="admin/question/questionedit" context="question" class="btn btn-primary">${message:editQuestion}</t:pagelink>
-                <t:eventlink event="toQuestionList" class="btn btn-default">${message:cancel}</t:eventlink>
-            </div>
-        </t:security.hasAnyRoles>
+            </t:security.hasAnyRoles>
+            <t:eventlink event="toQuestionList" class="btn btn-default">${message:cancel}</t:eventlink>
+        </div>
         <div class="col-sm-4 text-right">
                 <t:eventlink event="nextQuestion" class="btn btn-default">
                     <span class="glyphicon glyphicon-arrow-right" aria-hidden="true"/>

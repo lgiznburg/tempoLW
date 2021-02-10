@@ -146,4 +146,9 @@ public class ExamResult implements Serializable {
     public QuestionResult getCurrentQuestion() {
         return questionResults.get( currentQuestionNumber );
     }
+
+    @Transient
+    public boolean isResultAvailableImmediately() {
+        return questionResults.stream().noneMatch( qr -> qr.getQuestion() instanceof QuestionFree );
+    }
 }
