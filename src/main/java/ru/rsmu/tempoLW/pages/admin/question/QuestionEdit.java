@@ -51,31 +51,41 @@ public class QuestionEdit {
 
     @Inject
     Block questionSimple, questionOpen, questionCorrespondence,
-            questionSimpleOrder, questionTree, questionFree, questionTreeOpen;
+            questionSimpleOrder, questionTree, questionFree, questionTreeOpen,
+            questionCrossword, questionBigOpen;
 
     public Block getQuestionBlock() {
-        if ( question instanceof QuestionSimple ) {
-            return questionSimple;
+        Block block = null;
+        switch ( question.getType() ) {
+            case OPEN:
+                block = questionOpen;
+                break;
+            case SIMPLE:
+                block = questionSimple;
+                break;
+            case SIMPLE_ORDER:
+                block = questionSimpleOrder;
+                break;
+            case CORRESPONDENCE:
+                block = questionCorrespondence;
+                break;
+            case TREE:
+                block = questionTree;
+                break;
+            case FREE:
+                block = questionFree;
+                break;
+            case TREE_OPEN:
+                block = questionTreeOpen;
+                break;
+            case CROSSWORD:
+                block = questionCrossword;
+                break;
+            case BIG_OPEN:
+                block = questionBigOpen;
+                break;
         }
-        else if ( question instanceof QuestionOpen ) {
-            return questionOpen;
-        }
-        else if ( question instanceof QuestionCorrespondence ) {
-            return questionCorrespondence;
-        }
-        else if ( question instanceof QuestionSimpleOrder ) {
-            return questionSimpleOrder;
-        }
-        else if ( question instanceof QuestionTree ) {
-            return questionTree;
-        }
-        else if ( question instanceof QuestionFree ) {
-            return questionFree;
-        }
-        else if ( question instanceof QuestionTreeOpen ) {
-            return questionTreeOpen;
-        }
-        return null;
+        return block;
     }
 
 

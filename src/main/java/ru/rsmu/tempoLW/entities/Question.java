@@ -1,6 +1,5 @@
 package ru.rsmu.tempoLW.entities;
 
-import org.apache.tapestry5.beaneditor.Validate;
 import org.hibernate.annotations.Type;
 import ru.rsmu.tempoLW.data.QuestionType;
 
@@ -103,6 +102,9 @@ public abstract class Question implements Serializable {
     }
 
     abstract public int countErrors( List<ResultElement> elements );
+
+    @Transient
+    public boolean isManualCheckingRequired() { return false; }
 
     @Override
     public boolean equals( Object o ) {

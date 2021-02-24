@@ -38,5 +38,12 @@
     <t:block t:id="questionTreeOpen">
         <t:questiontreeopenform />
     </t:block>
+    <t:block t:id="questionCrossword">
+        <t:questioncrosswordform />
+    </t:block>
+    <t:block t:id="questionBigOpen">
+        <t:questionbigopenform />
+    </t:block>
+
 </t:content>
 </html>

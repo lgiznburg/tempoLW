@@ -3,13 +3,14 @@ package ru.rsmu.tempoLW.utils.builder;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import ru.rsmu.tempoLW.entities.Question;
-import ru.rsmu.tempoLW.entities.QuestionFree;
+import ru.rsmu.tempoLW.entities.QuestionBigOpen;
 
 /**
  * @author leonid.
  */
-public class FreeQuestionBuilder extends QuestionBuilder {
-    protected FreeQuestionBuilder() {}
+public class BigOpenQuestionBuilder extends QuestionBuilder {
+    protected BigOpenQuestionBuilder() {
+    }
 
     @Override
     public int parse( Row row ) {
@@ -19,7 +20,7 @@ public class FreeQuestionBuilder extends QuestionBuilder {
         if ( type != null ) {
             // this is question row. should we check question type again?
             try {
-                QuestionFree question = loadQuestion( row, QuestionFree.class );
+                QuestionBigOpen question = loadQuestion( row, QuestionBigOpen.class );
             } catch (IllegalAccessException | InstantiationException e) {
                 // constructor did not work. log it
             }
@@ -35,4 +36,5 @@ public class FreeQuestionBuilder extends QuestionBuilder {
 
         return rowN;
     }
+
 }

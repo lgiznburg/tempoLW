@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd" xmlns:p="tapestry:parameter">
+<t:content>
+    <t:form t:id="questionOpenForm" validate="questionResult" class="form-horizontal" async="true">
+
+        <t:if test="examMode">
+            <div class="form-group">
+                <t:label for="openAnswer" class="col-sm-3"/>
+                <div class="col-sm-9">
+                    <t:textarea t:id="openAnswer" value="resultBigOpen.text.text" rows="15"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-4 col-sm-offset-4">
+                    <t:submit value="message:save" class="btn btn-primary" mixins="ClickOnce"/>
+                </div>
+            </div>
+            <p:else>
+                <div class="col-sm-6 col-sm-offset-2">
+                    ${message:noPredefinedAnswers}
+                </div>
+            </p:else>
+        </t:if>
+
+    </t:form>
+</t:content>
+</html>

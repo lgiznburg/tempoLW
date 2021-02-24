@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd" xmlns:p="tapestry:parameter" >
+<t:content>
+    <div id="crossword-question">
+        <div id="puzzle-wrapper" ><!-- crossword puzzle appended here -->
+<!--            <div class="table-responsive">-->
+                <table>
+                    <t:loop source="tableRows" value="currentRow">
+                        <tr>
+                            <t:loop source="currentRow" value="tableCell">
+                                <td class="${tableCell.cellClass}" data-coords="${tableCell.coords}">
+                                    <t:outputraw value="tableCell.input"/>
+                                    <t:outputraw value="tableCell.positionMarker"/>
+                                </td>
+                            </t:loop>
+                        </tr>
+                    </t:loop>
+                </table>
+<!--            </div>-->
+        </div>
+        <div id="puzzle-clues">
+            <h3>${message:across}</h3>
+            <ul id="across">
+                <t:loop source="crosswordElements" value="crosswordElement">
+                    <t:if test="getElementOrientation('across')">
+                        <li tabindex="1" data-position="${elementIndex}"><strong>${crosswordElement.position}</strong>
+                            . ${crosswordElement.clue}</li>
+                    </t:if>
+                </t:loop>
+            </ul>
+            <h3>${message:down}</h3>
+            <ul id="down">
+                <t:loop source="crosswordElements" value="crosswordElement">
+                    <t:if test="getElementOrientation('down')">
+                        <li tabindex="1" data-position="${elementIndex}"><strong>${crosswordElement.position}</strong>
+                            . ${crosswordElement.clue}</li>
+                    </t:if>
+                </t:loop>
+            </ul>
+        </div>
+    </div>
+
+    <t:form t:id="questionTreeForm" validate="questionResult" class="form-horizontal" async="true">
+        <t:loop source="resultTreeOpens" value="resultTreeOpen" formstate="ITERATION">
+            <t:hidden value="resultTreeOpen.value" class="input-element${elementIndexForVariant}"/>
+        </t:loop>
+        <div class="form-group">
+            <div class="col-sm-4 col-sm-offset-4">
+                <t:submit value="message:save" class="btn btn-primary" mixins="ClickOnce"/>
+            </div>
+        </div>
+
+    </t:form>
+
+</t:content>
+</html>

@@ -56,7 +56,7 @@ public class SimpleOrderQuestionBuilder extends QuestionBuilder{
     @Override
     public int write( Sheet sheet, int rowN, Question question ) {
         Row row = sheet.createRow( rowN++ );
-        writeQuestionInfo( row, question, SIMPLE_ORDER_TYPE );
+        writeQuestionInfo( row, question );
 
         ((QuestionSimpleOrder)question).getAnswerVariants().sort(
                 new Comparator<AnswerVariant>() {

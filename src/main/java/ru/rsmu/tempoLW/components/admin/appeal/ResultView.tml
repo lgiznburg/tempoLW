@@ -34,6 +34,12 @@
     <t:block t:id="questionTreeOpen">
         <t:admin.appeal.resulttreeopenview current="current"/>
     </t:block>
+    <t:block t:id="questionCrossword">
+        <t:admin.appeal.resultcrosswordview current="current"/>
+    </t:block>
+    <t:block t:id="questionBigOpen">
+        <t:admin.appeal.resultbigopenview current="current"/>
+    </t:block>
 
 </t:content>
 </html>

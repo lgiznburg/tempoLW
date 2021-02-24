@@ -8,10 +8,16 @@
 </div>
 
 <t:if test="examResult.finished">
-    <div class="row">
-        <div class="col-sm-8 col-sm-offset-2 text-lg">${message:exam-finished} <span class="text-info"><strong>${examResult.markTotal}</strong></span> </div>
-        <div class="col-sm-8 col-sm-offset-2 text-lg">${message:exam-finished-info}</div>
-    </div>
+        <div class="row">
+            <div class="col-sm-8 col-sm-offset-2 text-lg">
+                <t:if test="examResult.resultAvailableImmediately">
+                ${message:exam-finished}
+                <span class="text-info"><strong>${examResult.markTotal}</strong></span>
+                    <p:else>${message:no-result-yet}</p:else>
+                </t:if>
+            </div>
+            <div class="col-sm-8 col-sm-offset-2 text-lg">${message:exam-finished-info}</div>
+        </div>
     <p:else>
         <t:if test="exam.useProctoring">
             <t:delegate to="block:proctoringBlock"/>

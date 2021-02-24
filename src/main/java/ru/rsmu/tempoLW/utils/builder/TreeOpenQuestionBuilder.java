@@ -1,6 +1,7 @@
 package ru.rsmu.tempoLW.utils.builder;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import ru.rsmu.tempoLW.entities.*;
@@ -38,7 +39,7 @@ public class TreeOpenQuestionBuilder extends QuestionBuilder {
             if ( StringUtils.isNoneBlank( code, text ) ) {
                 // correspondence variant row
                 CorrespondenceVariant variant = loadCorrespondenceVariant( row );
-                List<CorrespondenceVariant> variants = ((QuestionCorrespondence)result).getCorrespondenceVariants();
+                List<CorrespondenceVariant> variants = ((QuestionTreeOpen)result).getCorrespondenceVariants();
                 if ( !variants.contains( variant ) ) {
                     variants.add( variant );
                 }
@@ -61,6 +62,32 @@ public class TreeOpenQuestionBuilder extends QuestionBuilder {
 
     @Override
     public int write( Sheet sheet, int rowN, Question question ) {
-        return 0;
+        Row row = sheet.createRow( rowN++ );
+        writeQuestionInfo( row, question );
+
+        Cell cell;
+        char code = 'A';
+        for ( CorrespondenceVariant variant : ((QuestionTreeOpen)question).getCorrespondenceVariants() ) {
+            row = sheet.createRow( rowN++ );
+
+            cell = row.createCell( COLUMN_CODE );
+            cell.setCellValue( String.valueOf( code ) );
+
+            cell = row.createCell( COLUMN_TEXT );
+            cell.setCellValue( variant.getText() );
+
+            if ( variant.getImage() != null ) {
+                cell = row.createCell( COLUMN_IMAGE );
+                cell.setCellValue( variant.getImage().getSourceName() );
+            }
+
+            cell = row.createCell( COLUMN_ID );
+            cell.setCellValue( variant.getId() );
+
+            rowN = writeAnswers( sheet, rowN, variant.getCorrectAnswers() );
+            code++;
+        }
+
+        return rowN;
     }
 }

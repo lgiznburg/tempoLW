@@ -124,15 +124,27 @@ public class QuestionCreate {
             case TREE_OPEN:
                 question = new QuestionTreeOpen();
                 break;
+            case CROSSWORD:
+                question = new QuestionCrossword();
+                break;
+            case BIG_OPEN:
+                question = new QuestionBigOpen();
+                break;
+            case FREE:
+                question = new QuestionFree();
+                break;
         }
-        question.setCreatedDate( new Date() );
-        question.setQuestionInfo( questionInfo );
-        question.setText( text );
+        if ( question != null ) {
+            question.setCreatedDate( new Date() );
+            question.setQuestionInfo( questionInfo );
+            question.setText( text );
 
-        questionDao.save( questionInfo );
-        questionDao.save( question );
+            questionDao.save( questionInfo );
+            questionDao.save( question );
 
-        return linkSource.createPageRenderLink( "admin/question/" + QuestionEdit.class.getSimpleName(), false, question );
+            return linkSource.createPageRenderLink( "admin/question/" + QuestionEdit.class.getSimpleName(), false, question );
+        }
+        return null;
     }
 
     public Map<String, Object> getSubjectParams() {

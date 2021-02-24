@@ -48,7 +48,7 @@ public class OpenQuestionBuilder extends QuestionBuilder {
     @Override
     public int write( Sheet sheet, int rowN, Question question ) {
         Row row = sheet.createRow( rowN++ );
-        writeQuestionInfo( row, question, OPEN_TYPE );
+        writeQuestionInfo( row, question );
 
         return writeAnswers( sheet, rowN, ((QuestionOpen)question).getAnswerVariants() );
     }

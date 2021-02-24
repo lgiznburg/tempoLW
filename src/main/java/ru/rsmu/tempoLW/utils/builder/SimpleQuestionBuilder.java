@@ -50,7 +50,7 @@ public class SimpleQuestionBuilder extends QuestionBuilder {
     @Override
     public int write( Sheet sheet, int rowN, Question question ) {
         Row row = sheet.createRow( rowN++ );
-        writeQuestionInfo( row, question, SIMPLE_TYPE );
+        writeQuestionInfo( row, question );
 
         return writeAnswers( sheet, rowN, ((QuestionSimple)question).getAnswerVariants() );
     }

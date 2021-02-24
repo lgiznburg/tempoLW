@@ -83,7 +83,7 @@ public class CorrespondenceQuestionBuilder extends QuestionBuilder {
     @Override
     public int write( Sheet sheet, int rowN, Question question ) {
         Row row = sheet.createRow( rowN++ );
-        writeQuestionInfo( row, question, CORRESPONDENCE_TYPE );
+        writeQuestionInfo( row, question );
 
         Cell cell;
         Map<Long, String> codes = new HashMap<>();

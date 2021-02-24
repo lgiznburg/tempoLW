@@ -79,7 +79,7 @@ public class QuestionExporter implements ExcelLayout {
         for ( Question question : questions ) {
             QuestionBuilder builder = builders.get( question.getClass() );
             if ( builder == null ) {
-                builder = QuestionBuilder.create( question );
+                builder = QuestionBuilder.create( question.getType() );
                 builders.put( question.getClass(), builder );
             }
             rowN = builder.write( sheet, rowN, question );

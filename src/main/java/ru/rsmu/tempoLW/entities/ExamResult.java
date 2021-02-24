@@ -149,6 +149,6 @@ public class ExamResult implements Serializable {
 
     @Transient
     public boolean isResultAvailableImmediately() {
-        return questionResults.stream().noneMatch( qr -> qr.getQuestion() instanceof QuestionFree );
+        return questionResults.stream().noneMatch( qr -> qr.getQuestion().isManualCheckingRequired() );
     }
 }

@@ -7,6 +7,7 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import ru.rsmu.tempoLW.dao.QuestionDao;
+import ru.rsmu.tempoLW.data.QuestionType;
 import ru.rsmu.tempoLW.entities.ExamSubject;
 import ru.rsmu.tempoLW.entities.Question;
 import ru.rsmu.tempoLW.entities.QuestionInfo;
@@ -65,7 +66,7 @@ public class QuestionsLoader extends ExcelReader implements ExcelLayout {
                 // parse question row. only question could have not empty question type info
                 QuestionInfo questionInfo = createQuestionInfo( row );
                 if ( questionInfo != null ) {
-                    builder = QuestionBuilder.create( questionType );
+                    builder = QuestionBuilder.create( QuestionType.findType( questionType ) );
                     builder.setImagesExtractor( imagesExtractor );
                     builder.setQuestionDao( questionDao );
                     builder.parse( row );

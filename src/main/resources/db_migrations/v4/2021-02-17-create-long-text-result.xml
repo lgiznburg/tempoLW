@@ -7,10 +7,14 @@
                    http://www.liquibase.org/xml/ns/dbchangelog
                    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
 
-    <include file="2020-10-08-create-free-question-tables.xml" relativeToChangelogFile="true"/>
-    <include file="2020-10-22-add-send-email-flag.xml" relativeToChangelogFile="true"/>
-    <include file="2020-11-21-add-assignment-and-email-queue.xml" relativeToChangelogFile="true"/>
-    <include file="2020-11-25-add-checking-finished.xml" relativeToChangelogFile="true"/>
-    <include file="2021-02-17-create-long-text-result.xml" relativeToChangelogFile="true"/>
+    <changeSet id="2021-02-17-add-checking-finished" author="leonid">
+        <createTable tableName="attached_text">
+            <column autoIncrement="true" name="id" type="${id.type}">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="result_element_id" type="${id.type}"/>
+            <column name="text" type="${text.type}"/>
+        </createTable>
+    </changeSet>
 
 </databaseChangeLog>

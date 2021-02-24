@@ -12,11 +12,10 @@ import java.util.List;
 /**
  * @author leonid.
  */
-public class TreeQuestionBuilder extends QuestionBuilder {
-
+public class CrosswordQuestionBuilder extends QuestionBuilder {
     private CorrespondenceVariant currentVariant = null;
 
-    protected TreeQuestionBuilder() {
+    protected CrosswordQuestionBuilder() {
     }
 
     @Override
@@ -25,7 +24,7 @@ public class TreeQuestionBuilder extends QuestionBuilder {
         if ( type != null ) {
             // this is question row. should we check question type again?
             try {
-                QuestionTree question = loadQuestion( row, QuestionTree.class );
+                QuestionCrossword question = loadQuestion( row, QuestionCrossword.class );
                 if ( question != null && question.getCorrespondenceVariants() == null ) {
                     question.setCorrespondenceVariants( new LinkedList<>() );
                 }
@@ -38,13 +37,16 @@ public class TreeQuestionBuilder extends QuestionBuilder {
             String text = getCellValue( row, COLUMN_TEXT );
 
             if ( StringUtils.isNoneBlank( code, text ) ) {
-                // correspondence variant row
-                CorrespondenceVariant variant = loadCorrespondenceVariant( row );
-                List<CorrespondenceVariant> variants = ((QuestionCorrespondence)result).getCorrespondenceVariants();
-                if ( !variants.contains( variant ) ) {
-                    variants.add( variant );
+                if ( code.matches( "[XxYy],\\(\\d+,\\d+\\)" )) {
+                    // correspondence variant row
+                    CorrespondenceVariant variant = loadCorrespondenceVariant( row );
+                    List<CorrespondenceVariant> variants = ((QuestionCrossword) result).getCorrespondenceVariants();
+                    if ( !variants.contains( variant ) ) {
+                        variants.add( variant );
+                    }
+                    currentVariant = variant;
+                    currentVariant.setText( text + "%%" + code );
                 }
-                currentVariant = variant;
             }
             else {
                 // answer row
@@ -67,15 +69,15 @@ public class TreeQuestionBuilder extends QuestionBuilder {
         writeQuestionInfo( row, question );
 
         Cell cell;
-        char code = 'A';
-        for ( CorrespondenceVariant variant : ((QuestionTree)question).getCorrespondenceVariants() ) {
+        for ( CorrespondenceVariant variant : ((QuestionCrossword)question).getCorrespondenceVariants() ) {
             row = sheet.createRow( rowN++ );
 
+            String[] textParts = variant.getText().split( "%%" );
             cell = row.createCell( COLUMN_CODE );
-            cell.setCellValue( String.valueOf( code ) );
+            cell.setCellValue( textParts[1] );
 
             cell = row.createCell( COLUMN_TEXT );
-            cell.setCellValue( variant.getText() );
+            cell.setCellValue( textParts[0] );
 
             if ( variant.getImage() != null ) {
                 cell = row.createCell( COLUMN_IMAGE );
@@ -86,7 +88,6 @@ public class TreeQuestionBuilder extends QuestionBuilder {
             cell.setCellValue( variant.getId() );
 
             rowN = writeAnswers( sheet, rowN, variant.getCorrectAnswers() );
-            code++;
         }
 
         return rowN;

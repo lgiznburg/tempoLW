@@ -5,6 +5,7 @@ import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import ru.rsmu.tempoLW.dao.QuestionDao;
+import ru.rsmu.tempoLW.data.QuestionType;
 import ru.rsmu.tempoLW.entities.*;
 import ru.rsmu.tempoLW.utils.ExcelLayout;
 import ru.rsmu.tempoLW.utils.ExcelReader;
@@ -26,54 +27,40 @@ public abstract class QuestionBuilder extends ExcelReader implements ExcelLayout
 
     protected QuestionDao questionDao;
 
-    public static QuestionBuilder create( String questionType ) throws IllegalArgumentException {
-        if ( questionType.equalsIgnoreCase( SIMPLE_TYPE ) ) {
-            return new SimpleQuestionBuilder();
+    public static QuestionBuilder create( QuestionType questionType ) throws IllegalArgumentException {
+        QuestionBuilder builder;
+        switch ( questionType ) {
+            case SIMPLE:
+                builder = new SimpleQuestionBuilder();
+                break;
+            case OPEN:
+                builder = new OpenQuestionBuilder();
+                break;
+            case CORRESPONDENCE:
+                builder = new CorrespondenceQuestionBuilder();
+                break;
+            case SIMPLE_ORDER:
+                builder = new SimpleOrderQuestionBuilder();
+                break;
+            case TREE:
+                builder = new TreeQuestionBuilder();
+                break;
+            case FREE:
+                builder = new FreeQuestionBuilder();
+                break;
+            case TREE_OPEN:
+                builder = new TreeOpenQuestionBuilder();
+                break;
+            case CROSSWORD:
+                builder = new CrosswordQuestionBuilder();
+                break;
+            case BIG_OPEN:
+                builder = new BigOpenQuestionBuilder();
+                break;
+            default:
+                throw new IllegalArgumentException( "Incorrect type of question" );
         }
-        else if ( questionType.equalsIgnoreCase( OPEN_TYPE )) {
-            return new OpenQuestionBuilder();
-        }
-        else if ( questionType.equalsIgnoreCase( CORRESPONDENCE_TYPE )) {
-            return  new CorrespondenceQuestionBuilder();
-        }
-        else if ( questionType.equalsIgnoreCase( SIMPLE_ORDER_TYPE )) {
-            return  new SimpleOrderQuestionBuilder();
-        }
-        else if ( questionType.equalsIgnoreCase( TREE_TYPE )) {
-            return  new TreeQuestionBuilder();
-        }
-        else if ( questionType.equalsIgnoreCase( FREE_TYPE ) ) {
-            return new FreeQuestionBuilder();
-        }
-        else if ( questionType.equalsIgnoreCase( TREE_OPEN_TYPE ) ) {
-            return new TreeOpenQuestionBuilder();
-        }
-        throw new IllegalArgumentException( "Incorrect type of question" );
-    }
-
-    public static QuestionBuilder create( Question question ) throws IllegalArgumentException {
-        if ( question instanceof QuestionSimple ) {
-            return new SimpleQuestionBuilder();
-        }
-        else if ( question instanceof QuestionOpen ) {
-            return new OpenQuestionBuilder();
-        }
-        else if ( question instanceof QuestionCorrespondence ) {
-            return  new CorrespondenceQuestionBuilder();
-        }
-        else if ( question instanceof QuestionSimpleOrder ) {
-            return  new SimpleOrderQuestionBuilder();
-        }
-        else if ( question instanceof QuestionTree ) {
-            return  new TreeQuestionBuilder();
-        }
-        else if ( question instanceof QuestionFree ) {
-            return new FreeQuestionBuilder();
-        }
-        else if ( question instanceof QuestionTreeOpen ) {
-            return new TreeOpenQuestionBuilder();
-        }
-        throw new IllegalArgumentException( "Incorrect type of question" );
+        return builder;
     }
 
     /**
@@ -129,11 +116,11 @@ public abstract class QuestionBuilder extends ExcelReader implements ExcelLayout
         return null;
     }
 
-    void writeQuestionInfo( Row row, Question question, String questionType ) {
+    void writeQuestionInfo( Row row, Question question ) {
         Cell cell;
 
         cell = row.createCell( COLUMN_QUESTION_TYPE );
-        cell.setCellValue( questionType );
+        cell.setCellValue( question.getType().getExportCode() );
 
         cell = row.createCell( COLUMN_TOPIC );
         cell.setCellValue( question.getQuestionInfo().getTopic().getTitle() );

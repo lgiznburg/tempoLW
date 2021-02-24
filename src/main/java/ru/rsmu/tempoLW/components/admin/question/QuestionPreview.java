@@ -4,6 +4,7 @@ import org.apache.tapestry5.Block;
 import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.internal.services.LinkSource;
 import org.apache.tapestry5.ioc.annotations.Inject;
+import ru.rsmu.tempoLW.data.QuestionType;
 import ru.rsmu.tempoLW.entities.*;
 import ru.rsmu.tempoLW.pages.QuestionImage;
 
@@ -87,6 +88,9 @@ public class QuestionPreview {
         if ( question instanceof QuestionTreeOpen ) {
             return ((QuestionTreeOpen)question).getCorrespondenceVariants();
         }
+        if ( question instanceof QuestionCrossword ) {
+            return ((QuestionCrossword)question).getCorrespondenceVariants();
+        }
         return Collections.emptyList();
     }
 
@@ -115,7 +119,7 @@ public class QuestionPreview {
     }
 
     public boolean isQuestionTreeOpen() {
-        return question instanceof QuestionTreeOpen;
+        return question.getType() == QuestionType.TREE_OPEN || question.getType() == QuestionType.CROSSWORD;
     }
 
     /**
@@ -123,28 +127,29 @@ public class QuestionPreview {
      * @return Block to preview question of its type
      */
     public Block getQuestionBlock() {
-        if ( question instanceof QuestionSimple ) {
-            return questionSimple;
+        Block block = null;
+        switch ( question.getType() ) {
+            case SIMPLE:
+                block = questionSimple;
+                break;
+            case TREE_OPEN:
+            case CROSSWORD:
+                block = questionTreeOpen;
+                break;
+            case TREE:
+                block = questionTree;
+                break;
+            case SIMPLE_ORDER:
+                block = questionSimpleOrder;
+                break;
+            case OPEN:
+                block = questionOpen;
+                break;
+            case CORRESPONDENCE:
+                block = questionCorrespondence;
+                break;
         }
-        else if ( question instanceof QuestionSimpleOrder) {
-            return questionSimpleOrder;
-        }
-        else if ( question instanceof QuestionOpen) {
-            return questionOpen;
-        }
-        else if ( question instanceof QuestionCorrespondence) {
-            return questionCorrespondence;
-        }
-        else if ( question instanceof QuestionTree) {
-            return questionTree;
-        }
-        /*else if ( question instanceof QuestionFree) {
-            return questionFree;
-        }*/
-        else if ( question instanceof QuestionTreeOpen) {
-            return questionTreeOpen;
-        }
-        return null;
+        return block;
     }
 
     public String getImageLink() {
