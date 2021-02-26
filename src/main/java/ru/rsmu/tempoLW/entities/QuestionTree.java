@@ -34,8 +34,6 @@ public class QuestionTree extends Question {
                     .filter( AnswerVariant::isCorrect ).count();
         }
         int correctAnswersCount = (int) elements.stream().filter( ResultElement::isCorrect ).count();
-        int errors = Math.abs( correctVariantsCount - correctAnswersCount );  // count missed correct answers
-        errors += elements.size() - correctAnswersCount; // count incorrect answers
-        return  errors;
+        return Math.abs( Math.max( correctVariantsCount, elements.size() ) - correctAnswersCount );
     }
 }
