@@ -438,9 +438,10 @@ public class TestWizard {
         List<String> tags = new ArrayList<>();
         tags.add( testee.getCaseNumber() );
         tags.addAll( Arrays.asList( testee.getLastName().split( " " ) ) );
+        String prefix = propertyService.getProperty( StoredPropertyName.PROCTORING_NAME_PREFIX );
         JWTCreator.Builder jwtBuilder = JWT.create()
                 .withExpiresAt( expiration.getTime() )
-                .withClaim( "username", testee.getCaseNumber() )
+                .withClaim( "username", prefix + testee.getCaseNumber() )
                 //.withClaim( "role", "student" )
                 .withClaim( "nickname", testee.getFullName() )
                 .withClaim( "id", sessionId )      // proctoring session

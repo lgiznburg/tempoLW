@@ -14,6 +14,7 @@ public enum StoredPropertyName {
 
     EMAIL_FROM_ADDRESS("Email","Обратный адрес для email", "prk@rsmu.ru", StoredPropertyType.STRING),
     EMAIL_FROM_SIGNATURE("Email","Название обратного адреса для email", "Приемная комиссия РНИМУ им.Пирогова", StoredPropertyType.STRING),
+    EMAIL_TEMPLATE("Email", "Код шаблона письма для рассылки паролей ( EXAM_PASSWORD_ или PROCTORING_CHECK_ )", "EXAM_PASSWORD_", StoredPropertyType.STRING),
 
     PROCTORING_JS_URL("Proctoring", "Адрес JS библиотеки прокторинга", "https://demo.proctoring.online/sdk/supervisor", StoredPropertyType.STRING),
     PROCTORING_SERVER_ADDRESS("Proctoring", "Адрес сервера прокторинга", "https://demo.proctoring.online", StoredPropertyType.STRING),
@@ -21,6 +22,7 @@ public enum StoredPropertyName {
     PROCTORING_API_KEY("Proctoring", "API ключ для передачи результатов", "secret", StoredPropertyType.STRING),
     PROCTORING_CALLBACK_ALLOWED("Proctoring","Разрешить передачу результатов сессии", "0", StoredPropertyType.INTEGER),
     PROCTORING_DEBUG_ENVIRONMENT("Proctoring","Режим тестирования (только для разработки)", "0", StoredPropertyType.INTEGER),
+    PROCTORING_NAME_PREFIX("Proctoring", "Уникальный префикс для ID участника", "", StoredPropertyType.STRING),
 
     VIEW_ONLY_THIS_YEAR_EXAM("Global", "Показывать экзамены только текущего года", "1", StoredPropertyType.INTEGER ),
     MY_OWN_URI("Global", "Адрес данного сервера", "https://tempolw.rsmu.ru", StoredPropertyType.STRING )
