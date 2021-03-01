@@ -1,8 +1,15 @@
 <html t:type="layout" t:pageTitle="${message:login-pagetitle}"
       xmlns:t="http://tapestry.apache.org/schema/tapestry_5_3.xsd"
       xmlns:p="tapestry:parameter"> <!-- Тестирование -->
+
+<div class="row" style="margin-top: 25px">
+    <div class="col-sm-12 text-center">
+        <h1 style="margin-bottom: 0 !important;">${message:authorization}</h1>
+        <h3 style="color: #4a4a4a"><t:outputraw value="${message:app-name}"/></h3>
+    </div>
+</div>
 <div class="row">
-    <div class="col-sm-6 col-sm-offset-3">
+    <div class="col-md-6 col-sm-12 col-md-offset-3">
         <!--<t:security.loginform />-->
         <t:localloginform includeRememberMe="true" />
     </div>
