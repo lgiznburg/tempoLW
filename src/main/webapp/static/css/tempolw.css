@@ -325,3 +325,13 @@ h1, h2, h3, h4 {
     background-color: transparent;
     padding: 1.5rem;
 }
+
+.login-text-right {
+    text-align: right;
+}
+
+@media ( max-width: 576px ) {
+    .login-text-right {
+        text-align: left !important;
+    }
+}

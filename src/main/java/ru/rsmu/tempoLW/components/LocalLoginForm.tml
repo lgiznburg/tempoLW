@@ -10,7 +10,7 @@
             </div>
             <div class="login-card-content">
                 <div class="row" style="margin-bottom: 15px">
-                    <div class="col-sm-3" style="text-align: right; margin-top: 5px">
+                    <div class="col-sm-3 login-text-right" style="margin-top: 5px">
                         <b>${message:login-label}</b>
                     </div>
                     <div class="col-sm-9">
@@ -18,7 +18,7 @@
                     </div>
                 </div>
                 <div class="row" style="margin-bottom: 15px">
-                    <div class="col-sm-3" style="text-align: right; margin-top: 5px">
+                    <div class="col-sm-3 login-text-right" style="margin-top: 5px">
                         <b>${message:password-label}</b>
                     </div>
                     <div class="col-sm-9">
