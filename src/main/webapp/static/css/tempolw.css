@@ -94,16 +94,16 @@ button.bg-dark:focus {
     color: #fff;
     /*background-color: #1D4C5D;*/
     /*border-color: #1D4C5D;*/
-    background-color: #00d1b2;
-    border-color: #00d1b2;
+    background-color: #008d8a;
+    border-color: #008d8a;
 }
 
 .btn-primary:hover {
     color: #fff;
     /*background-color: #00565e;*/
     /*border-color: #1D4C5D;*/
-    background-color: #00c4a7;
-    border-color: #00c4a7;
+    background-color: #089d9a;
+    border-color: #089d9a;
 }
 
 .btn {
