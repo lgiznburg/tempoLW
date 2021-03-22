@@ -5,12 +5,13 @@ package ru.rsmu.tempoLW.services;
  */
 public enum EmailType {
     EXAM_PASSWORD_RU("/emails/ExamPasswordRu.vm", "${eventType} в РНИМУ им.Н.И.Пирогова"),
-    EXAM_PASSWORD_EN("/emails/ExamPasswordEn.vm", "Pirogov's University ${eventType}");
+    EXAM_PASSWORD_EN("/emails/ExamPasswordEn.vm", "Pirogov's University ${eventType}"),
+    PROCTORING_CHECK_RU("/emails/ExamPreparationPasswordRu.vm", "${eventType} в РНИМУ им.Н.И.Пирогова");
 
     public static final String EXAM_PASSWORD_SHORT_NAME = "EXAM_PASSWORD_";
 
-    private String fileName;
-    private String subject;
+    private final String fileName;
+    private final String subject;
 
     EmailType( String fileName, String subject ) {
         this.fileName = fileName;

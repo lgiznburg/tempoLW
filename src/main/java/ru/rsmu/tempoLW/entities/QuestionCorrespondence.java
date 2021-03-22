@@ -1,6 +1,5 @@
 package ru.rsmu.tempoLW.entities;
 
-import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
@@ -43,27 +42,20 @@ public class QuestionCorrespondence extends Question {
 
     @Override
     public int countErrors( List<ResultElement> elements ) {
-        int errors = 0;
         Map<Long,Integer> counts = new HashMap<>();  // map of variant ID -> number of given answers
-        for ( ResultElement result : elements ) {
-            errors += result.isCorrect() ? 0:1;
-            Long id = ((ResultCorrespondence)result).getCorrespondenceVariant().getId();
-            if ( result.isCorrect() ) {
-                if ( counts.containsKey( id ) ) {
-                    counts.put( id, counts.get( id ) + 1 );
-                }
-                else {
-                    counts.put( id, 1 );
-                }
-            }
-        }
+        //1. Count correct answers
+        int correctCount = (int) elements.stream().filter( ResultElement::isCorrect ).count();
+        //2. all other answers are incorrect^ count errors
+        int errors = elements.size() - correctCount;
 
+        //3. add "missing" answers, if there is less answers for each variant than it should be
         for ( CorrespondenceVariant correspondenceVariant : correspondenceVariants ) {
-            Integer size = counts.get( correspondenceVariant.getId() );
-            if ( size == null ) size = 0;
+            int givenAnswersCount = (int) elements.stream()
+                    .filter( re -> ((ResultCorrespondence)re).getCorrespondenceVariant().getId() == correspondenceVariant.getId() )
+                    .count();
 
             // add errors only if there are less answers
-            errors += Math.max( 0, correspondenceVariant.getCorrectAnswers().size() - size );
+            errors += Math.max( 0, correspondenceVariant.getCorrectAnswers().size() - givenAnswersCount );
         }
         return errors;
     }

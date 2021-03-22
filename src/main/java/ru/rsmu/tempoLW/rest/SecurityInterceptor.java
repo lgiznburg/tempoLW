@@ -67,10 +67,12 @@ public class SecurityInterceptor implements ContainerRequestFilter
 
         Method method = pmContext.getResourceMethod().getMethod();
         //Access allowed for all
-        if( ! method.isAnnotationPresent(PermitAll.class))
+        if( ! method.isAnnotationPresent(PermitAll.class)
+                && ! method.getDeclaringClass().isAnnotationPresent( PermitAll.class ))
         {
             //Access denied for all
-            if(method.isAnnotationPresent(DenyAll.class))
+            if(method.isAnnotationPresent(DenyAll.class)
+                    || method.getDeclaringClass().isAnnotationPresent( DenyAll.class ))
             {
                 context.abortWith(ACCESS_FORBIDDEN);
                 return;

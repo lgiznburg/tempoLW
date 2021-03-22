@@ -30,7 +30,7 @@ public class ResultTreeOpenView {
         ResultTreeOpen currentResult = (ResultTreeOpen)current.getElements().stream().filter( e ->
                 ((ResultTreeOpen)e).getCorrespondenceVariant().getId() == correspondenceVariant.getId() )
                 .findFirst().orElse( null );
-        return currentResult != null ? currentResult.getValue() : "";
+        return (currentResult != null && currentResult.getValue() != null) ? currentResult.getValue() : "";
     }
 
     /**

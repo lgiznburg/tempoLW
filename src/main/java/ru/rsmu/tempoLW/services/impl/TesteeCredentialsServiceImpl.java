@@ -46,7 +46,8 @@ public class TesteeCredentialsServiceImpl implements TesteeCredentialsService {
         String examDate = new SimpleDateFormat( "dd MMMM yyyy", Locale.forLanguageTag( exam.getTestingPlan().getSubject().getLocale() ) )
                 .format( exam.getExamDate() );
         String examDuration = formatDuration( exam );
-        EmailType emailType = EmailType.findForLocale( EmailType.EXAM_PASSWORD_SHORT_NAME, exam.getTestingPlan().getSubject().getLocale() );
+        String emailTemplate = systemPropertyDao.getProperty( StoredPropertyName.EMAIL_TEMPLATE );
+        EmailType emailType = EmailType.findForLocale( emailTemplate, exam.getTestingPlan().getSubject().getLocale() );
 
         List<List<String>> table = new ArrayList<>();
         exam.getExamToTestees().sort( new Comparator<ExamToTestee>() {

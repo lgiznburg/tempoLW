@@ -61,10 +61,10 @@ public class CorrespondenceQuestionBuilder extends QuestionBuilder {
                     }
 
                     String correct = getCellValue( row, COLUMN_RIGHTNESS );
-                    if ( correct != null && !correct.isEmpty() ) {
+                    if ( StringUtils.isNotBlank( correct ) ) {
                         String[] codes = correct.split( "," );
                         for ( String answerCode : codes ) {
-                            CorrespondenceVariant variant = variantMap.get( answerCode );
+                            CorrespondenceVariant variant = variantMap.get( answerCode.trim() );
                             if ( variant != null && !variant.getCorrectAnswers().contains( answerVariant ) ) {
                                 variant.getCorrectAnswers().add( answerVariant );
                             }

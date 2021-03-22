@@ -40,7 +40,7 @@ public class TreeQuestionBuilder extends QuestionBuilder {
             if ( StringUtils.isNoneBlank( code, text ) ) {
                 // correspondence variant row
                 CorrespondenceVariant variant = loadCorrespondenceVariant( row );
-                List<CorrespondenceVariant> variants = ((QuestionCorrespondence)result).getCorrespondenceVariants();
+                List<CorrespondenceVariant> variants = ((QuestionTree)result).getCorrespondenceVariants();
                 if ( !variants.contains( variant ) ) {
                     variants.add( variant );
                 }
@@ -49,10 +49,14 @@ public class TreeQuestionBuilder extends QuestionBuilder {
             else {
                 // answer row
                 if ( StringUtils.isNotBlank( text ) && currentVariant != null ) {
+                    String correct = getCellValue( row, COLUMN_RIGHTNESS );
                     AnswerVariant answerVariant = loadAnswer( row );
                     List<AnswerVariant> answers = currentVariant.getCorrectAnswers();
                     if ( !answers.contains( answerVariant ) ) {
                         answers.add( answerVariant );
+                    }
+                    if ( StringUtils.isNotBlank( correct ) ) {
+                        answerVariant.setCorrect( true );
                     }
 
                 }
