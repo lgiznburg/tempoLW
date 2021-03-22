@@ -6,82 +6,89 @@
     <link rel="shortcut icon" href="${context:static/icons/favicon.ico}" type="image/x-icon" />
 </head>
 <body>
-<div class="navbar navbar-default navbar-dark bg-dark">
-    <div class="container-fluid">
 
+<nav class="navbar navbar-rnimu navbar-inverse" style="border-radius: 0 !important; margin-bottom: 0 !important;">
+    <div class="container-fluid">
+        <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbarsReque" aria-expanded="false">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#monreg-nav" aria-expanded="false">
                 <span class="sr-only">Toggle navigation</span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <t:pagelink page="index" style="padding: 3px 5px" class="navbar-brand">
-                <img title="${message:navbar.logotitle}" src="${context:static/img/px.png}" id="logoImage"/>
-            </t:pagelink>
-            <t:pagelink page="index">
-                <strong class="navbar-brand">${message:navbar.university}</strong>
-            </t:pagelink>
+            <div style="display: flex; flex-direction: row">
+                <t:pagelink page="index" class="navbar-brand" style="padding: 8px 15px !important; display: flex; flex-direction: row">
+                    <img style="max-height: 34px" alt="${message:navbar.logotitle}" title="${message:navbar.logotitle}" src="${context:static/img/px.png}" id="logoImage"/>
+                    <div style="display: flex; align-items: center; margin-left: 15px">
+                        <span>${message:navbar.university}</span>
+                    </div>
+                </t:pagelink>
+            </div>
         </div>
 
-        <div class="collapse navbar-collapse" id="navbarsReque">
+        <div class="collapse navbar-collapse" id="monreg-nav">
             <t:security.user>
-                <ul class="nav navbar-nav navbar-right">
-                    <t:security.lacksrole role="testee">
-                        <li><t:eventlink event="togglelocale" class="nav-link">${localeNameToSwitch}</t:eventlink></li>
-                        <li class="dropdown">
-                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" id="userDropdown" aria-expanded="false">
-                                ${message:navbar.welcome} ${username}. <span class="caret"/></a>
-                            <ul class="dropdown-menu bg-light" aria-labelledby="userDropdown">
-                                <t:security.hasAnyRoles roles="admin,subject_admin,teacher">
-                                    <li><t:pagelink page="admin/subjects">${message:navbar.admin.subjects}</t:pagelink></li>
-                                    <li><t:pagelink page="admin/exams">${message:navbar.admin.exams}</t:pagelink></li>
-                                    <li><t:pagelink page="admin/results">${message:findresults}</t:pagelink></li>
-                                    <!--<li><t:pagelink page="admin/analytics">${message:analytics-title}</t:pagelink></li>-->
-                                    <li role="separator" class="divider"></li>
-                                </t:security.hasAnyRoles>
-                                <t:security.hasrole role="teacher">
-                                    <li><t:pagelink page="admin/worksassignedtome">${message:navbar.admin.works-assigned-to-me}</t:pagelink></li>
-                                </t:security.hasrole>
-                                <t:security.hasRole role="admin">
-                                    <li><t:pagelink page="admin/users">${message:navbar.admin.users}</t:pagelink></li>
-                                    <li><t:pagelink page="admin/loademails">${message:navbar.admin.load-emails}</t:pagelink></li>
-                                    <li><t:pagelink page="admin/assignteachers">${message:navbar.admin.assign-teachers}</t:pagelink></li>
-                                    <li><t:pagelink page="admin/templates/rtftemplates">${message:rtf-template-short}</t:pagelink></li>
-                                    <li><t:pagelink page="admin/systemproperties">${message:navbar.admin.system-properties}</t:pagelink></li>
-                                    <li role="separator" class="divider"></li>
-                                </t:security.hasRole>
-                                <t:security.hasAnyRoles roles="admin, subject_admin, teacher">
-                                    <li><t:pagelink page="userpassword">${message:navbar.admin.password}</t:pagelink></li>
-                                    <li role="separator" class="divider"></li>
-                                </t:security.hasAnyRoles>
-                                <li><t:eventlink event="logout">${message:navbar.logout}</t:eventlink></li>
-
-                            </ul>
-                        </li>
-                        <p:else>
-                            <li></li>
-                        </p:else>
-                    </t:security.lacksrole>
-
+                <ul class="nav navbar-nav navbar-right" style="margin-right: 10px">
+                    <li>
+                        <t:eventlink event="toggleLocale" class="nav-link rsmu-lang-switch">
+                            ${localeNameToSwitch}
+                        </t:eventlink>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="nav-link dropdown-toggle rsmu-lang-switch" data-toggle="dropdown" aria-haspopup="true" id="userDropdown" aria-expanded="false">
+                            ${message:navbar.welcome} ${username}. <span class="caret"/></a>
+                        <ul class="dropdown-menu bg-light" aria-labelledby="userDropdown">
+                            <t:security.hasAnyRoles roles="admin,subject_admin,teacher">
+                                <li><t:pagelink page="admin/subjects">${message:navbar.admin.subjects}</t:pagelink></li>
+                                <li><t:pagelink page="admin/exams">${message:navbar.admin.exams}</t:pagelink></li>
+                                <li><t:pagelink page="admin/results">${message:findresults}</t:pagelink></li>
+                                <!--<li><t:pagelink page="admin/analytics">${message:analytics-title}</t:pagelink></li>-->
+                                <li role="separator" class="divider"></li>
+                            </t:security.hasAnyRoles>
+                            <t:security.hasrole role="teacher">
+                                <li><t:pagelink page="admin/worksassignedtome">${message:navbar.admin.works-assigned-to-me}</t:pagelink></li>
+                            </t:security.hasrole>
+                            <t:security.hasRole role="admin">
+                                <li><t:pagelink page="admin/users">${message:navbar.admin.users}</t:pagelink></li>
+                                <li><t:pagelink page="admin/loademails">${message:navbar.admin.load-emails}</t:pagelink></li>
+                                <li><t:pagelink page="admin/assignteachers">${message:navbar.admin.assign-teachers}</t:pagelink></li>
+                                <li><t:pagelink page="admin/templates/rtftemplates">${message:rtf-template-short}</t:pagelink></li>
+                                <li><t:pagelink page="admin/systemproperties">${message:navbar.admin.system-properties}</t:pagelink></li>
+                                <li role="separator" class="divider"></li>
+                            </t:security.hasRole>
+                            <t:security.hasAnyRoles roles="admin, subject_admin, teacher">
+                                <li><t:pagelink page="userpassword">${message:navbar.admin.password}</t:pagelink></li>
+                                <li role="separator" class="divider"></li>
+                            </t:security.hasAnyRoles>
+                            <li><t:eventlink event="logout">${message:navbar.logout}</t:eventlink></li>
+                        </ul>
+                    </li>
                 </ul>
-                <p:else>
-                    <ul class="nav navbar-nav navbar-right">
-                        <!-- locale switch for unlogged users -->
-                        <li><t:eventlink event="togglelocale" class="nav-link">${localeNameToSwitch}</t:eventlink></li>
-                        <li><t:pagelink page="login" class="nav-link">${message:navbar.login}</t:pagelink></li>
-                    </ul>
-                </p:else>
             </t:security.user>
+            <t:security.guest>
+                <ul class="nav navbar-nav navbar-right" style="margin-right: 10px">
+                    <li>
+                        <t:eventlink event="toggleLocale" class="nav-link rsmu-lang-switch">
+                            ${localeNameToSwitch}
+                        </t:eventlink>
+                    </li>
+                    <li>
+                        <t:pagelink page="login" class="rsmu-lang-switch" title="${message:navbar.login}">
+                            ${message:navbar.login}
+                        </t:pagelink>
+                    </li>
+                </ul>
+            </t:security.guest>
         </div>
     </div>
-</div>
+</nav>
 
 <div class="container" role="main">
     <t:body/>
 </div>
 
-<div class="row">
+<div>
     <div class="col-sm-11 col-sm-offset-1">
         <p class="text-muted">
             <small>Copyright <span class="glyphicon glyphicon-copyright-mark" aria-hidden="true"></span>

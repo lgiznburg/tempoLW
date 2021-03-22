@@ -4,32 +4,75 @@
 
     <t:form t:id="tempoLoginForm" class="form-horizontal">
         <t:if test="loginMessage"><div class="alert alert-danger">${loginMessage}</div></t:if>
-        <div class="form-group">
-            <t:label for="login" class="col-sm-2"/>
-            <div class="col-sm-8">
-                <t:textfield value="login" validate="required" t:id="login"/>
+        <div class="login-card">
+            <div class="login-card-image">
+                <img style="width: 100%" src="${context:static/img/banner1200x400.jpg}" alt="RSMU"/>
             </div>
-        </div>
-        <div class="form-group">
-            <t:label for="password" class="col-sm-2"/>
-            <div class="col-sm-8">
-                <t:passwordfield value="password" validate="required" t:id="password"/>
-            </div>
-        </div>
-        <t:if test="includeRememberMe">
-            <div class="form-group">
-                <div class="col-sm-8 col-sm-offset-2">
-                    <t:label for="rememberMe">
-                        <t:checkbox value="rememberMe" t:id="rememberMe"/>
-                        ${message:rememberMe-label} </t:label>
+            <div class="login-card-content">
+                <div class="row" style="margin-bottom: 15px">
+                    <div class="col-sm-3 login-text-right" style="margin-top: 5px">
+                        <b>${message:login-label}</b>
+                    </div>
+                    <div class="col-sm-9">
+                        <t:textfield value="login" validate="required" t:id="login" class="form-control" placeholder="${message:login-label}"/>
+                    </div>
+                </div>
+                <div class="row" style="margin-bottom: 15px">
+                    <div class="col-sm-3 login-text-right" style="margin-top: 5px">
+                        <b>${message:password-label}</b>
+                    </div>
+                    <div class="col-sm-9">
+                        <t:passwordfield value="password" validate="required" t:id="password" class="form-control" placeholder="${message:password-label}"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-9 col-sm-offset-3">
+                        <t:if test="includeRememberMe">
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <t:label for="rememberMe">
+                                        <t:checkbox value="rememberMe" t:id="rememberMe"/>
+                                        ${message:rememberMe-label} </t:label>
+                                </div>
+                            </div>
+                        </t:if>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-9 col-sm-offset-3">
+                        <input type="submit" class="btn btn-primary" value="${message:loginSubmit}" style="margin-right: 15px; margin-bottom: 10px"/>
+                    </div>
                 </div>
             </div>
-        </t:if>
-
-        <div class="btn-toolbar">
-            <div class="btn-group">
-                <input type="submit" class="btn btn-primary" value="${message:loginSubmit}" />
-            </div>
         </div>
+
+<!--        <t:if test="loginMessage"><div class="alert alert-danger">${loginMessage}</div></t:if>-->
+<!--        <div class="form-group">-->
+<!--            <t:label for="login" class="col-sm-2"/>-->
+<!--            <div class="col-sm-8">-->
+<!--                <t:textfield value="login" validate="required" t:id="login"/>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <div class="form-group">-->
+<!--            <t:label for="password" class="col-sm-2"/>-->
+<!--            <div class="col-sm-8">-->
+<!--                <t:passwordfield value="password" validate="required" t:id="password"/>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--        <t:if test="includeRememberMe">-->
+<!--            <div class="form-group">-->
+<!--                <div class="col-sm-8 col-sm-offset-2">-->
+<!--                    <t:label for="rememberMe">-->
+<!--                        <t:checkbox value="rememberMe" t:id="rememberMe"/>-->
+<!--                        ${message:rememberMe-label} </t:label>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </t:if>-->
+
+<!--        <div class="btn-toolbar">-->
+<!--            <div class="btn-group">-->
+<!--                <input type="submit" class="btn btn-primary" value="${message:loginSubmit}" />-->
+<!--            </div>-->
+<!--        </div>-->
     </t:form>
 </t:container>
