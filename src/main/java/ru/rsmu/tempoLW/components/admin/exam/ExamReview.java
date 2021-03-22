@@ -4,10 +4,13 @@ import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import ru.rsmu.tempoLW.dao.ExamDao;
+import ru.rsmu.tempoLW.entities.ExamResult;
 import ru.rsmu.tempoLW.entities.ExamSchedule;
+import ru.rsmu.tempoLW.entities.QuestionResult;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Review Exam component for CRUD
@@ -44,5 +47,24 @@ public class ExamReview {
 
     public boolean isAfterExamDate() {
         return exam != null && exam.getExamDate().before( new Date() );
+    }
+
+    public boolean onRecalculate() {
+        if ( examId != null ) {
+            exam = examDao.find( ExamSchedule.class, examId );
+            if ( exam != null ) {
+                List<ExamResult> results = examDao.findExamResults( exam );
+                results.forEach( examResult -> {
+                    examResult.getQuestionResults().forEach( qr -> {
+                        if ( !qr.getQuestion().isManualCheckingRequired() ) qr.checkCorrectness();
+                    } );
+                    int finalMark = examResult.getQuestionResults().stream().mapToInt( QuestionResult::getMark ).sum();
+                    examResult.setMarkTotal( finalMark );
+                    examDao.save( examResult );
+                } );
+            }
+        }
+
+        return true;
     }
 }

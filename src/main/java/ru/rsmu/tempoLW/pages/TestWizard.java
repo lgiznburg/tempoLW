@@ -304,10 +304,10 @@ public class TestWizard {
     public void onFinishTest() {
         if ( checkSessionDisruption() ) return;
 
-        int finalMark = 0;
-        for ( QuestionResult questionResult : examResult.getQuestionResults() ) {
+        int finalMark = examResult.getQuestionResults().stream().mapToInt( QuestionResult::getMark ).sum();
+        /*for ( QuestionResult questionResult : examResult.getQuestionResults() ) {
             finalMark += questionResult.getMark();
-        }
+        }*/
         examResult.setMarkTotal( finalMark );
         examResult.setEndTime( new Date() );
         //save only existed result

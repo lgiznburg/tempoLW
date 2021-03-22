@@ -19,7 +19,7 @@ public class ResultOpenView {
         String answer = "";
         if(!current.getElements().isEmpty()){
             ResultOpen r = (ResultOpen) current.getElements().get(0);
-            answer = r.getValue();
+            answer = r.getValue() == null ? "" : r.getValue();
         }
         return answer;
     }
