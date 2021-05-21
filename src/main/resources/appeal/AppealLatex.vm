@@ -1,0 +1,191 @@
+\documentclass[12pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[russian]{babel}
+\usepackage{natbib}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{textcomp}
+
+\title{олимпиада}
+\author{${testee.fullName}}
+\date{ ${examDate} }
+
+\begin{document}
+
+\begin{center}
+\textbf{\textsc{Российский национальный исследовательский медицинский университет им. Н.И.Пирогова Минздрава России}}
+
+\bigskip
+\Large
+\textbf{${testee.fullName}}
+\normalsize
+
+\bigskip
+\begin{tabular}{lr}
+${exam.testingPlan.subject.title}, ${exam.testingPlan.name} & ${examDate}
+\end{tabular}
+
+\end{center}
+
+#foreach( $result in $results )
+
+\section{${result.result.question.questionInfo.name}}
+    ${result.questionBody}
+    #*
+      \begin{figure}[h!]
+      \centering
+      \includegraphics[scale=1.7]{universe}
+      \caption{The Universe}
+      \label{fig:universe}
+      \end{figure}
+       *#
+    ## ========= Simple
+    #if ($result.simple)
+        \smallskip\noindent #if ( $result.result.elements.size() > 1 ) \textbf{Выбранные ответы} #else \textbf{Выбранный ответ} #end \\[1mm]
+        \begin{tabular}{p{10cm}|r}
+        #if ( $result.result.elements.empty) без ответа
+        #else
+            #foreach( $element in $result.result.elements)
+                $element.answerVariant.text & #if( $element.correct ) (верно) #else (неверно) #end \\
+            #end
+        #end
+        \end{tabular}
+        #if( !$result.missedAnswers.empty )
+        \\[1mm] #if( $result.missedAnswers.size() > 1 ) \textbf{Пропущенные правильные ответы} #else \textbf{Пропущенный правильный ответ} #end \\[1mm]
+        \begin{tabular}{p{10cm}}
+            #foreach( $answer in $result.missedAnswers )
+                $result.prepareText($answer.text) \\
+            #end
+        \end{tabular}
+        #end
+    #end
+    ## ============= Open
+    #if( $result.open )
+    \paragraph{Данный ответ}\\[1mm]
+    \begin{tabular}{p{8cm}|r}
+        #if ( $result.result.elements.empty ) без ответа #set( $incorrect = true )
+        #else
+            #foreach( $element in $result.result.elements )
+                $element.value & #if( $element.correct ) (верно) #else (неверно)  #set( $incorrect = true ) #end \\
+            #end
+        #end
+    \end{tabular}
+        #if( $incorrect )
+            #if ( $result.result.question.answerVariants.size() == 1 )
+            \paragraph{Правильный ответ}\\[1mm]
+                #foreach( $answer in $result.result.question.answerVariants )
+                    $answer.readableText
+                #end
+            #else
+            \textbf{Правильные ответы}\\[1mm]
+            \begin{tabular}{p{10cm}}
+                #foreach( $answer in $result.result.question.answerVariants )
+                    $answer.readableText \\
+                #end
+            \end{tabular}
+            #end
+            #set( $incorrect = false )
+        #end
+    #end
+    ##============== Correspondece or Tree
+    #if( $result.correspondence || $result.tree )
+        \begin{enumerate}
+        #foreach( $variant in $result.result.question.correspondenceVariants)
+        \item{$result.prepareText($variant.text)}\\[1mm]
+        #if ( $result.getVariantAnswers( $variant ).size() > 1)\textbf{Выбранные ответы} #else \textbf{Выбранный ответ} #end\\[1mm]
+        \begin{tabular}{p{10cm}|r}
+            #if ( $result.getVariantAnswers( $variant ).empty ) без ответа
+            #else
+                #foreach( $element in $result.getVariantAnswers( $variant ) )
+                    $result.prepareText($element.answerVariant.text) & #if( $element.correct ) (верно) #else (неверно)  #end \\
+                #end
+            #end
+        \end{tabular}
+            #if( !$result.getMissedAnswers( $variant ).empty)
+            \\[1mm]#if( $result.getMissedAnswers( $variant ).size()> 1)\textbf{Пропущенные правильные ответы}#else \textbf{Пропущенный правильный ответ} #end\\[1mm]
+            \begin{tabular}{p{10cm}}
+                #foreach( $answer in $result.getMissedAnswers( $variant ) )
+                    $result.prepareText($answer.text) \\
+                #end
+            \end{tabular}
+                #set( $incorrect = false )
+            #end
+        #end
+        \end{enumerate}
+    #end
+    ## ========= Crossword or TreeOpen
+    #if ( $result.crossword || $result.treeOpen )
+        \begin{enumerate}
+        #foreach( $variant in $result.result.question.correspondenceVariants) \item{$result.prepareText($variant.text)}\\[1mm]
+        \textbf{Выбранный ответ}
+            \begin{tabular}{p{6cm}|r}
+            #if ( $result.getVariantAnswers( $variant ).empty ) без ответа #set( $incorrect = true )
+            #else
+                #foreach( $element in $result.getVariantAnswers( $variant ) )
+                    $element.value & #if( $result.isOpenAnswerCorrect( $element ) ) (верно) #else (неверно)  #set( $incorrect = true ) #end \\
+                #end
+            #end
+            \end{tabular}
+            #if( $incorrect ) \\[1mm]
+                #if ( $variant.correctAnswers.size() == 1 )
+                \textbf{Правильный ответ}
+                    #foreach( $answer in $variant.correctAnswers )
+                        $answer.readableText
+                    #end
+                #else
+                \textbf{Правильные ответы}\\[1mm]
+                \begin{tabular}{p{10cm}}
+                    #foreach( $answer in $variant.correctAnswers )
+                        $answer.readableText \\
+                    #end
+                \end{tabular}
+                #end
+                #set( $incorrect = false )
+            #end
+        #end
+        \end{enumerate}
+    #end
+    ## ============== BigOpen
+    #if( $result.bigOpen)
+    \paragraph{Данный ответ}
+        #if( $result.result.elements.empty )
+        без ответа
+        #else
+            #foreach( $element in $result.result.elements)
+                $result.getBigAnswerBody( $element.text.text )
+
+            \medskip
+            \begin{tabular}{l|p{8cm}|p{6cm}}
+                #foreach( $evaluation in $element.evaluation )
+                \textbf{$evaluation.score} & $result.getBigAnswerBody($evaluation.explanation) & $result.getExaminerFio($evaluation.examiner) \\
+                #end
+            \end{tabular}
+            #end
+        #end
+    #end
+    ## ============ SimpleOrder
+    #if( $result.simpleOrder )
+    \smallskip\begin{tabular}{l|p{6cm}|p{6cm}}
+        \textnumero & Выбранный ответ & Правильный ответ \\
+      \hline
+      #foreach( $idx in [1 .. $result.numberOfOrderElements] )
+          #foreach( $answ in $result.findAnswersForOrderIndex($idx) )
+              #if($foreach.first) $idx #end &
+              $result.prepareText($answ.text) &
+              #if($foreach.first && !$result.isOrderCorrectAnswerPresent($idx)) $result.prepareText($result.findCorrectAnswer($idx).text) #else (верно) #end \\
+          #end
+      #end
+    \end{tabular}
+    #end
+    ## ================
+\paragraph{Оценка}
+\textbf{ ${result.result.mark} } = ${result.result.score} балла(ов) (из ${result.result.question.questionInfo.maxScore}) * ${result.result.scoreCost}
+#end
+
+\section*{Оценка}
+\paragraph{{Итоговая оценка}}
+\textbf{ ${finalMark} }
+
+\end{document}

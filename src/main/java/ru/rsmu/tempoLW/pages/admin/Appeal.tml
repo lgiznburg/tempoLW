@@ -54,13 +54,19 @@
 </div>
 <div class="row">
     <div class="form-group">
-        <div class="col-sm-4 col-sm-offset-4">
+        <div class="col-sm-8 col-sm-offset-4">
             <t:security.hasanyroles roles="admin,subject_admin">
                 <t:pagelink page="admin/appealstatement" context="[exam,testee]" class="btn btn-success"
                             aria-label="Print">
                     ${message:appeal-statement}
                 </t:pagelink>
                 <t:pagelink page="admin/exams" parameters="queryParams" class="btn btn-default">${message:back}</t:pagelink>
+            </t:security.hasanyroles>
+            <t:security.hasanyroles roles="admin">
+                <t:pagelink page="admin/appeallatexstatement" context="[exam,testee]" class="btn btn-success"
+                            aria-label="Print">
+                    ${message:statement-latex}
+                </t:pagelink>
             </t:security.hasanyroles>
             <t:security.hasrole role="teacher">
                 <t:pagelink page="admin/worksassignedtome"

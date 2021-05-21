@@ -13,7 +13,10 @@
         ${examResult.title}</h2>
     <t:if test="examResult.examMode">
         <h4>${examResult.testee.lastName}</h4>
-        <t:zone t:id="examTimingZone">
+    </t:if>
+        <t:eventlink t:id="refreshExamTimingZone" async="true" style="display: none;">Hidden Refresh Link</t:eventlink>
+    <t:zone t:id="examTimingZone" id="examTimingZone">
+        <t:if test="examResult.examMode">
             <t:if test="examResult.startTime">
                 <p class="text-lg">
                     ${message:exam-start} : <strong><t:output format="literal:dd/MM HH:mm" value="examResult.startTime"/></strong> -
@@ -26,8 +29,9 @@
                     </t:if>
                 </p>
             </t:if>
-        </t:zone>
-    </t:if>
+        </t:if>
+        <p class="text-lg">${message:current-time} : <strong><t:output format="literal:HH:mm" value="currentServerTime"/></strong></p>
+    </t:zone>
 </div>
 
 <t:zone t:id="questionFormZone" id="questionFormZone">

@@ -9,6 +9,7 @@ import org.apache.tapestry5.Block;
 import org.apache.tapestry5.PersistenceConstants;
 import org.apache.tapestry5.SymbolConstants;
 import org.apache.tapestry5.annotations.*;
+import org.apache.tapestry5.corelib.components.EventLink;
 import org.apache.tapestry5.corelib.components.Zone;
 import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
@@ -94,6 +95,9 @@ public class TestWizard {
     @InjectComponent
     private Zone questionFormZone, examTimingZone;
 
+    @InjectComponent
+    private EventLink refreshExamTimingZone;
+
     @Inject
     private AjaxResponseRenderer ajaxResponseRenderer;
 
@@ -122,6 +126,12 @@ public class TestWizard {
 */
             javaScriptSupport.require( "proctoring" ).invoke( "startSession" ).with( proctoringServer, getToken() );
         }
+    }
+    
+    public void afterRender() {
+        // periodic update the page to keep session alive
+        String eventURL = refreshExamTimingZone.getLink().toAbsoluteURI();
+        javaScriptSupport.require("zone-updater").with(examTimingZone.getClientId(), eventURL, 60 ); // 1 min
     }
 
     public Object onActivate() {
@@ -369,6 +379,16 @@ public class TestWizard {
             }
         }
         return calendar.getTime();
+    }
+
+    public Date getCurrentServerTime() {
+        return new Date();
+    }
+
+    void onRefreshExamTimingZone() {
+        if (request.isXHR()) {
+            ajaxResponseRenderer.addRender(examTimingZone);
+        }
     }
 
     /**

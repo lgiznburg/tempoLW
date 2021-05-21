@@ -99,7 +99,7 @@ public class AppealStatement {
             Cell cellExamDateValue = CellUtil.createCell(rowExamDate, 2, new SimpleDateFormat("dd.MM.yyyy").format(exam.getExamDate()));
             CellUtil.setFont(cellExamDateValue, styles.getDefaultFont());
 
-            //row with the date of фззуфд
+            //row with the date of exam
             Row rowAppealDate = sheet.createRow(5);
             //sheet.addMergedRegion(new CellRangeAddress(5,5,1,2));
             Cell cellAppealDateTitle = rowAppealDate.createCell(0);
