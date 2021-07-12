@@ -27,6 +27,7 @@ public class TesteeLoader extends ExcelReader {
     private static final short FIRST_NAME_CELL = 2;
     private static final short MIDDLE_NAME_CELL = 3;
     private static final short EMAIL_CELL = 4;
+    private static final short GOSUSLUGI_CELL = 5;
 
 
     private final TesteeDao testeeDao;
@@ -79,6 +80,8 @@ public class TesteeLoader extends ExcelReader {
                 testee.setLastName( getCellValue( row, FULL_NAME_CELL ) );
                 testee.setFirstName( getCellValue( row, FIRST_NAME_CELL ) );
                 testee.setMiddleName( getCellValue( row, MIDDLE_NAME_CELL ) );
+                String gosuslugi = getCellValue( row, GOSUSLUGI_CELL );
+                testee.setGosuslugi( "да".equalsIgnoreCase( gosuslugi ) );
                 if ( StringUtils.isNoneBlank( email ) ) {
                     testee.setEmail( email );
                 }

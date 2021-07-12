@@ -12,5 +12,6 @@
     <include file="2020-11-21-add-assignment-and-email-queue.xml" relativeToChangelogFile="true"/>
     <include file="2020-11-25-add-checking-finished.xml" relativeToChangelogFile="true"/>
     <include file="2021-02-17-create-long-text-result.xml" relativeToChangelogFile="true"/>
+    <include file="2021-07-09-password-for-integration.xml" relativeToChangelogFile="true"/>
 
 </databaseChangeLog>

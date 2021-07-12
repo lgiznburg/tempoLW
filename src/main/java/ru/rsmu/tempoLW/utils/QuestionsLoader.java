@@ -137,10 +137,11 @@ public class QuestionsLoader extends ExcelReader implements ExcelLayout {
         questionInfo.setName( name );
         questionInfo.setTopic( topic );
         questionInfo.setSubject( subject );
-        /*Long questionCode = getCellNumber( row, COLUMN_CODE );
+        // code for linked question
+        Long questionCode = getCellNumber( row, COLUMN_CODE );
         if ( questionCode != null && questionCode > 0 ) {
             questionInfo.setCode( questionCode.intValue() );
-        }*/
+        }
         //questionDao.save( questionInfo );
 
         return questionInfo;

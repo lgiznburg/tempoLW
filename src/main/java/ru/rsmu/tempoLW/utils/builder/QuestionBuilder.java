@@ -135,6 +135,10 @@ public abstract class QuestionBuilder extends ExcelReader implements ExcelLayout
             cell = row.createCell( COLUMN_NAME );
             cell.setCellValue( question.getQuestionInfo().getName() );
         }
+        if ( question.getQuestionInfo().getCode() > 0 ) {
+            cell = row.createCell( COLUMN_CODE );
+            cell.setCellValue( question.getQuestionInfo().getCode() );
+        }
 
         cell = row.createCell( COLUMN_TEXT );
         cell.setCellValue( question.getText() );

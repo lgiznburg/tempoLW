@@ -9,6 +9,7 @@ import org.codehaus.jackson.type.TypeReference;
 import ru.rsmu.tempoLW.consumabales.proctoring.MetricInfo;
 import ru.rsmu.tempoLW.dao.ExamDao;
 import ru.rsmu.tempoLW.entities.*;
+import ru.rsmu.tempoLW.services.TesteeCredentialsService;
 
 import java.io.IOException;
 import java.util.*;
@@ -50,6 +51,9 @@ public class ExamTestees {
 
     @Inject
     private ExamDao examDao;
+
+    @Inject
+    private TesteeCredentialsService testeeCredentialsService;
 
     public void setupRender() {
         rtf = true;
@@ -128,5 +132,15 @@ public class ExamTestees {
 
     public boolean getProctoringExist() {
         return exam.isUseProctoring() && proctoringReportMap.containsKey( testee.getId() );
+    }
+
+    public void onResendPassword( Testee testeeToSend ) {
+        exam = examId != null ? examDao.find( ExamSchedule.class, examId ) : null;
+        if ( exam != null ) {
+            exam.getExamToTestees().stream()
+                    .filter( ett -> ett.getTestee().equals( testeeToSend ) )
+                    .findAny()
+                    .ifPresent( ett -> {if ( StringUtils.isNotBlank( ett.getSecretKey() ) ) { testeeCredentialsService.sendCredentialsEmail( ett ); } });
+        }
     }
 }

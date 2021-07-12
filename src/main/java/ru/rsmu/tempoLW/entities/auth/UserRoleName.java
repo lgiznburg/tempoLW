@@ -7,5 +7,6 @@ public enum UserRoleName {
     admin,
     subject_admin,
     teacher,
-    testee
+    testee,
+    api
 }

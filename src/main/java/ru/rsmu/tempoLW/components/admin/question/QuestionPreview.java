@@ -1,13 +1,19 @@
 package ru.rsmu.tempoLW.components.admin.question;
 
 import org.apache.tapestry5.Block;
+import org.apache.tapestry5.annotations.InjectComponent;
 import org.apache.tapestry5.annotations.Parameter;
+import org.apache.tapestry5.annotations.Property;
+import org.apache.tapestry5.corelib.components.Zone;
 import org.apache.tapestry5.internal.services.LinkSource;
 import org.apache.tapestry5.ioc.annotations.Inject;
+import org.apache.tapestry5.services.Request;
+import org.apache.tapestry5.services.ajax.AjaxResponseRenderer;
 import ru.rsmu.tempoLW.data.QuestionType;
 import ru.rsmu.tempoLW.entities.*;
 import ru.rsmu.tempoLW.pages.QuestionImage;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -24,12 +30,27 @@ public class QuestionPreview {
 
     private CorrespondenceVariant correspondence;
 
+    @Property
+    private String openAnswerText;
+
+    @Property
+    private int errors;
+
     @Inject
     private LinkSource linkSource;
 
     @Inject
     private Block questionSimple, questionSimpleOrder, questionOpen,
             questionCorrespondence, questionTree, questionTreeOpen;
+
+    @InjectComponent
+    private Zone checkOpenZone;
+
+    @Inject
+    private Request request;
+
+    @Inject
+    private AjaxResponseRenderer ajaxResponseRenderer;
 
     public Question getQuestion() {
         return question;
@@ -164,6 +185,30 @@ public class QuestionPreview {
             return linkSource.createPageRenderLink(QuestionImage.class.getSimpleName(), false, correspondence.getImage().getId() ).toURI();
         }
         return "";
-
     }
+
+    // check how the open question work
+    void beginRender() {
+        errors = -1;
+    }
+
+    void onSubmitFromCheckOpenForm() {
+        List<ResultElement> results = new ArrayList<>();
+        ResultOpen resultOpen = new ResultOpen();
+        resultOpen.setValue( openAnswerText );
+        results.add( resultOpen );
+        errors = question.countErrors( results );
+        if ( request.isXHR() ) {
+            ajaxResponseRenderer.addRender( checkOpenZone );
+        }
+    }
+
+    public boolean isResultDefined() {
+        return errors >= 0;
+    }
+
+    public boolean isCorrect() {
+        return errors == 0;
+    }
+
 }

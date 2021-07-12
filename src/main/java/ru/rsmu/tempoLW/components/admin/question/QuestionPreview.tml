@@ -16,6 +16,33 @@
         </div>
     </div>
 
+<!--    check how to work open question -->
+    <t:if test="questionOpen">
+        <t:zone t:id="checkOpenZone" id="checkOpenZone">
+            <t:form t:id="checkOpenForm" class="form-horizontal" async="true">
+                <div class="form-group">
+                    <t:label for="openAnswerText" class="col-sm-3"/>
+                    <div class="col-sm-5">
+                        <t:textfield value="openAnswerText" t:id="openAnswerText"/>
+                    </div>
+                    <div class="col-sm-4">
+                        <t:if test="resultDefined">
+                            <t:if test="correct">
+                                <span class="text-success">${message:correct}</span>
+                                <p:else><span class="text-danger">${message:incorrect}</span> </p:else>
+                            </t:if>
+                        </t:if>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-5 col-sm-offset-3">
+                        <t:submit value="${message:checkCorrectness}"/>
+                    </div>
+                </div>
+            </t:form>
+        </t:zone>
+    </t:if>
+
     <t:block t:id="questionSimple" id="questionSimple">
         <ul>
             <t:loop source="simpleAnswers" value="answer">
@@ -47,6 +74,7 @@
             </t:loop>
         </ul>
     </t:block>
+
     <t:block t:id="questionCorrespondence" id="questionCorrespondence">
         <dl>
             <t:loop source="correspondenceVariants" value="correspondence">

@@ -26,6 +26,9 @@ public class ExamToTestee implements Serializable {
     @Column
     private String password;
 
+    @Column(name = "secret_key")
+    private String secretKey;
+
     public long getId() {
         return id;
     }
@@ -56,5 +59,13 @@ public class ExamToTestee implements Serializable {
 
     public void setPassword( String password ) {
         this.password = password;
+    }
+
+    public String getSecretKey() {
+        return secretKey;
+    }
+
+    public void setSecretKey( String secretKey ) {
+        this.secretKey = secretKey;
     }
 }

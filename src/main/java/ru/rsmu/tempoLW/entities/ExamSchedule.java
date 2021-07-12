@@ -59,6 +59,9 @@ public class ExamSchedule implements Serializable {
     @Column(name = "send_emails")
     private boolean sendEmails;
 
+    @Column(name = "send_epgu_only")
+    private boolean sendEpguOnly;
+
     public long getId() {
         return id;
     }
@@ -83,14 +86,7 @@ public class ExamSchedule implements Serializable {
         this.testingPlan = testingPlan;
     }
 
-/*
-    public List<Testee> getTestees() {
-        return testees;
-    }
-*/
-
     public void setTestees( List<Testee> testees ) {
-        //this.testees = testees;
         addTestees( testees );
     }
 
@@ -163,6 +159,14 @@ public class ExamSchedule implements Serializable {
 
     public void setSendEmails( boolean sendEmails ) {
         this.sendEmails = sendEmails;
+    }
+
+    public boolean isSendEpguOnly() {
+        return sendEpguOnly;
+    }
+
+    public void setSendEpguOnly( boolean sendEpguOnly ) {
+        this.sendEpguOnly = sendEpguOnly;
     }
 
     @Override

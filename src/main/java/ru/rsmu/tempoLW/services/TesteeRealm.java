@@ -13,7 +13,6 @@ import org.apache.tapestry5.hibernate.HibernateSessionManager;
 import org.apache.tapestry5.ioc.Messages;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
-import ru.rsmu.tempoLW.entities.ExamSchedule;
 import ru.rsmu.tempoLW.entities.ExamToTestee;
 import ru.rsmu.tempoLW.entities.Testee;
 import ru.rsmu.tempoLW.entities.auth.UserRoleName;
@@ -74,7 +73,12 @@ public class TesteeRealm extends AuthorizingRealm {
 
         ExamToTestee examToTestee = null;
         try {
-            examToTestee = checkCurrentExam( testee, PasswordEncoder.encrypt( new String( upToken.getPassword() ) ) );
+            if ( "direct".equals( upToken.getHost() ) ) {
+                // login through direct link from LKA
+                examToTestee = checkCurrentExam( testee, new String( upToken.getPassword() ) );
+            } else {
+                examToTestee = checkCurrentExam( testee, PasswordEncoder.encrypt( new String( upToken.getPassword() ) ) );
+            }
             if ( examToTestee == null ) {
                 throw new LockedAccountException( messages.get( "realm.account-locked" ) ); //"Account [" + login + "] is locked."
             }
@@ -100,6 +104,10 @@ public class TesteeRealm extends AuthorizingRealm {
         if ( ((UsernamePasswordToken) token).isRememberMe() ) {
             //remember me is not allowed for testees
             ((UsernamePasswordToken) token).setRememberMe( false );
+        }
+        if ( "direct".equals( upToken.getHost() ) ) {
+            // login through direct link from LKA
+            ((UsernamePasswordToken) token).setPassword( examToTestee.getSecretKey().toCharArray() );
         }
         return new SimpleAuthenticationInfo(login, examToTestee.getPassword(), /*new SimpleByteSource(testee.getPasswordSalt()),*/ getName());
     }

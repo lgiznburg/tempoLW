@@ -1,6 +1,5 @@
 package ru.rsmu.tempoLW.entities;
 
-import org.apache.commons.lang.text.StrBuilder;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.*;
@@ -43,6 +42,9 @@ public class Testee implements Serializable {
 
     @Column
     private String email;
+
+    @Column
+    private boolean gosuslugi;
 
     @Column(name = "expiration_date")
     @Temporal( TemporalType.DATE )
@@ -118,6 +120,14 @@ public class Testee implements Serializable {
 
     public void setEmail( String email ) {
         this.email = email;
+    }
+
+    public boolean isGosuslugi() {
+        return gosuslugi;
+    }
+
+    public void setGosuslugi( boolean gosuslugi ) {
+        this.gosuslugi = gosuslugi;
     }
 
     @Override

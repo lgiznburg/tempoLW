@@ -62,4 +62,6 @@ public interface ExamDao extends BaseDao {
     List<ExamResult> findAssignedResults( User teacher, int startIndex, int size );
 
     TeacherAssignment findMyAssignment( ExamResult examResult, User teacher );
+
+    List<ExamToTestee> findExamsForTestee( Testee testee );
 }

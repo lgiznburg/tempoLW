@@ -207,4 +207,13 @@ public class ExamDaoImpl extends BaseDaoImpl implements ExamDao {
                 .setMaxResults( 1 );
         return (TeacherAssignment) criteria.uniqueResult();
     }
+
+    @Override
+    public List<ExamToTestee> findExamsForTestee( Testee testee ) {
+        Criteria criteria = session.createCriteria( ExamToTestee.class )
+                .add( Restrictions.eq( "testee", testee ) )
+                .createAlias( "exam", "exam" )
+                .add( Restrictions.gt("exam.periodEndTime", new Date() ) );
+        return criteria.list();
+    }
 }

@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  * @author leonid.
  */
 @Path( "/exam" )
-@RolesAllowed( {"admin", "subject_admin"} )
+@RolesAllowed( {"admin", "api"} )
 public class ExamsApi {
 
     @Inject

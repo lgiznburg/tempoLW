@@ -6,7 +6,7 @@
         <h4>${message:exam} ${exam.name}</h4>
 
         <t:grid t:id="testeesGrid" source="testees" row="testee"
-                exclude="id,lastName,firstName,middleName,login,password,email,expirationDate,credentialsExpired"
+                exclude="id,lastName,firstName,middleName,login,password,email,expirationDate,credentialsExpired,gosuslugi"
                 add="testResult,printStatement" class="table table-bordered table-hover"
                 reorder="caseNumber,fullName,testResult,printStatement"
                 rowsPerPage="50" pagerPosition="bottom"
@@ -107,6 +107,12 @@
                                             class="btn btn-warning btn-sm" aria-label="Print">
                                     <span class="glyphicon glyphicon-heart" aria-hidden="true"></span>
                                 </t:pagelink>
+                            </span>
+                                <span title="${message:resend-password}" class="text-center"><!-- col-xs-3 -->
+                                    <t:eventlink event="resendPassword" context="[testee]"
+                                                class="btn btn-warning btn-sm" aria-label="Resend">
+                                    <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
+                                </t:eventlink>
                             </span>
                             </t:security.hasanyroles>
                         </p>

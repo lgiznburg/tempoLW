@@ -55,6 +55,15 @@
                 </t:if>
             </div>
         </div>
+        <div class="row">
+            <div class="col-sm-3 text-right">${message:send-epgu-only}:</div>
+            <div class="col-sm-3">
+                <t:if test="exam.sendEpguOnly">
+                    ${message:do-send-epgu-only}
+                    <p:else>${message:do-send-all}</p:else>
+                </t:if>
+            </div>
+        </div>
         <t:if test="exam.examToTestees">
             <div class="row">
                 <div class="col-sm-3 text-right">${message:testeeList}:</div>

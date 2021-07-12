@@ -43,12 +43,6 @@ public class TesteeCredentialsServiceImpl implements TesteeCredentialsService {
     @Override
     public List<List<String>> createPasswordsAndEmails( ExamSchedule exam ) {
 
-        String examDate = new SimpleDateFormat( "dd MMMM yyyy", Locale.forLanguageTag( exam.getTestingPlan().getSubject().getLocale() ) )
-                .format( exam.getExamDate() );
-        String examDuration = formatDuration( exam );
-        String emailTemplate = systemPropertyDao.getProperty( StoredPropertyName.EMAIL_TEMPLATE );
-        EmailType emailType = EmailType.findForLocale( emailTemplate, exam.getTestingPlan().getSubject().getLocale() );
-
         List<List<String>> table = new ArrayList<>();
         exam.getExamToTestees().sort( new Comparator<ExamToTestee>() {
             @Override
@@ -57,19 +51,23 @@ public class TesteeCredentialsServiceImpl implements TesteeCredentialsService {
             }
         } );
         for ( ExamToTestee examToTestee : exam.getExamToTestees() ) {
-            // create new password for each testee
-            String password = RandomStringUtils.randomAlphanumeric( 8 )
-                    .replace( 'l', 'k' )
-                    .replace( 'I', 'N' )
-                    .replace( 'O', 'W' )
-                    .replace( 'o', 'w' )
-                    .replace( '1', '7' ) //exclude symbols which can be miss read
-                    .toLowerCase();
-            examToTestee.setPassword( userDao.encrypt( password ) );
-            Calendar expDate = Calendar.getInstance();
-            expDate.setTime( exam.getExamDate() );
-            expDate.add( Calendar.DAY_OF_YEAR, 1 );
-            //examToTestee.setExpirationDate( expDate.getTime() );
+            if ( StringUtils.isBlank( examToTestee.getPassword() ) ) {
+                // create new password for each testee
+                String password = RandomStringUtils.randomAlphanumeric( 8 )
+                        .replace( 'l', 'k' )
+                        .replace( 'I', 'N' )
+                        .replace( 'O', 'W' )
+                        .replace( 'o', 'w' )
+                        .replace( '1', '7' ) //exclude symbols which can be miss read
+                        .toLowerCase();
+                examToTestee.setPassword( userDao.encrypt( password ) );
+                examToTestee.setSecretKey( password );
+                Calendar expDate = Calendar.getInstance();
+                expDate.setTime( exam.getExamDate() );
+                expDate.add( Calendar.DAY_OF_YEAR, 1 );
+                //examToTestee.setExpirationDate( expDate.getTime() );
+                testeeDao.save( examToTestee );
+            }
 
             // password ouput
             //"Номер дела", "ФИО", "ФИО", "Логин", "Пароль"
@@ -78,46 +76,64 @@ public class TesteeCredentialsServiceImpl implements TesteeCredentialsService {
             row.add( examToTestee.getTestee().getEmail() != null ? examToTestee.getTestee().getEmail() : examToTestee.getTestee().getFullName() );       // use email
             row.add( examToTestee.getTestee().getFullName() );
             row.add( examToTestee.getTestee().getLogin() );
-            row.add( password );
+            row.add( examToTestee.getSecretKey() );
             table.add( row );
-            testeeDao.save( examToTestee );
 
-            SimpleDateFormat stimef = new SimpleDateFormat("dd/MM HH:mm");
-            if ( (exam.isUseProctoring() || exam.isSendEmails()) && StringUtils.isNotBlank( examToTestee.getTestee().getEmail() ) ) {
-                // need to send email to testee
-                Map<String,Object> model = new HashMap<>();
+            sendCredentialsEmail( examToTestee );
 
-                String thisServerUri = systemPropertyDao.getProperty( StoredPropertyName.MY_OWN_URI );
-                model.put( "fullName", examToTestee.getTestee().getFullName() );
-                model.put( "examName", exam.getTestingPlan().getSubject().getTitle() );
-                model.put( "eventType", exam.getTestingPlan().getName() );
-                model.put( "examDate", examDate );
-                model.put( "useProctoring", exam.isUseProctoring() );
-                model.put( "serverAddress", thisServerUri );
-                model.put( "examDuration", examDuration );
-                model.put( "testeeLogin", examToTestee.getTestee().getLogin() );
-                model.put( "testeePassword", password );
-                if ( exam.getPeriodStartTime() != null && exam.getPeriodEndTime() != null ) {
-                    model.put( "examPeriod", String.format( "%s - %s",
-                            stimef.format( exam.getPeriodStartTime() ),
-                            stimef.format( exam.getPeriodEndTime() )) );
-                }
-
-                EmailQueue emailQueue = new EmailQueue();
-                emailQueue.setEmailType( emailType );
-                emailQueue.setTestee( examToTestee.getTestee() );
-                ObjectMapper mapper = new ObjectMapper();
-                try {
-                    emailQueue.setModel( mapper.writeValueAsString( model ) );
-                } catch (IOException e) {
-                    // do nothing
-                }
-                emailDao.save( emailQueue );
-
-                //emailService.sendEmail( examToTestee.getTestee(), emailType, model );
-            }
         }
         return table;
+    }
+
+    @Override
+    public void sendCredentialsEmail( ExamToTestee examToTestee ) {
+        ExamSchedule exam = examToTestee.getExam();
+
+        String examDate = new SimpleDateFormat( "dd MMMM yyyy", Locale.forLanguageTag( exam.getTestingPlan().getSubject().getLocale() ) )
+                .format( exam.getExamDate() );
+        String examDuration = formatDuration( exam );
+        String emailTemplate = systemPropertyDao.getProperty( StoredPropertyName.EMAIL_TEMPLATE );
+        EmailType emailType = EmailType.findForLocale( emailTemplate, exam.getTestingPlan().getSubject().getLocale() );
+
+        SimpleDateFormat stimef = new SimpleDateFormat("dd/MM HH:mm");
+        if ( (exam.isUseProctoring() || exam.isSendEmails()) && StringUtils.isNotBlank( examToTestee.getTestee().getEmail() ) ) {
+
+            if ( exam.isSendEpguOnly() && !examToTestee.getTestee().isGosuslugi() ) {
+                return;
+            }
+            // need to send email to testee
+            Map<String,Object> model = new HashMap<>();
+
+            String thisServerUri = systemPropertyDao.getProperty( StoredPropertyName.MY_OWN_URI );
+            model.put( "fullName", examToTestee.getTestee().getFullName() );
+            model.put( "examName", exam.getTestingPlan().getSubject().getTitle() );
+            model.put( "eventType", exam.getTestingPlan().getName() );
+            model.put( "examDate", examDate );
+            model.put( "useProctoring", exam.isUseProctoring() );
+            model.put( "serverAddress", thisServerUri );
+            model.put( "examDuration", examDuration );
+            model.put( "testeeLogin", examToTestee.getTestee().getLogin() );
+            model.put( "testeePassword", examToTestee.getSecretKey() );
+            if ( exam.getPeriodStartTime() != null && exam.getPeriodEndTime() != null ) {
+                model.put( "examPeriod", String.format( "%s - %s",
+                        stimef.format( exam.getPeriodStartTime() ),
+                        stimef.format( exam.getPeriodEndTime() )) );
+            }
+
+            EmailQueue emailQueue = new EmailQueue();
+            emailQueue.setEmailType( emailType );
+            emailQueue.setTestee( examToTestee.getTestee() );
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                emailQueue.setModel( mapper.writeValueAsString( model ) );
+            } catch (IOException e) {
+                // do nothing
+            }
+            emailDao.save( emailQueue );
+
+            //emailService.sendEmail( examToTestee.getTestee(), emailType, model );
+        }
+
     }
 
     private String formatDuration( ExamSchedule exam ) {

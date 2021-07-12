@@ -127,10 +127,16 @@ public class TestWizard {
             javaScriptSupport.require( "proctoring" ).invoke( "startSession" ).with( proctoringServer, getToken() );
         }
     }
-    
+
     public void afterRender() {
         // periodic update the page to keep session alive
         String eventURL = refreshExamTimingZone.getLink().toAbsoluteURI();
+        String serverUrl = propertyService.getProperty( StoredPropertyName.MY_OWN_URI );
+        String eventSchema = eventURL.split( "://" )[0];
+        String serverSchema = serverUrl.split( "://" )[0];
+        if ( !eventSchema.equalsIgnoreCase( serverSchema ) ) {
+            eventURL = eventURL.replace( eventSchema, serverSchema );
+        }
         javaScriptSupport.require("zone-updater").with(examTimingZone.getClientId(), eventURL, 60 ); // 1 min
     }
 

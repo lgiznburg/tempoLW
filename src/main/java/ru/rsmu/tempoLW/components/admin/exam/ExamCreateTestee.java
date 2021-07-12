@@ -3,12 +3,10 @@ package ru.rsmu.tempoLW.components.admin.exam;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.apache.tapestry5.ComponentResources;
-import org.apache.tapestry5.Field;
 import org.apache.tapestry5.annotations.InjectComponent;
 import org.apache.tapestry5.annotations.Parameter;
 import org.apache.tapestry5.annotations.Property;
 import org.apache.tapestry5.corelib.components.Form;
-import org.apache.tapestry5.corelib.components.TextField;
 import org.apache.tapestry5.ioc.Messages;
 import org.apache.tapestry5.ioc.annotations.Inject;
 import ru.rsmu.tempoLW.dao.ExamDao;
@@ -43,6 +41,9 @@ public class ExamCreateTestee {
 
     @Property
     private String email;
+
+    @Property
+    private boolean gosuslugi;
 
     @Property
     private ExamSchedule exam;
@@ -112,16 +113,20 @@ public class ExamCreateTestee {
             if ( testee.getId() == 0 ) {
                 if ( StringUtils.isNotBlank( lastName ) ) {
                     testee.setCaseNumber( caseNumber );
-                    StringBuilder builder = new StringBuilder( lastName );
+                    /*StringBuilder builder = new StringBuilder( lastName );
                     if ( StringUtils.isNotBlank( firstName ) ) {
                         builder.append( " " ).append( firstName );
                     }
                     if ( StringUtils.isNotBlank( middleName ) ) {
                         builder.append( " " ).append( middleName );
                     }
-                    testee.setLastName( builder.toString() );
+                    testee.setLastName( builder.toString() );*/
+                    testee.setLastName( lastName );
+                    testee.setFirstName( firstName );
+                    testee.setMiddleName( middleName );
                     testee.setLogin( new TesteeLoader( testeeDao ).createLogin( caseNumber ) );
                     testee.setEmail( email );
+                    testee.setGosuslugi( gosuslugi );
                 }
                 else {
                     addTesteeForm.recordError(messages.get("add-testee-incomplete"));

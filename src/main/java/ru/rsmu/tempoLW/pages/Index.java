@@ -86,7 +86,7 @@ public class Index {
                     .collect( Collectors.toList());
             // select plans to display
             testingPlans = testingPlans.stream()
-                    .filter( pl -> pl.isDisplayed() )
+                    .filter( TestingPlan::isDisplayed )
                     .collect( Collectors.toList());
             // collect unique names of plan type
             testsLevels.addAll( testingPlans.stream()
